@@ -27,16 +27,8 @@ const internSchema = new mongoose.Schema({
     enum: ["pending", "in_progress", "completed", "hired"],
     default: "pending",
   },
-  assignedMentor: { type: mongoose.Schema.Types.ObjectId, ref: "Mentor" },
+  
   feedback: { type: String },
-
-  // 🔐 Approval Details
-  approvalStatus: {
-    type: String,
-    enum: ["pending", "approved", "rejected"],
-    default: "pending",
-  },
-  approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin" },
 
   // ⚙️ Misc
   isActive: { type: Boolean, default: true },
