@@ -87,6 +87,10 @@ const LoginPage = () => {
   return (
     <div className="h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
         
+        <div className="absolute top-6 left-6">
+        <img src="/GraphuraLogo.jpg" alt="Graphura Logo" className="h-24 rounded-full" />
+        </div>
+
         {/* Left Section - Image */}
         <div className="hidden lg:flex relative w-full xl:w-1/2">
           <img

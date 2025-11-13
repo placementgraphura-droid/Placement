@@ -22,6 +22,7 @@ const internSchema = new mongoose.Schema({
   githubUrl: { type: String },
 
   // 🧩 Internship Details
+  
   appliedFor: [{ type: String }],
 
 

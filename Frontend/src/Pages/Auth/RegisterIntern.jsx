@@ -260,9 +260,10 @@ const RegisterPage = () => {
         <div className="min-h-screen bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 py-8 px-4 sm:px-6 lg:px-8 overflow-auto">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-8">
+                <div className="flex items-center justify-center flex-col mb-8 ">
+                    <img src="/GraphuraLogo.jpg" alt="Graphura Logo" className="h-24 rounded-full" />
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                        Join Placement Programme As an Intern
+                        Join Placement Programme
                     </h1>
                     <p className="text-gray-600 text-lg">
                         Create your account and start your internship journey
@@ -506,7 +507,6 @@ const RegisterPage = () => {
                                     className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                                 />
                                 <span className="text-xs text-green-500 block mt-1 ml-2"># Enter your domain as per Graphura india private limited Internship programme .</span>
-
                             </div>
 
                             {/* Skills Input */}
