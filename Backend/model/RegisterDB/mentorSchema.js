@@ -16,6 +16,8 @@ const mentorSchema = new mongoose.Schema(
 
     // 💼 Professional Details
     experience: { type: Number }, // years
+    linkedinUrl: { type: String },
+    githubUrl: { type: String },
 
 
     // 📂 Optional fields
@@ -24,7 +26,7 @@ const mentorSchema = new mongoose.Schema(
     isactive: { type: Boolean, default: true },
 
 
-  },
+  },  
   { timestamps: true }
 );
 

@@ -68,4 +68,4 @@ hiringTeamFeedback: [
 
 }, { timestamps: true });
 
-export default mongoose.model("Intern", internSchema, "Intern");
+export default mongoose.model("Intern", internSchema, "Interns");

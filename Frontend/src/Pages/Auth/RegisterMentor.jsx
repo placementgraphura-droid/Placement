@@ -8,8 +8,6 @@ import {
     Mail,
     Phone,
     Lock,
-    BookOpen,
-    GraduationCap,
     Briefcase,
     Code,
     FileText,
@@ -18,7 +16,11 @@ import {
     Shield,
     RefreshCw,
     CheckCircle,
-    XCircle
+    XCircle,
+    Award,
+    Calendar,
+    Upload,
+    Key
 } from "lucide-react";
 
 const getRandomInt = (min, max) =>
@@ -41,7 +43,7 @@ const createCaptcha = () => {
     };
 };
 
-const RegisterPage = () => {
+const MentorRegister = () => {
     const navigate = useNavigate();
 
     // Form state
@@ -52,21 +54,14 @@ const RegisterPage = () => {
         phone: "",
         password: "",
         confirmPassword: "",
+        privateKey: "", // New private key field
 
-        // 🎓 Academic Info
-        college: "",
-        course: "",
-        yearOfStudy: "",
-        domain: "",
-
-        // 💼 Professional Info
-        skills: [],
-        resumeUrl: "",
+        // 💼 Professional Details
+        experience: "",
+        domain: "", // Single domain selection
+        profileImage: null,
         linkedinUrl: "",
-        githubUrl: "",
-
-        // Single skill input
-        currentSkill: ""
+        githubUrl: ""
     });
 
     const [error, setError] = useState("");
@@ -75,13 +70,60 @@ const RegisterPage = () => {
     const [captchaInput, setCaptchaInput] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showPrivateKey, setShowPrivateKey] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [shake, setShake] = useState(false);
     const [passwordStrength, setPasswordStrength] = useState({
         score: 0,
         feedback: ""
     });
-    const [suggestions, setSuggestions] = useState([]);
+    const [imagePreview, setImagePreview] = useState("");
+
+    // Admin-controlled domains
+    const domains = [
+        "Frontend Development",
+        "Backend Development",
+        "Full Stack Development",
+        "MERN Stack",
+        "MEAN Stack",
+
+        "Data Science",
+        "Machine Learning",
+        "Artificial Intelligence",
+
+        "DevOps",
+        "Cloud Computing",
+        "Cyber Security",
+
+        "UI/UX Design",
+        "Android Development",
+        "iOS Development",
+
+        "Software Testing / QA",
+        "Blockchain Development",
+        "Game Development",
+
+
+        "Human Resources",
+        "Business Development",
+        "Digital Marketing",
+        "Social Media Management",
+
+        "Content Writing",
+        "Graphic Design",
+        "Finance",
+        "Accounting",
+
+        "Sales & Marketing",
+        "Customer Support",
+        "Operations Management",
+        "Project Management",
+        "Email and Outreaching",
+        "Public Relations",
+        "Event Management", 
+        "Quality Assurance",
+    ];
+
 
     // Password strength checker
     const checkPasswordStrength = (password) => {
@@ -129,53 +171,48 @@ const RegisterPage = () => {
         }
     };
 
-    const addSkill = () => {
-        const skillToAdd = formData.currentSkill.trim();
-        if (skillToAdd && !formData.skills.includes(skillToAdd)) {
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Validate file type and size
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+
+            if (!validTypes.includes(file.type)) {
+                setError('Please select a valid image file (JPEG, PNG, GIF)');
+                return;
+            }
+
+            if (file.size > maxSize) {
+                setError('Image size should be less than 5MB');
+                return;
+            }
+
             setFormData(prev => ({
                 ...prev,
-                skills: [...prev.skills, skillToAdd],
-                currentSkill: ""
+                profileImage: file
             }));
-            setSuggestions([]); // Clear suggestions after adding
-        }
-    };
 
-    const addSuggestedSkill = (skill) => {
-        if (!formData.skills.includes(skill)) {
-            setFormData(prev => ({
-                ...prev,
-                skills: [...prev.skills, skill],
-                currentSkill: "" // Clear the input field
-            }));
-        }
-        setSuggestions([]);
-    };
-
-    const removeSkill = (skillToRemove) => {
-        setFormData(prev => ({
-            ...prev,
-            skills: prev.skills.filter(skill => skill !== skillToRemove)
-        }));
-    };
-
-    const handleSkillKeyPress = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            addSkill();
+            // Create image preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+            setError("");
         }
     };
 
     const validateForm = () => {
         // Required fields validation
         const requiredFields = [
-            'name', 'email', 'phone', 'password',
-            'college', 'course', 'yearOfStudy'
+            'name', 'email', 'phone', 'password', 'confirmPassword',
+            'privateKey', 'experience', 'domain'
         ];
 
         const missingFields = requiredFields.filter(field => !formData[field]);
         if (missingFields.length > 0) {
-            setError(`Please fill in all required fields: ${missingFields.join(", ")}`);
+            setError(`Please fill in all required fields`);
             return false;
         }
 
@@ -204,122 +241,20 @@ const RegisterPage = () => {
             return false;
         }
 
-        // Year of study validation
-        const year = parseInt(formData.yearOfStudy);
-        if (isNaN(year) || year < 1 || year > 5) {
-            setError("Year of study must be between 1 and 5");
+        // Experience validation
+        const experience = parseInt(formData.experience);
+        if (isNaN(experience) || experience < 0 || experience > 50) {
+            setError("Experience must be between 0 and 50 years");
+            return false;
+        }
+
+        // Private key validation (basic length check)
+        if (formData.privateKey.length < 8) {
+            setError("Private key must be at least 8 characters long");
             return false;
         }
 
         return true;
-    };
-
-    const allSkills = [
-        // ============================
-        // 🔹 TECHNICAL SKILLS (DEV)
-        // ============================
-        "JavaScript", "TypeScript", "Python", "Java", "C", "C++", "C#", "Go", "PHP", "Ruby",
-        "HTML", "CSS", "Tailwind CSS", "Bootstrap", "SASS",
-        "React", "Next.js", "Vue.js", "Angular", "Svelte",
-        "Node.js", "Express.js", "NestJS", "Django", "Flask", "Spring Boot",
-        "MongoDB", "MySQL", "PostgreSQL", "SQLite", "Firebase", "Oracle",
-        "Git", "GitHub", "GitLab", "Bitbucket",
-
-        // ============================
-        // 🔹 DATA / AI / MACHINE LEARNING
-        // ============================
-        "Machine Learning", "Deep Learning", "Data Science", "Data Analysis",
-        "TensorFlow", "Keras", "PyTorch",
-        "Pandas", "NumPy", "Matplotlib", "Scikit-learn",
-        "Prompt Engineering", "AI Tools", "NLP", "Computer Vision",
-
-        // ============================
-        // 🔹 APP / MOBILE DEVELOPMENT
-        // ============================
-        "React Native", "Android Development", "Kotlin", "Java (Android)",
-        "Swift", "iOS Development", "Flutter", "Dart",
-
-        // ============================
-        // 🔹 CYBER SECURITY / CLOUD
-        // ============================
-        "Cyber Security", "Ethical Hacking", "Penetration Testing",
-        "AWS", "Azure", "Google Cloud", "DevOps",
-        "Docker", "Kubernetes", "Linux", "Shell Scripting",
-
-        // ============================
-        // 🔹 DESIGN & CREATIVE
-        // ============================
-        "UI/UX Design", "Figma", "Adobe XD", "Photoshop", "Illustrator",
-        "Canva", "Graphic Design", "Video Editing",
-        "After Effects", "Premiere Pro",
-
-        // ============================
-        // 🔹 DIGITAL MARKETING
-        // ============================
-        "SEO", "Content Writing", "Copywriting",
-        "Social Media Management", "Facebook Ads",
-        "Google Ads", "Email Marketing", "Influencer Marketing",
-        "Brand Management",
-
-        // ============================
-        // 🔹 BUSINESS / MANAGEMENT
-        // ============================
-        "Business Development", "Sales", "Marketing",
-        "Cold Calling", "Lead Generation",
-        "Operations Management", "Project Management",
-        "Product Management", "Research & Analysis",
-
-        // ============================
-        // 🔹 HR / RECRUITMENT
-        // ============================
-        "Human Resources", "Recruitment", "Talent Acquisition",
-        "Employee Engagement", "Training & Development",
-        "Interview Skills", "Payroll Processing",
-
-        // ============================
-        // 🔹 FINANCE / ACCOUNTING
-        // ============================
-        "Accounting", "Finance", "Investment Analysis",
-        "Bookkeeping", "Tally", "GST Filing",
-        "Financial Modeling", "Excel", "Power BI",
-        "Data Visualization",
-
-        // ============================
-        // 🔹 OFFICE SKILLS
-        // ============================
-        "MS Word", "MS Excel", "MS PowerPoint",
-        "Email Communication", "Professional Writing",
-        "Customer Support", "Client Handling",
-        "Documentation", "Report Writing",
-
-        // ============================
-        // 🔹 SOFT SKILLS (ANYONE CAN SELECT)
-        // ============================
-        "Communication", "Leadership", "Teamwork", "Problem Solving",
-        "Creativity", "Time Management", "Critical Thinking",
-        "Adaptability", "Public Speaking", "Negotiation",
-
-        // ============================
-        // 🔹 OTHER GENERAL SKILLS
-        // ============================
-        "Event Management", "Photography", "Video Editing",
-        "Blogging", "Content Creation", "Podcast Editing",
-        "Typing", "Data Entry", "Customer Service",
-
-        // Add more if needed
-    ];
-
-    const handleSkillInput = (value) => {
-        handleInputChange("currentSkill", value);
-
-        if (value.length >= 1) {
-            const filtered = allSkills.filter(skill =>
-                skill.toLowerCase().startsWith(value.toLowerCase())
-            );
-            setSuggestions(filtered.slice(0, 6)); // show only top 6
-        } else {
-            setSuggestions([]);
-        }
     };
 
     const handleSubmit = async (e) => {
@@ -341,16 +276,33 @@ const RegisterPage = () => {
         setIsLoading(true);
 
         try {
-            // Prepare data for API call (remove temporary fields)
-            const { ...submitData } = formData;
+            // Create FormData for file upload
+            const submitData = new FormData();
+            submitData.append('name', formData.name);
+            submitData.append('email', formData.email);
+            submitData.append('phone', formData.phone);
+            submitData.append('password', formData.password);
+            submitData.append('privateKey', formData.privateKey);
+            submitData.append('experience', formData.experience);
+            submitData.append('domain', formData.domain);
+            submitData.append('linkedinUrl', formData.linkedinUrl);
+            submitData.append('githubUrl', formData.githubUrl);
 
-            await axios.post("/api/register/intern", submitData);
+            if (formData.profileImage) {
+                submitData.append('profileImage', formData.profileImage);
+            }
 
-            setSuccess("Registration successful! Redirecting to login...");
+            await axios.post('/api/mentors/register', submitData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            setSuccess("Mentor registered successfully! Redirecting to login...");
 
             // Redirect to login after 2 seconds
             setTimeout(() => {
-                navigate("/intern-login");
+                navigate("/mentor-login");
             }, 2000);
 
         } catch (err) {
@@ -381,13 +333,13 @@ const RegisterPage = () => {
         <div className="min-h-screen bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 py-8 px-4 sm:px-6 lg:px-8 overflow-auto">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
-                <div className="flex items-center justify-center flex-col mb-8 ">
+                <div className="flex items-center justify-center flex-col mb-8">
                     <img src="/GraphuraLogo.jpg" alt="Graphura Logo" className="h-24 rounded-full" />
                     <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                        Join Placement Programme
+                        Mentor Registration
                     </h1>
                     <p className="text-gray-600 text-lg">
-                        Create your account and start your internship journey
+                        Join our platform as a mentor and guide the next generation
                     </p>
                 </div>
 
@@ -401,7 +353,6 @@ const RegisterPage = () => {
                             </h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                                 <div>
                                     <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
                                         <User className="w-4 h-4 mr-2 text-blue-500" />
@@ -445,6 +396,33 @@ const RegisterPage = () => {
                                         className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                                         required
                                     />
+                                </div>
+
+                                <div>
+                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                        <Key className="w-4 h-4 mr-2 text-blue-500" />
+                                        Private Key *
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type={showPrivateKey ? "text" : "password"}
+                                            placeholder="Enter your private key"
+                                            value={formData.privateKey}
+                                            onChange={(e) => handleInputChange("privateKey", e.target.value)}
+                                            className="w-full p-3 pr-10 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                            required
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPrivateKey(!showPrivateKey)}
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                        >
+                                            {showPrivateKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                        </button>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Contact admin to get your private registration key
+                                    </p>
                                 </div>
 
                                 <div>
@@ -530,223 +508,52 @@ const RegisterPage = () => {
                             </div>
                         </div>
 
-                        {/* 🎓 Academic Info Section */}
-                        <div className="border-b border-gray-200 pb-6">
-                            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                                <GraduationCap className="w-5 h-5 mr-2 text-green-500" />
-                                Academic Information
-                            </h2>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <BookOpen className="w-4 h-4 mr-2 text-green-500" />
-                                        College/University *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        placeholder="Enter your college name"
-                                        value={formData.college}
-                                        onChange={(e) => handleInputChange("college", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
-                                        required
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <BookOpen className="w-4 h-4 mr-2 text-green-500" />
-                                        Course/Program *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        placeholder="e.g., B.Tech, B.Sc, BCA"
-                                        value={formData.course}
-                                        onChange={(e) => handleInputChange("course", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
-                                        required
-                                    />
-                                </div>
-
-                                <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <BookOpen className="w-4 h-4 mr-2 text-green-500" />
-                                        Year of Study *
-                                    </label>
-                                    <select
-                                        value={formData.yearOfStudy}
-                                        onChange={(e) => handleInputChange("yearOfStudy", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
-                                        required
-                                    >
-                                        <option value="">Select Year</option>
-                                        <option value="1">1st Year</option>
-                                        <option value="2">2nd Year</option>
-                                        <option value="3">3rd Year</option>
-                                        <option value="4">4th Year</option>
-                                        <option value="5">5th Year</option>
-                                    </select>
-                                </div>
-
-
-                            </div>
-                        </div>
-
-                        {/* 💼 Professional Info Section */}
+                        {/* 💼 Professional Details Section */}
                         <div className="border-b border-gray-200 pb-6">
                             <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
                                 <Briefcase className="w-5 h-5 mr-2 text-purple-500" />
-                                Professional Information
+                                Professional Details
                             </h2>
-
-                            <div>
-                                <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                    <BookOpen className="w-4 h-4 mr-2 text-green-500" />
-                                    Domain
-                                </label>
-
-                                <select
-                                    value={formData.domain}
-                                    onChange={(e) => handleInputChange("domain", e.target.value)}
-                                    className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white"
-                                >
-                                    <option value="">Select Domain</option>
-
-                                    {/* 🔹 Technical Domains */}
-                                    <optgroup label="Technical Domains">
-                                        <option value="Frontend Development">Frontend Development</option>
-                                        <option value="Backend Development">Backend Development</option>
-                                        <option value="Full Stack Development">Full Stack Development</option>
-                                        <option value="MERN Stack">MERN Stack</option>
-                                        <option value="MEAN Stack">MEAN Stack</option>
-
-                                        <option value="Data Science">Data Science</option>
-                                        <option value="Machine Learning">Machine Learning</option>
-                                        <option value="Artificial Intelligence">Artificial Intelligence</option>
-
-                                        <option value="DevOps">DevOps</option>
-                                        <option value="Cloud Computing">Cloud Computing</option>
-                                        <option value="Cyber Security">Cyber Security</option>
-
-                                        <option value="UI/UX Design">UI / UX Design</option>
-                                        <option value="Android Development">Android Development</option>
-                                        <option value="iOS Development">iOS Development</option>
-
-                                        <option value="Software Testing / QA">Software Testing / QA</option>
-                                        <option value="Blockchain Development">Blockchain Development</option>
-                                        <option value="Game Development">Game Development</option>
-                                    </optgroup>
-
-                                    {/* 🔹 Non-Technical Domains */}
-                                    <optgroup label="Non-Technical Domains">
-                                        <option value="Human Resources">Human Resources (HR)</option>
-                                        <option value="Business Development">Business Development (BD)</option>
-                                        <option value="Digital Marketing">Digital Marketing</option>
-                                        <option value="Social Media Management">Social Media Management</option>
-
-                                        <option value="Content Writing">Content Writing</option>
-                                        <option value="Graphic Design">Graphic Design</option>
-                                        <option value="Finance">Finance</option>
-                                        <option value="Accounting">Accounting</option>
-
-                                        <option value="Sales & Marketing">Sales & Marketing</option>
-                                        <option value="Customer Support">Customer Support</option>
-                                        <option value="Operations Management">Operations Management</option>
-                                        <option value="Project Management">Project Management</option>
-                                         <option value="Email and Outreaching">Email and Outreaching</option>
-                                        <option value="Event Management">Event Management</option>
-                                        <option value="Quality Assurance">Quality Assurance</option>
-                                    </optgroup>
-                                </select>
-
-                                <span className="text-xs text-green-500 block mt-1 ml-2">
-                                    # Select your domain as per Graphura India Private Limited Internship Programme.
-                                </span>
-                            </div>
-
-
-
-                            {/* Skills Input */}
-                            <div className="mb-4 mt-4">
-                                <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                    <Code className="w-4 h-4 mr-2 text-purple-500" />
-                                    Skills *
-                                </label>
-
-                                <div className="relative">
-                                    {/* Input */}
-                                    <div className="flex space-x-2 mb-3">
-                                        <input
-                                            type="text"
-                                            placeholder="Add a skill (e.g., JavaScript, Python)"
-                                            value={formData.currentSkill}
-                                            onChange={(e) => handleSkillInput(e.target.value)}
-                                            onKeyPress={handleSkillKeyPress}
-                                            className="flex-1 p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={addSkill}
-                                            className="px-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
-                                        >
-                                            Add
-                                        </button>
-                                    </div>
-
-                                    {/* 🔽 Auto Suggestions Dropdown */}
-                                    {suggestions.length > 0 && (
-                                        <div className="absolute z-20 bg-white border border-gray-200 rounded-xl shadow-lg w-full max-h-48 overflow-y-auto">
-                                            {suggestions.map((skill, index) => (
-                                                <div
-                                                    key={index}
-                                                    onClick={() => addSuggestedSkill(skill)}
-                                                    className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm"
-                                                >
-                                                    {skill}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Skill Tags */}
-                                <div className="flex flex-wrap gap-2 mt-2">
-                                    {formData.skills.map((skill, index) => (
-                                        <div
-                                            key={index}
-                                            className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center space-x-2"
-                                        >
-                                            <span>{skill}</span>
-                                            <button
-                                                type="button"
-                                                onClick={() => removeSkill(skill)}
-                                                className="text-blue-600 hover:text-blue-800 ml-1"
-                                            >
-                                                ×
-                                            </button>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {formData.skills.length === 0 && (
-                                    <p className="text-sm text-gray-500 mt-2">Add at least one skill</p>
-                                )}
-                            </div>
-
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <FileText className="w-4 h-4 mr-2 text-purple-500" />
-                                        Resume URL
+                                        <Calendar className="w-4 h-4 mr-2 text-purple-500" />
+                                        Years of Experience *
                                     </label>
                                     <input
-                                        type="url"
-                                        placeholder="Link to your resume (Google Drive, etc.)"
-                                        value={formData.resumeUrl}
-                                        onChange={(e) => handleInputChange("resumeUrl", e.target.value)}
+                                        type="number"
+                                        min="0"
+                                        max="50"
+                                        placeholder="Enter years of experience"
+                                        value={formData.experience}
+                                        onChange={(e) => handleInputChange("experience", e.target.value)}
                                         className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        required
                                     />
+                                </div>
+
+                                <div>
+                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+                                        <Code className="w-4 h-4 mr-2 text-purple-500" />
+                                        Primary Domain *
+                                    </label>
+                                    <select
+                                        value={formData.domain}
+                                        onChange={(e) => handleInputChange("domain", e.target.value)}
+                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white"
+                                        required
+                                    >
+                                        <option value="">Select Your Domain</option>
+                                        {domains.map((domain, index) => (
+                                            <option key={index} value={domain}>
+                                                {domain}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Select your primary expertise domain
+                                    </p>
                                 </div>
 
                                 <div>
@@ -775,6 +582,64 @@ const RegisterPage = () => {
                                         onChange={(e) => handleInputChange("githubUrl", e.target.value)}
                                         className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                                     />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 📸 Profile Photo Upload */}
+                        <div className="border-b border-gray-200 pb-6">
+                            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <Upload className="w-5 h-5 mr-2 text-green-500" />
+                                Profile Photo
+                            </h2>
+
+                            <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                                {/* Image Preview */}
+                                <div className="flex-shrink-0">
+                                    <div className="w-32 h-32 rounded-full border-4 border-gray-200 overflow-hidden bg-gray-100 flex items-center justify-center">
+                                        {imagePreview ? (
+                                            <img
+                                                src={imagePreview}
+                                                alt="Profile preview"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <User className="w-12 h-12 text-gray-400" />
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Upload Area */}
+                                <div className="flex-1">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Upload Profile Image
+                                    </label>
+                                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors duration-200">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleFileChange}
+                                            className="hidden"
+                                            id="profileImage"
+                                        />
+                                        <label
+                                            htmlFor="profileImage"
+                                            className="cursor-pointer block"
+                                        >
+                                            <Upload className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                                            <div className="flex flex-col items-center space-y-1">
+                                                <span className="text-blue-600 font-medium">Click to upload</span>
+                                                <span className="text-gray-500 text-sm">or drag and drop</span>
+                                                <span className="text-gray-400 text-xs">PNG, JPG, GIF up to 5MB</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    {formData.profileImage && (
+                                        <p className="mt-2 text-sm text-green-600 flex items-center">
+                                            <CheckCircle className="w-4 h-4 mr-1" />
+                                            Selected: {formData.profileImage.name}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -844,7 +709,7 @@ const RegisterPage = () => {
                             {isLoading ? (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                             ) : null}
-                            <span>{isLoading ? "Creating Account..." : "Create Account"}</span>
+                            <span>{isLoading ? "Creating Mentor Account..." : "Register as Mentor"}</span>
                         </button>
                     </form>
 
@@ -853,7 +718,7 @@ const RegisterPage = () => {
                         <p className="text-gray-600">
                             Already have an account?{" "}
                             <button
-                                onClick={() => navigate("/intern-login")}
+                                onClick={() => navigate("/mentor-login")}
                                 className="font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200 underline underline-offset-2"
                             >
                                 Sign In
@@ -865,17 +730,17 @@ const RegisterPage = () => {
 
             {/* Custom CSS for shake animation */}
             <style jsx>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-5px); }
-          75% { transform: translateX(5px); }
-        }
-        .animate-shake {
-          animation: shake 0.5s ease-in-out;
-        }
-      `}</style>
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-5px); }
+                    75% { transform: translateX(5px); }
+                }
+                .animate-shake {
+                    animation: shake 0.5s ease-in-out;
+                }
+            `}</style>
         </div>
     );
 };
 
-export default RegisterPage;
+export default MentorRegister;
