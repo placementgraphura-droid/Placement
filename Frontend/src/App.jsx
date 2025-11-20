@@ -5,6 +5,8 @@ import LoginPage from './Pages/Auth/LoginIntern';
 import RegisterPage from './Pages/Auth/RegisterIntern';
 import LoginMentor from './Pages/Auth/LoginMentor';
 import MentorRegister from './Pages/Auth/RegisterMentor';
+import LoginHiringTeam from './Pages/Auth/LoginHiringTeam';
+import LoginAdmin from './Pages/Auth/LoginAdminPage';
 
 
 function App() {
@@ -17,6 +19,9 @@ function App() {
 
          <Route path="/mentor-login" element={<LoginMentor/>} />
          <Route path="/register-mentor" element={<MentorRegister/>} />
+         <Route path="/hiring-team-login" element={<LoginHiringTeam/>} />
+          <Route path="/admin-login" element={<LoginAdmin/>} />
+
 
     
       </Routes>
