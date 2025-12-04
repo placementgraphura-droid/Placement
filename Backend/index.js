@@ -13,7 +13,7 @@ import authRoutes from './routers/authRouters.js';
 import internRoutes from './routers/InternRoutes.js';
 // import MentorRoutes from './model/RegisterDB/mentorSchema.js';
 import MentorRoutes from './routers/MentorRoutes.js';
-
+import HiringRoutes from './routers/HiringRoutes.js';
 import paymentRoutes from './routers/PaymentRoutes.js';
 
 
@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use('/api', authRoutes);
 app.use('/api', internRoutes);
 app.use('/api', MentorRoutes);
-
+app.use('/api', HiringRoutes);
 app.use("/api", paymentRoutes);
 
 
