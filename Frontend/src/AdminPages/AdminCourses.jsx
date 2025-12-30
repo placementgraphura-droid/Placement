@@ -504,7 +504,6 @@ const AdminClasses = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Admin Header */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-gray-800 to-gray-900  p-8 md:p-12 mb-10 shadow-2xl">
           <div className="relative z-10">
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
