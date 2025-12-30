@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const internSchema = new mongoose.Schema({
+
   // 👤 Basic Details
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -10,74 +11,89 @@ const internSchema = new mongoose.Schema({
   // 🎓 Academic Info
   college: { type: String, required: true },
   course: { type: String, required: true },
-  yearOfStudy: { type: Number, required: true },
+  yearOfStudy: { type: Number},
   domain: { type: String },
 
   // 💼 Professional Info
-  skills: [
+  skills: [{ name: { type: String, required: true } }],
+  resumeUrl: String,
+  linkedinUrl: String,
+  githubUrl: String,
+  profileImage: String,
+
+  // 🧩 Feedback
+  mentorFeedback: [{
+    comment: String,
+    rating: { type: Number, min: 1, max: 5 },
+    improvementSuggestions: String,
+    date: { type: Date, default: Date.now }
+  }],
+
+  hiringTeamFeedback: [{
+    comment: String,
+    rating: { type: Number, min: 1, max: 5 },
+    improvementSuggestions: String,
+    date: { type: Date, default: Date.now }
+  }],
+
+  /* =========================================================
+     💰 COMBINED PAYMENT SYSTEM (COURSES + JOB PACKAGES)
+     ========================================================= */
+
+  purchases: [
     {
-      name: { type: String, required: true }
+      purchaseCategory: {
+        type: String,
+        enum: ["COURSE", "JOB_PACKAGE"],
+        required: true
+      },
+
+      // 🎥 COURSE DETAILS
+      courseDetails: {
+        courseType: {
+          type: String,
+          enum: ["CV_BUILDING", "INTERVIEW_PREP", "COMBO"]
+        },
+        totalSessions: Number,       // 5 / 10 / 15
+        liveSessions: Number,        // 2 / 5 / 7
+        recordedSessions: Number     // auto or manual
+      },
+
+      // 💼 JOB PACKAGE DETAILS
+      jobPackageDetails: {
+        packageType: {
+          type: String,
+          enum: ["Silver", "NON_BLUE", "BLUE", "SUPER_BLUE"]
+        },
+        maxPackageLPA: Number,       // 5 / 10 / null
+        creditsGiven: Number,        // 4 / 6 / 8
+        creditsRemaining: Number
+      },
+
+      // 💳 PAYMENT INFO (COMMON)
+      amountPaid: { type: Number, required: true },
+      currency: { type: String, default: "INR" },
+      paymentId: String,
+      paymentStatus: {
+        type: String,
+        enum: ["SUCCESS", "FAILED", "PENDING"],
+        default: "SUCCESS"
+      },
+      purchasedAt: { type: Date, default: Date.now }
     }
   ],
-  resumeUrl: { type: String },
-  linkedinUrl: { type: String },
-  githubUrl: { type: String },
-  profileImage: { type: String },
 
-  // 🧩 Internship Details
-
-  mentorFeedback: [
-    {
-      comment: String,
-      rating: { type: Number, min: 1, max: 5 },
-      date: { type: Date, default: Date.now },
-      improvementSuggestions: String
-    }
-  ],
-
-  hiringTeamFeedback: [
-    {
-      comment: String,
-      rating: { type: Number, min: 1, max: 5 },
-      date: { type: Date, default: Date.now },
-      improvementSuggestions: String
-    }
-  ],
-
-
-  // 🌟 Paid Plans (Silver / Gold / Platinum)
-  planCategory: {
-    type: String,
-    enum: ["SILVER", "GOLD", "PLATINUM", "NONE"],
-    default: "NONE"
-  },
-
-  // 🎯 Job Credits After Buying a Plan
-  jobCredits: { type: Number, default: 0 },  // e.g. SILVER = 10, GOLD = 25, PLATINUM = 50
-
-  // 🔄 Credit Usage History
+  // 🔄 Job Credit Usage
   creditHistory: [
     {
-      action: { type: String }, // e.g. "APPLIED JOB"
-      creditsUsed: { type: Number },
-      date: { type: Date, default: Date.now },
-      jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job" }
+      action: { type: String, enum: ["JOB_APPLIED"] },
+      creditsUsed: Number,
+      jobId: { type: mongoose.Schema.Types.ObjectId, ref: "Job" },
+      date: { type: Date, default: Date.now }
     }
   ],
 
-  // 💰 Payment History (multiple upgrades allowed)
-  paymentHistory: [
-    {
-      amount: Number,
-      currency: { type: String, default: "INR" },
-      date: { type: Date, default: Date.now },
-      paymentId: String,
-      status: String,
-      planPurchased: String, // SILVER / GOLD / PLATINUM
-    }
-  ],
-
-  isActive: { type: Boolean, default: true },
+  isActive: { type: Boolean, default: true }
 
 }, { timestamps: true });
 

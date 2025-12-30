@@ -25,7 +25,7 @@ export const registerIntern = async (req, res) => {
       githubUrl
     } = req.body;
 
-    if (!name || !email || !phone || !password || !college || !course || !yearOfStudy) {
+    if (!name || !email || !phone || !password || !college || !course ) {
       return res.status(400).json({ message: "All required fields must be filled." });
     }
 
@@ -104,6 +104,10 @@ export const internLogin = async (req, res) => {
     const intern = await Intern.findOne({ email });
     if (!intern) {
       return res.status(404).json({ message: "Intern not found" });
+    }
+
+    if (!intern.isActive) {
+      return res.status(403).json({ message: "Account is inactive Please contact admin or support team." });
     }
 
     const isMatch = await bcrypt.compare(password, intern.password);
@@ -231,10 +235,15 @@ export const loginMentor = async (req, res) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
+
     // 2. Check mentor exists
     const mentor = await Mentor.findOne({ email });
     if (!mentor) {
       return res.status(404).json({ message: "Mentor not found" });
+    }
+
+    if (!mentor.isActive) {
+      return res.status(403).json({ message: "Account is inactive Please contact admin or support team." });
     }
 
     // 3. Match password
@@ -346,6 +355,10 @@ export const loginHiring = async (req, res) => {
     const Hiring = await HiringTeam.findOne({ email });
     if (!Hiring) {
       return res.status(404).json({ message: "HR not found" });
+    }
+
+    if (Hiring.isactive === false) {
+      return res.status(403).json({ message: "Account is inactive Please contact admin or support team." });
     }
 
     // 3. Match password

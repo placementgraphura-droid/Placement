@@ -11,6 +11,12 @@ import {
   Menu,
   Home,
   LogOut,
+  BarChart3,
+  FileText,
+  PlayCircle,
+  ShoppingBag,
+  UserCog,
+  Building
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -20,15 +26,18 @@ import AdminCourses from "./AdminPages/AdminCourses.jsx";
 import AdminMaterials from "./AdminPages/AdminMaterials.jsx";
 import AdminVideos from "./AdminPages/AdminVideos";
 import AdminJobs from "./AdminPages/AdminJobs.jsx";
-import AdminAccess from "./AdminPages/AdminAccess";
 import AdminPayments from "./AdminPages/AdminPayments";
 import AdminDashboardHome from "./AdminPages/dminHomeDashboard.jsx"
+import HR_page from "./AdminPages/HR_page.jsx";
+import Mentor from "./AdminPages/MentorPage.jsx";
 
 const AdminDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile] = useState(false);
   const navigate = useNavigate();
+
+
 
   // ============================
   // LOGOUT FUNCTION
@@ -52,7 +61,7 @@ const AdminDashboard = () => {
     switch (activePage) {  
       case "users":
         return <AdminUsers />;
-      case "courses":
+      case "classes":
         return <AdminCourses />;
       case "materials":
         return <AdminMaterials />;
@@ -62,6 +71,10 @@ const AdminDashboard = () => {
         return <AdminJobs />;
       case "payments":
         return <AdminPayments />;
+      case "mentors":
+        return <Mentor />;
+      case "hr_team":
+        return <HR_page />;
       default:
         case "Dashboard":
         return <AdminDashboardHome />;
@@ -72,15 +85,15 @@ const AdminDashboard = () => {
   // ADMIN SIDEBAR MENU
   // ============================
   const menuItems = [
-    { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, color: "text-blue-500" },
-    { key: "users", label: "Users", icon: Users, color: "text-indigo-500" },
-    { key: "courses", label: "Courses", icon: BookOpen, color: "text-green-500" },
-    { key: "materials", label: "Study Materials", icon: BookOpen, color: "text-red-500" },
-    { key: "videos", label: "Video Library", icon: Video, color: "text-purple-500" },
-    { key: "jobs", label: "Jobs", icon: Briefcase, color: "text-yellow-500" },
-    // { key: "access", label: "Access Control", icon: Shield, color: "text-blue-300" },
-    { key: "payments", label: "Payments", icon: CreditCard, color: "text-orange-500" },
-    { key: "settings", label: "System Settings", icon: Settings, color: "text-gray-300" },
+    { key: "dashboard", label: "Dashboard", icon: BarChart3 },
+    { key: "users", label: "Users", icon: Users },
+    { key: "classes", label: "Classes", icon: BookOpen },
+    { key: "materials", label: "Study Materials", icon: FileText },
+    { key: "videos", label: "Video Library", icon: PlayCircle },
+    { key: "jobs", label: "Jobs", icon: Briefcase },
+    { key: "payments", label: "Payments", icon: CreditCard },
+    { key: "mentors", label: "Mentors", icon: UserCog },
+    { key: "hr_team", label: "HR Team", icon: Building },
   ];
 
   // ============================
@@ -88,62 +101,68 @@ const AdminDashboard = () => {
   // ============================
   const Sidebar = () => {
     return (
-      <div className="w-64 bg-gray-800 text-white flex flex-col h-full">
-
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col h-full shadow-sm">
         {/* Sidebar Header */}
-        <div className="p-4 bg-gradient-to-r from-purple-600 to-indigo-600">
-          <h1 className="font-bold text-lg">Admin Panel</h1>
-          <p className="text-xs text-purple-100">Platform Management</p>
+        <div className="p-6 border-b border-gray-200">
+          <h1 className="font-bold text-2xl text-gray-900 tracking-tight">ADMIN</h1>
+          <p className="text-sm text-gray-500 mt-1">Management Console</p>
         </div>
 
         {/* Menu Buttons */}
-        <nav className="flex-1 p-2">
+        <nav className="flex-1 p-4">
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
               <button
                 key={item.key}
-                className={`w-full flex items-center p-3 rounded-lg mb-1 ${
-                  activePage === item.key ? `bg-white bg-opacity-10 ${item.color}` : `hover:bg-white/5 text-white`
+                className={`w-full flex items-center p-3 rounded-lg mb-1 transition-all duration-200 ${
+                  activePage === item.key 
+                    ? "bg-gray-900 text-white shadow-sm" 
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                 }`}
                 onClick={() => {
                   setActivePage(item.key);
                   if (isMobile) setMobileOpen(false);
                 }}
               >
-                <Icon className={`mr-3 ${item.color}`} size={20} />
-                {item.label}
+                <Icon 
+                  className={`mr-3 ${
+                    activePage === item.key 
+                      ? "text-white" 
+                      : "text-gray-500"
+                  }`} 
+                  size={20} 
+                />
+                <span className="font-medium">{item.label}</span>
               </button>
             );
           })}
 
-          {/* Footer Buttons */}
-          <div className="mt-4 border-t border-gray-700 pt-4 space-y-2">
-            
+          <div className="border-t border-gray-200 space-y-2">
             <button
               onClick={handleBackToHome}
-              className="w-full flex items-center p-3 rounded-lg hover:bg-white/5"
+              className="w-full flex items-center p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
             >
-              <Home className="mr-3 text-gray-300" size={20} />
-              Back to Home
+              <Home className="mr-3 text-gray-500" size={20} />
+              <span className="font-medium">Back to Home</span>
             </button>
 
             <button
               onClick={handleLogout}
-              className="w-full flex items-center p-3 rounded-lg text-red-400 hover:bg-red-500/10"
+              className="w-full flex items-center p-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
             >
-              <LogOut className="mr-3" size={20} />
-              Logout
+              <LogOut className="mr-3 text-gray-500" size={20} />
+              <span className="font-medium">Logout</span>
             </button>
           </div>
         </nav>
+
       </div>
     );
   };
 
   return (
     <div className="flex h-screen bg-gray-50">
-
       {/* Mobile Overlay */}
       {mobileOpen && (
         <div
@@ -161,32 +180,43 @@ const AdminDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-
+      <div className="flex-1 flex flex-col overflow-hidden bg-white">
         {/* Top Bar */}
-        <header className="bg-white border-b">
-          <div className="flex items-center justify-between px-4 py-3">
-            
+        <header className="bg-white border-b border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between px-6 py-4">
             {/* Mobile Menu Button */}
             <button 
               onClick={() => setMobileOpen(true)} 
-              className="md:hidden p-2 hover:bg-gray-100 rounded"
+              className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <Menu />
+              <Menu className="text-gray-700" />
             </button>
 
-            {/* Page Title */}
-            <h1 className="text-xl font-bold">
-              {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
-            </h1>
+            {/* Page Title and Breadcrumb */}
+            <div className="flex items-center space-x-3">
+              <h1 className="text-xl font-bold text-gray-900">
+                {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
+              </h1>
+              <span className="text-gray-400">/</span>
+              <span className="text-sm text-gray-500">Admin Panel</span>
+            </div>
+
+            {/* User/Status Badge */}
+            <div className="hidden md:flex items-center space-x-3">
+              <div className="text-sm text-gray-600">
+                Logged in as <span className="font-semibold text-gray-900">Admin</span>
+              </div>
+              <div className="w-2 h-2 rounded-full bg-green-500"></div>
+            </div>
           </div>
         </header>
 
         {/* Content */}
-        <main className="flex-1 overflow-auto p-4 md:p-6">
-          {renderPage()}
+        <main className="flex-1 overflow-auto p-4 md:p-6 bg-gray-50">
+          <div className="max-w-full">
+            {renderPage()}
+          </div>
         </main>
-
       </div>
     </div>
   );

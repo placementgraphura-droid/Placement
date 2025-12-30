@@ -1,7 +1,9 @@
 import HiringTeam from "../model/RegisterDB/hiringSchema.js";
 import JobPost from "../model/JobPostDB/JobSchema.js";
 import Intern from "../model/RegisterDB/internSchema.js";
-
+import { Parser } from "json2csv";
+import ExcelJS from "exceljs";
+import JobApplication from "../model/JobPostDB/JobApplication.js";
 
 export const getProfile = async (req, res) => {
   try {
@@ -313,6 +315,133 @@ export const submitHiringFeedback = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to submit feedback"
+    });
+  }
+};
+
+
+
+export const exportApplicants = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const format = req.query.format || "csv";
+
+    // 🔎 Validate Job
+    const job = await JobPost.findById(jobId).lean();
+    if (!job) {
+      return res.status(404).json({
+        success: false,
+        message: "Job not found",
+      });
+    }
+
+    // 📄 Fetch applications
+    const applications = await JobApplication.find({ job: jobId })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    if (!applications.length) {
+      return res.status(400).json({
+        success: false,
+        message: "No applicants found",
+      });
+    }
+
+    // 🧠 Collect dynamic custom fields
+    const customFieldKeys = new Set();
+    applications.forEach(app => {
+      if (app.customResponses) {
+        Object.keys(app.customResponses).forEach(key =>
+          customFieldKeys.add(key)
+        );
+      }
+    });
+
+    // 🧾 Build rows
+    const rows = applications.map((app, index) => {
+      const baseRow = {
+        "S.No": index + 1,
+        "Full Name": app.full_name || "",
+        "Email": app.email || "",
+        "Mobile Number": app.mobile_number || "",
+        "Resume URL": app.resume || "",
+        "Cover Letter": app.cover_letter || "",
+        "Status": app.status || "APPLIED",
+        "Applied At": new Date(app.appliedAt).toLocaleString(),
+      };
+
+      customFieldKeys.forEach(key => {
+        baseRow[key] =
+          app.customResponses?.[key] !== undefined
+            ? String(app.customResponses[key])
+            : "";
+      });
+
+      return baseRow;
+    });
+
+    // ✅ SAFE JOB TITLE FOR FILE NAME
+    const safeJobTitle = job.title
+      .replace(/[^a-zA-Z0-9-_ ]/g, "")
+      .replace(/\s+/g, "_")
+      .toLowerCase();
+
+    // =========================
+    // 📤 CSV EXPORT
+    // =========================
+    if (format === "csv") {
+      const parser = new Parser({ fields: Object.keys(rows[0]) });
+      const csv = parser.parse(rows);
+
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=applicants_${safeJobTitle}.csv`
+      );
+
+      return res.status(200).send(csv);
+    }
+
+    // =========================
+    // 📊 EXCEL EXPORT
+    // =========================
+    if (format === "excel") {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet("Applicants");
+
+      worksheet.columns = Object.keys(rows[0]).map(key => ({
+        header: key,
+        key,
+        width: 25,
+      }));
+
+      rows.forEach(row => worksheet.addRow(row));
+
+      worksheet.getRow(1).font = { bold: true };
+      worksheet.views = [{ state: "frozen", ySplit: 1 }];
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename=applicants_${safeJobTitle}.xlsx`
+      );
+
+      await workbook.xlsx.write(res);
+      return res.end();
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: "Invalid format. Use csv or excel",
+    });
+  } catch (error) {
+    console.error("Export applicants error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to export applicants",
     });
   }
 };

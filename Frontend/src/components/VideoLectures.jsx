@@ -1,7 +1,7 @@
 // components/VideoLectures.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { GraduationCap, Sparkles, CheckCircle, Play, Clock, Calendar, User, BookOpen, ArrowRight } from 'lucide-react';
+import { GraduationCap, Sparkles, CheckCircle, Play, Clock, Calendar, User, BookOpen, ArrowRight, Lock } from 'lucide-react';
 
 const VideoLectures = () => {
   const [videos, setVideos] = useState([]);
@@ -9,32 +9,54 @@ const VideoLectures = () => {
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadingVideos, setLoadingVideos] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const [allowedCategories, setAllowedCategories] = useState([]);
   const [error, setError] = useState('');
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [activeFilter, setActiveFilter] = useState('All');
 
   // Fetch user's plan information
-  useEffect(() => {
-    const fetchPlan = async () => {
-      try {
-        const { data } = await axios.get('/api/payments/current-plan');
-        if (data.success) {
-          setPlanInfo(data);
-          const paidPlan = data.planCategory && data.planCategory !== 'NONE';
-          setHasAccess(paidPlan);
-        } else {
-          setHasAccess(false);
+useEffect(() => {
+  const fetchPlan = async () => {
+    try {
+      const { data } = await axios.get('/api/payments/current-plan', {
+        withCredentials: true
+      });
+
+      if (data.success && data.purchasedCourses?.length > 0) {
+        // ✅ Get LAST purchased course
+        const lastCourse =
+          data.purchasedCourses[data.purchasedCourses.length - 1];
+
+        setPlanInfo(lastCourse);
+
+        const courseType = lastCourse.courseType;
+        let allowed = [];
+
+        if (courseType === "CV_BUILDING") {
+          allowed = ["CV_BUILDING"];
+        } else if (courseType === "INTERVIEW_PREP") {
+          allowed = ["INTERVIEW_PREP"];
+        } else if (courseType === "COMBO") {
+          allowed = ["CV_BUILDING", "INTERVIEW_PREP"];
         }
-      } catch (err) {
-        console.error('Error fetching plan info:', err);
+
+        setAllowedCategories(allowed);
+        setHasAccess(true);
+      } else {
         setHasAccess(false);
-      } finally {
-        setLoadingPlan(false);
       }
-    };
-    fetchPlan();
-  }, []);
+    } catch (err) {
+      console.error("Error fetching plan info:", err);
+      setHasAccess(false);
+    } finally {
+      setLoadingPlan(false);
+    }
+  };
+
+  fetchPlan();
+}, []);
+
 
   // Fetch videos data from backend
   useEffect(() => {
@@ -44,7 +66,11 @@ const VideoLectures = () => {
         const { data } = await axios.get('/api/intern/video-lectures');
         
         if (data.success) {
-          setVideos(data.videos);
+          // Filter videos based on allowed categories
+          const filteredVideos = data.videos.filter(video => 
+            allowedCategories.includes(video.category)
+          );
+          setVideos(filteredVideos);
         } else {
           setError('Failed to load video lectures');
         }
@@ -56,10 +82,12 @@ const VideoLectures = () => {
       }
     };
 
-    if (hasAccess) {
+    if (hasAccess && allowedCategories.length > 0) {
       fetchVideos();
+    } else if (hasAccess) {
+      setLoadingVideos(false);
     }
-  }, [hasAccess]);
+  }, [hasAccess, allowedCategories]);
 
   const handleWatch = (video) => {
     setSelectedVideo(video);
@@ -79,21 +107,37 @@ const VideoLectures = () => {
     });
   };
 
-  const getSubjectColor = (subject) => {
-    const colors = {
-      'Frontend': 'border-l-blue-500 bg-blue-50 text-blue-700',
-      'Backend': 'border-l-green-500 bg-green-50 text-green-700',
-      'Architecture': 'border-l-purple-500 bg-purple-50 text-purple-700',
-      'Database': 'border-l-orange-500 bg-orange-50 text-orange-700',
-      'Mobile': 'border-l-indigo-500 bg-indigo-50 text-indigo-700',
-      'Other': 'border-l-gray-500 bg-gray-50 text-gray-700'
+  // const getSubjectColor = (subject) => {
+  //   const colors = {
+  //     'Frontend': 'border-l-blue-500 bg-blue-50 text-blue-700',
+  //     'Backend': 'border-l-green-500 bg-green-50 text-green-700',
+  //     'Architecture': 'border-l-purple-500 bg-purple-50 text-purple-700',
+  //     'Database': 'border-l-orange-500 bg-orange-50 text-orange-700',
+  //     'Mobile': 'border-l-indigo-500 bg-indigo-50 text-indigo-700',
+  //     'Other': 'border-l-gray-500 bg-gray-50 text-gray-700'
+  //   };
+  //   return colors[subject] || colors['Other'];
+  // };
+
+  const getCategoryLabel = (category) => {
+    const labels = {
+      'CV_BUILDING': 'CV Building',
+      'INTERVIEW_PREP': 'Interview Prep'
     };
-    return colors[subject] || colors['Other'];
+    return labels[category] || category;
   };
-  
+
+  const getCategoryColor = (category) => {
+    const colors = {
+      'CV_BUILDING': 'bg-blue-100 text-blue-800 border-blue-200',
+      'INTERVIEW_PREP': 'bg-green-100 text-green-800 border-green-200'
+    };
+    return colors[category] || 'bg-gray-100 text-gray-800 border-gray-200';
+  };
+
   const filteredVideos = activeFilter === 'All' 
     ? videos 
-    : videos.filter(video => video.subject === activeFilter);
+    : videos.filter(video => video.category === activeFilter);
 
   // ⏳ While checking plan
   if (loadingPlan) {
@@ -107,8 +151,10 @@ const VideoLectures = () => {
     );
   }
 
-  // ❌ No active plan → show upgrade screen (UNCHANGED)
+  // ❌ No active plan → show upgrade screen
   if (!hasAccess) {
+    const courseType = planInfo?.courseDetails?.courseType || 'No Plan';
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
@@ -133,13 +179,17 @@ const VideoLectures = () => {
             </h2>
             
             <p className="text-gray-600 text-center mb-8">
-              Access a curated library of video lectures from industry experts by upgrading to a premium plan.
+              Access expert video lectures by purchasing our career development courses.
             </p>
 
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">High-quality video lectures</span>
+                <span className="text-gray-700">CV Building Masterclass</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                <span className="text-gray-700">Interview Preparation Series</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
@@ -148,9 +198,16 @@ const VideoLectures = () => {
             </div>
 
             {planInfo && (
-              <p className="text-center text-sm text-gray-500">
-                Current plan: <span className="font-semibold text-gray-700">{planInfo.planCategory || 'Free Tier'}</span>
-              </p>
+              <div className="text-center">
+                <p className="text-sm text-gray-500">
+                  Current plan: <span className="font-semibold text-gray-700">{courseType}</span>
+                </p>
+                {courseType === 'No Plan' && (
+                  <p className="text-sm text-red-500 mt-2">
+                    You haven't purchased any course yet.
+                  </p>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -171,7 +228,7 @@ const VideoLectures = () => {
           
           {/* Loading Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((n) => (
+            {[1, 2, 3].map((n) => (
               <div key={n} className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 animate-pulse">
                 <div className="w-full h-48 bg-gray-200 rounded-lg mb-4"></div>
                 <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
@@ -212,6 +269,40 @@ const VideoLectures = () => {
     );
   }
 
+  // Show access message when user has access but no videos in their category
+  if (hasAccess && videos.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center py-20">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-12 h-12 text-blue-500" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              No Videos Available for Your Course
+            </h3>
+            <p className="text-gray-600 mb-4 max-w-md mx-auto">
+              You have access to: {allowedCategories.map(cat => getCategoryLabel(cat)).join(' & ')}
+            </p>
+            <p className="text-gray-500 text-sm mb-8">
+              Video content for your purchased course will be available soon.
+            </p>
+            <div className="flex flex-wrap gap-3 justify-center">
+              {allowedCategories.map(category => (
+                <span
+                  key={category}
+                  className={`px-4 py-2 rounded-full text-sm font-medium border ${getCategoryColor(category)}`}
+                >
+                  {getCategoryLabel(category)}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -224,8 +315,28 @@ const VideoLectures = () => {
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">Video Lectures</h1>
-                <p className="text-gray-600 mt-1">Expert-led sessions to enhance your skills</p>
+                <p className="text-gray-600 mt-1">Expert-led sessions for your course</p>
               </div>
+            </div>
+            
+            {/* Course Access Badge */}
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-sm font-medium text-gray-500">Your Access:</span>
+                <div className="flex flex-wrap gap-2">
+                  {allowedCategories.map(category => (
+                    <span
+                      key={category}
+                      className={`px-3 py-1.5 rounded-full text-sm font-medium border ${getCategoryColor(category)}`}
+                    >
+                      {getCategoryLabel(category)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <p className="text-sm text-gray-500">
+                You can access videos from your purchased course(s) only.
+              </p>
             </div>
             
             {/* Stats */}
@@ -242,13 +353,42 @@ const VideoLectures = () => {
               <div className="bg-white rounded-xl border border-gray-200 p-5">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-500">Subjects</p>
+                    <p className="text-sm text-gray-500">Categories</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {[...new Set(videos.map(v => v.subject))].length}
+                      {[...new Set(videos.map(v => v.category))].length}
                     </p>
                   </div>
                   <GraduationCap className="w-8 h-8 text-green-500" />
                 </div>
+              </div>
+            </div>
+
+            {/* Category Filters */}
+            <div className="mb-6">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setActiveFilter('All')}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    activeFilter === 'All'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  All Videos
+                </button>
+                {allowedCategories.map(category => (
+                  <button
+                    key={category}
+                    onClick={() => setActiveFilter(category)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                      activeFilter === category
+                        ? getCategoryColor(category).replace('bg-100', 'bg-600').replace('text-800', 'text-white')
+                        : getCategoryColor(category)
+                    }`}
+                  >
+                    {getCategoryLabel(category)}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -277,10 +417,10 @@ const VideoLectures = () => {
                       </div>
                     </div>
                     
-                    {/* Subject Badge */}
+                    {/* Category Badge */}
                     <div className="absolute top-4 left-4">
-                      <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${getSubjectColor(video.subject)} border-l-4`}>
-                        {video.subject}
+                      <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${getCategoryColor(video.category)} border`}>
+                        {getCategoryLabel(video.category)}
                       </span>
                     </div>
                     
@@ -314,7 +454,7 @@ const VideoLectures = () => {
             ))}
           </div>
 
-          {/* No Videos Message */}
+          {/* No Videos Message for active filter */}
           {filteredVideos.length === 0 && (
             <div className="text-center py-16">
               <div className="w-24 h-24 bg-gradient-to-br from-blue-50 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -323,8 +463,8 @@ const VideoLectures = () => {
               <h3 className="text-2xl font-bold text-gray-900 mb-3">No Videos Found</h3>
               <p className="text-gray-600 max-w-md mx-auto mb-8">
                 {activeFilter === 'All' 
-                  ? "We're preparing amazing video content for you. Check back soon!"
-                  : `No ${activeFilter} videos available yet. Try another category.`}
+                  ? "No videos available for your purchased courses yet."
+                  : `No ${getCategoryLabel(activeFilter)} videos available. Try another category.`}
               </p>
               {activeFilter !== 'All' && (
                 <button
@@ -334,18 +474,6 @@ const VideoLectures = () => {
                   View All Videos
                 </button>
               )}
-            </div>
-          )}
-
-          {/* View All Button for filtered results */}
-          {activeFilter !== 'All' && filteredVideos.length > 0 && (
-            <div className="mt-10 text-center">
-              <button
-                onClick={() => setActiveFilter('All')}
-                className="bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:border-blue-400 hover:text-blue-600 transition-colors"
-              >
-                View All Categories
-              </button>
             </div>
           )}
         </div>
@@ -358,12 +486,14 @@ const VideoLectures = () => {
             {/* Modal Header */}
             <div className="flex justify-between items-center p-6 border-b border-gray-200">
               <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-lg ${getSubjectColor(selectedVideo.subject).replace('bg-', 'bg-').split(' ')[0]}`}>
+                <div className={`p-3 rounded-lg ${getCategoryColor(selectedVideo.category)}`}>
                   <BookOpen className="w-6 h-6" />
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-gray-900">{selectedVideo.title}</h2>
-                  <p className="text-gray-600 mt-1">{selectedVideo.subject} • {selectedVideo.duration}</p>
+                  <p className="text-gray-600 mt-1">
+                    {getCategoryLabel(selectedVideo.category)} • {selectedVideo.duration}
+                  </p>
                 </div>
               </div>
               <button
@@ -381,7 +511,7 @@ const VideoLectures = () => {
                   controls
                   autoPlay
                   className="w-full aspect-video"
-                  poster={selectedVideo.thumbnail}
+                  poster={selectedVideo.thumbnailUrl}
                 >
                   <source src={selectedVideo.videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -399,8 +529,10 @@ const VideoLectures = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <span className="font-semibold text-gray-700 block mb-1">Subject</span>
-                    <span className="text-gray-600">{selectedVideo.subject}</span>
+                    <span className="font-semibold text-gray-700 block mb-1">Category</span>
+                    <span className={`px-2 py-1 rounded text-sm font-medium ${getCategoryColor(selectedVideo.category)}`}>
+                      {getCategoryLabel(selectedVideo.category)}
+                    </span>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-4">
                     <span className="font-semibold text-gray-700 block mb-1">Duration</span>

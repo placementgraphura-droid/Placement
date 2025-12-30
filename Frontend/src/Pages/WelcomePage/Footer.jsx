@@ -42,29 +42,7 @@ const Footer = () => {
           </div>
         </div>
 
-      
-        {/* <div>
-          <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-          <ul className="space-y-2 text-gray-200">
-            <li>About Us</li>
-            <li>Our Blogs</li>
-            <li>Course Policy</li>
-            <li>Privacy Policy</li>
-            <li>Contact Us</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-          <ul className="space-y-2 text-gray-200">
-            <li>Our Courses</li>
-            <li>Verify Interns</li>
-            <li>Intern Corner</li>
-            <li>SiteMap</li>
-            <li>FAQ</li>
-          </ul>
-        </div> */}
-
+  
      
         <div>
           <h3 className="text-lg font-semibold mb-4">Newsletter</h3>
@@ -74,25 +52,12 @@ const Footer = () => {
             sectors.
           </p>
 
-          {/* Email Input Box */}
-          <div className="flex bg-white/10 border border-white/20 rounded-full overflow-hidden">
-            <input
-              type="email"
-              placeholder="Enter Email Address"
-              className="bg-transparent text-white px-4 py-2 w-full focus:outline-none"
-            />
-            <button className="bg-white text-[#064a69] px-4 font-semibold">
-              →
-            </button>
-          </div>
-
           {/* Social Icons */}
           <div className="flex gap-4 text-xl text-white mt-5 ml-3">
-            <FaLinkedin />
-            <FaInstagram />
-            <FaFacebook />
-            <FaTwitter />
-            <FaYoutube />
+            <a href="https://www.linkedin.com/company/graphura-india-private-limited/"><FaLinkedin /></a>
+            <a href="https://www.instagram.com/graphura.in/"><FaInstagram /></a>
+            <a href="https://www.facebook.com/Graphura.in/"><FaFacebook /></a>
+            <a href="https://x.com/Graphura"><FaTwitter /></a>
           </div>
         </div>
       </div>

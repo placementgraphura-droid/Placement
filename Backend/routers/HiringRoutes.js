@@ -1,6 +1,6 @@
 import express from "express";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-import { getProfile, updateProfile, uploadProfileImage, createJobPost, getAllJobPosts, updateJob, getJobById, submitHiringFeedback, updateJobStatus, getAllInterns } from "../controller/HiringController.js";
+import { getProfile, updateProfile, uploadProfileImage, createJobPost, getAllJobPosts, updateJob, getJobById, submitHiringFeedback, updateJobStatus, getAllInterns, exportApplicants } from "../controller/HiringController.js";
 import upload from "../middlewares/upload.js";
 
 const router = express.Router();
@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/hiring/profile", authMiddleware, getProfile);
 router.put("/hiring/profile", authMiddleware, updateProfile);
 router.post("/hiring/profile/upload-image", authMiddleware, upload.single("profileImage"), uploadProfileImage);
-
+router.get("/hiring/jobs/:jobId/export-applicants", authMiddleware, exportApplicants);
 
 router.post("/hiring/jobs", authMiddleware, createJobPost);
 

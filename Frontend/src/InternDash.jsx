@@ -54,20 +54,20 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 overflow-hidden">
+    <div className="flex h-screen bg-gradient-to-br from-[#EAF6FC] via-[#F0F9FF] to-[#EAF6FC] overflow-hidden">
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 rounded-lg bg-white shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300"
+          className="p-2 rounded-lg bg-white shadow border border-[#7EC9E8] hover:shadow-lg transition-all duration-300"
         >
-          <div className={`w-6 h-0.5 bg-gray-700 transition-all duration-300 ${
+          <div className={`w-6 h-0.5 bg-[#0A2E40] transition-all duration-300 ${
             mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''
           }`}></div>
-          <div className={`w-6 h-0.5 bg-gray-700 my-1.5 transition-all duration-300 ${
+          <div className={`w-6 h-0.5 bg-[#0A2E40] my-1.5 transition-all duration-300 ${
             mobileMenuOpen ? 'opacity-0' : 'opacity-100'
           }`}></div>
-          <div className={`w-6 h-0.5 bg-gray-700 transition-all duration-300 ${
+          <div className={`w-6 h-0.5 bg-[#0A2E40] transition-all duration-300 ${
             mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
           }`}></div>
         </button>
@@ -76,7 +76,7 @@ const Dashboard = () => {
       {/* Overlay for mobile */}
       {mobileMenuOpen && (
         <div 
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30 transition-opacity duration-300"
+          className="lg:hidden fixed inset-0 bg-[#0A2E40]/50 backdrop-blur-sm z-30 transition-opacity duration-300"
           onClick={() => setMobileMenuOpen(false)}
         ></div>
       )}
@@ -104,16 +104,16 @@ const Dashboard = () => {
         h-screen overflow-y-auto
       `}>
         {/* Animated Header */}
-        <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-gray-200/60 shadow-sm">
+        <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-lg border-b border-[#7EC9E8]/30 shadow-sm">
           <div className="px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#0E5C7E] to-[#4FB0DA] rounded-xl flex items-center justify-center shadow">
                     <span className="text-white font-bold text-lg">I</span>
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+                    <h1 className="text-2xl font-bold text-[#0A2E40]">
                       {activePage === 'dashboard' && 'Dashboard Overview'}
                       {activePage === 'profile' && 'My Profile'}
                       {activePage === 'jobs' && 'Job Opportunities'}  
@@ -122,7 +122,7 @@ const Dashboard = () => {
                       {activePage === 'classes' && 'Live Classes'}
                       {activePage === 'payments' && 'Payments & Billing'}
                     </h1>
-                    <p className="text-gray-500 text-sm mt-1">
+                    <p className="text-[#0E5C7E] text-sm mt-1">
                       {activePage === 'dashboard' && 'Welcome back! Here\'s your learning overview'}
                       {activePage === 'profile' && 'Manage your personal information and settings'}
                       {activePage === 'jobs' && 'Find your dream internship opportunities'}
@@ -134,36 +134,44 @@ const Dashboard = () => {
                   </div>
                 </div>  
               </div>
-
-              {/* User Profile & Notifications */}
             </div>
           </div>
 
           {/* Progress Bar for page loading */}
           {loading && (
-            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500 to-purple-600 animate-pulse"></div>
+            <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] animate-pulse"></div>
           )}
         </header>
 
         {/* Main Content Area */}
-        <main className="p-6">
+        <main className="p-4 md:p-6">
           {renderPage()}
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-black bg-white/50 backdrop-blur-sm mt-8">
+        <footer className="border-t border-[#7EC9E8]/20 bg-white/60 backdrop-blur-sm mt-8">
           <div className="px-6 py-4">
             <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="flex items-center space-x-4 text-sm text-gray-800">
+              <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4 text-sm text-[#0E5C7E]">
                 <span>© {new Date().getFullYear()} Graphura India Private Limited. All rights reserved.</span>
                 <span className="hidden md:inline">•</span>
-                <span className="hidden md:inline">Built with ❤️ for aspiring interns</span>
+                <span>Built with ❤️ for aspiring interns</span>
+              </div>
+              <div className="mt-4 md:mt-0 flex items-center space-x-4">
+                <a href="/privacy" className="text-xs text-[#0E5C7E]/70 hover:text-[#0A2E40] transition-colors">
+                  Privacy Policy
+                </a>
+                <a href="/terms" className="text-xs text-[#0E5C7E]/70 hover:text-[#0A2E40] transition-colors">
+                  Terms of Service
+                </a>
+                <a href="/contact" className="text-xs text-[#0E5C7E]/70 hover:text-[#0A2E40] transition-colors">
+                  Contact Support
+                </a>
               </div>
             </div>
           </div>
         </footer>
       </div>
-
 
       {/* Custom CSS for animations */}
       <style jsx>{`
@@ -179,6 +187,25 @@ const Dashboard = () => {
         }
         .animate-fade-in-up {
           animation: fade-in-up 0.5s ease-out forwards;
+        }
+        
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+          background: #EAF6FC;
+          border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+          background: #7EC9E8;
+          border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+          background: #4FB0DA;
         }
       `}</style>
     </div>

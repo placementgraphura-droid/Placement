@@ -2,89 +2,35 @@ import mongoose from "mongoose";
 
 const jobApplicationSchema = new mongoose.Schema(
   {
-    /* ===============================
-       RELATION INFO
-    =============================== */
-    jobId: {
+    intern: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "JobPost",
+      ref: "Intern",
       required: true,
-      index: true,
     },
 
-    applicantId: {
+    job: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Intern", // or User
-      required: true,
-      index: true,
-    },
-
-    /* ===============================
-       BASIC FORM FIELDS
-    =============================== */
-    full_name: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    email: {
-      type: String,
-      required: true,
-      lowercase: true,
-    },
-
-    mobile_number: {
-      type: String,
+      ref: "Job",
       required: true,
     },
 
-    resume: {
-      url: String,
-      fileName: String,
-      fileType: String,
+    // 🔹 Static mandatory fields
+    full_name: { type: String, required: true },
+    email: { type: String, required: true },
+    mobile_number: { type: String, required: true },
+    resume: { type: String, required: true }, // URL
+    cover_letter: { type: String },
+
+    // 🔹 Dynamic custom fields (MAIN PART)
+    customResponses: {
+      type: Map,
+      of: mongoose.Schema.Types.Mixed, // supports string, array, number, url
     },
 
-    /* ===============================
-       DYNAMIC CUSTOM FIELD ANSWERS
-    =============================== */
-    customFieldAnswers: [
-      {
-        fieldKey: {
-          type: String,
-          required: true,
-        },
-
-        label: String,
-
-        fieldType: {
-          type: String,
-          enum: [
-            "text",
-            "email",
-            "number",
-            "phone",
-            "url",
-            "file",
-            "textarea",
-            "select",
-            "radio",
-            "checkbox",
-            "date",
-          ],
-        },
-
-        value: mongoose.Schema.Types.Mixed,
-      },
-    ],
-
-    /* ===============================
-       APPLICATION STATUS
-    =============================== */
     status: {
       type: String,
-      enum: ["Applied", "Reviewed", "Shortlisted", "Rejected", "Hired"],
-      default: "Applied",
+      enum: ["APPLIED", "SHORTLISTED", "REJECTED", "HIRED"],
+      default: "APPLIED",
     },
 
     appliedAt: {
@@ -92,9 +38,7 @@ const jobApplicationSchema = new mongoose.Schema(
       default: Date.now,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 export default mongoose.model("JobApplication", jobApplicationSchema);

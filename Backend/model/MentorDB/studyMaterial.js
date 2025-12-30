@@ -22,12 +22,11 @@ const studyMaterialSchema = new mongoose.Schema({
     required: true,  // Cloudinary URL
   },
 
+  link: {
+    type: String,
+    default: "",
+  },
 
-  uploadedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "mentor",
-    required: true
-  }
 
 }, { timestamps: true });
 

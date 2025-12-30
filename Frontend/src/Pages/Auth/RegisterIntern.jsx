@@ -20,7 +20,8 @@ import {
     CheckCircle,
     XCircle,
     Camera,
-    Upload
+    Upload,
+    LogIn
 } from "lucide-react";
 
 const getRandomInt = (min, max) =>
@@ -219,7 +220,7 @@ const RegisterPage = () => {
         // Required fields validation
         const requiredFields = [
             'name', 'email', 'phone', 'password',
-            'college', 'course', 'yearOfStudy'
+            'college', 'course'
         ];
 
         const missingFields = requiredFields.filter(field => !formData[field]);
@@ -253,12 +254,6 @@ const RegisterPage = () => {
             return false;
         }
 
-        // Year of study validation
-        const year = parseInt(formData.yearOfStudy);
-        if (isNaN(year) || year < 1 || year > 5) {
-            setError("Year of study must be between 1 and 5");
-            return false;
-        }
 
         // Skills validation
         if (formData.skills.length === 0) {
@@ -407,39 +402,68 @@ const RegisterPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-200 via-indigo-100 to-purple-200 py-8 px-4 sm:px-6 lg:px-8 overflow-auto">
-            <div className="max-w-4xl mx-auto">
-                {/* Header */}
-                <div className="flex items-center justify-center flex-col mb-8 ">
-                    <img src="/GraphuraLogo.jpg" alt="Graphura Logo" className="h-24 rounded-full" />
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-                        Join Placement Programme
-                    </h1>
-                    <p className="text-gray-600 text-lg">
-                        Create your account and start your internship journey
-                    </p>
-                </div>
+        <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-cover bg-center bg-fixed"
+            style={{
+                backgroundImage: `
+                    linear-gradient(
+                        to bottom right,
+                        rgba(13,93,132,0.85),
+                        rgba(42,151,206,0.85),
+                        rgba(9,67,95,0.85)
+                    ),
+                    url('/herobg.png')
+                `
+            }}>
+            {/* Subtle Background Pattern */}
+            <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                    backgroundImage: `radial-gradient(#FEFEFE 10px, transparent 10px)`,
+                    backgroundSize: '30px 30px'
+                }}></div>
+            </div>
 
-                <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8">
+            {/* Logo */}
+            <div className="absolute top-6 left-6">
+                <img
+                    src="/logoWhite.png"
+                    alt="Graphura Logo"
+                    className="w-60"
+                />
+            </div>
+
+            {/* Main Container */}
+            <div className="w-full top-10 max-w-4xl mx-auto relative py-8">
+                {/* Transparent Glass Form */}
+                <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 sm:p-8 shadow-2xl overflow-auto max-h-[90vh]">
+                    {/* Header */}
+                    <div className="text-center mb-6">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                            Create Your Account
+                        </h1>
+                        <p className="text-white/80 text-sm sm:text-base">
+                            Join our internship program and start your journey
+                        </p>
+                    </div>
+
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* 👤 Basic Details Section */}
-                        <div className="border-b border-gray-200 pb-6">
-                            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                                <User className="w-5 h-5 mr-2 text-blue-500" />
+                        <div className="border-b border-white/20 pb-6">
+                            <h2 className="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
+                                <User className="w-5 h-5 mr-2 text-[#D4E5EE]" />
                                 Basic Details
                             </h2>
 
                             {/* Profile Image Upload */}
                             <div className="mb-6">
-                                <label className="flex items-center text-sm font-medium text-gray-700 mb-3">
-                                    <Camera className="w-4 h-4 mr-2 text-blue-500" />
+                                <label className="flex items-center text-sm font-medium text-white/90 mb-3">
+                                    <Camera className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                     Profile Image
                                 </label>
 
-                                <div className="flex items-center space-x-6">
+                                <div className="flex flex-col sm:flex-row items-center sm:space-x-6 space-y-4 sm:space-y-0">
                                     {/* Image Preview */}
                                     <div className="relative">
-                                        <div className="w-24 h-24 rounded-full border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden">
+                                        <div className="w-24 h-24 rounded-full border-2 border-dashed border-white/30 bg-white/10 flex items-center justify-center overflow-hidden">
                                             {imagePreview ? (
                                                 <img
                                                     src={imagePreview}
@@ -447,7 +471,7 @@ const RegisterPage = () => {
                                                     className="w-full h-full object-cover rounded-full"
                                                 />
                                             ) : (
-                                                <User className="w-8 h-8 text-gray-400" />
+                                                <User className="w-8 h-8 text-white/50" />
                                             )}
                                         </div>
 
@@ -464,15 +488,15 @@ const RegisterPage = () => {
                                     </div>
 
                                     {/* Upload Controls */}
-                                    <div className="flex-1">
-                                        <label className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                    <div className="flex-1 w-full">
+                                        <label className="flex flex-col items-center justify-center w-full p-4 border-2 border-dashed border-white/30 rounded-xl cursor-pointer bg-white/10 hover:bg-white/20 transition-colors">
                                             <div className="flex flex-col items-center justify-center space-y-2">
                                                 {isUploading ? (
-                                                    <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                                                    <div className="w-6 h-6 border-2 border-[#D4E5EE] border-t-transparent rounded-full animate-spin"></div>
                                                 ) : (
                                                     <>
-                                                        <Upload className="w-6 h-6 text-gray-400" />
-                                                        <span className="text-sm text-gray-600 font-medium">
+                                                        <Upload className="w-6 h-6 text-white/60" />
+                                                        <span className="text-sm text-white font-medium">
                                                             Click to upload profile image
                                                         </span>
                                                     </>
@@ -486,7 +510,7 @@ const RegisterPage = () => {
                                                 disabled={isUploading}
                                             />
                                         </label>
-                                        <p className="text-xs text-gray-500 mt-2 text-center">
+                                        <p className="text-xs text-white/60 mt-2 text-center">
                                             JPG, PNG, WEBP (Max 5MB)
                                         </p>
                                     </div>
@@ -495,8 +519,8 @@ const RegisterPage = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <User className="w-4 h-4 mr-2 text-blue-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <User className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         Full Name *
                                     </label>
                                     <input
@@ -504,14 +528,14 @@ const RegisterPage = () => {
                                         placeholder="Enter your full name"
                                         value={formData.name}
                                         onChange={(e) => handleInputChange("name", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <Mail className="w-4 h-4 mr-2 text-blue-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <Mail className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         Email Address *
                                     </label>
                                     <input
@@ -519,14 +543,14 @@ const RegisterPage = () => {
                                         placeholder="Enter your email address"
                                         value={formData.email}
                                         onChange={(e) => handleInputChange("email", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <Phone className="w-4 h-4 mr-2 text-blue-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <Phone className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         Phone Number *
                                     </label>
                                     <input
@@ -534,14 +558,14 @@ const RegisterPage = () => {
                                         placeholder="Enter your phone number"
                                         value={formData.phone}
                                         onChange={(e) => handleInputChange("phone", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <Lock className="w-4 h-4 mr-2 text-blue-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <Lock className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         Password *
                                     </label>
                                     <div className="relative">
@@ -550,13 +574,13 @@ const RegisterPage = () => {
                                             placeholder="Create a strong password"
                                             value={formData.password}
                                             onChange={(e) => handleInputChange("password", e.target.value)}
-                                            className="w-full p-3 pr-10 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                            className="w-full p-3 pr-10 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                             required
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors"
                                         >
                                             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                         </button>
@@ -565,11 +589,11 @@ const RegisterPage = () => {
                                     {/* Password Strength Indicator */}
                                     {formData.password && (
                                         <div className="mt-2">
-                                            <div className="flex justify-between text-xs text-gray-600 mb-1">
+                                            <div className="flex justify-between text-xs text-white/80 mb-1">
                                                 <span>Password Strength:</span>
                                                 <span>{passwordStrength.feedback}</span>
                                             </div>
-                                            <div className="w-full bg-gray-200 rounded-full h-2">
+                                            <div className="w-full bg-white/20 rounded-full h-2">
                                                 <div
                                                     className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor()}`}
                                                     style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
@@ -580,8 +604,8 @@ const RegisterPage = () => {
                                 </div>
 
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <Lock className="w-4 h-4 mr-2 text-blue-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <Lock className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         Confirm Password *
                                     </label>
                                     <div className="relative">
@@ -590,13 +614,13 @@ const RegisterPage = () => {
                                             placeholder="Confirm your password"
                                             value={formData.confirmPassword}
                                             onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                                            className="w-full p-3 pr-10 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                            className="w-full p-3 pr-10 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                             required
                                         />
                                         <button
                                             type="button"
                                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors"
                                         >
                                             {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                         </button>
@@ -607,13 +631,13 @@ const RegisterPage = () => {
                                         <div className="mt-2 flex items-center space-x-2">
                                             {formData.password === formData.confirmPassword ? (
                                                 <>
-                                                    <CheckCircle className="w-4 h-4 text-green-500" />
-                                                    <span className="text-xs text-green-600">Passwords match</span>
+                                                    <CheckCircle className="w-4 h-4 text-green-400" />
+                                                    <span className="text-xs text-green-300">Passwords match</span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <XCircle className="w-4 h-4 text-red-500" />
-                                                    <span className="text-xs text-red-600">Passwords don't match</span>
+                                                    <XCircle className="w-4 h-4 text-red-400" />
+                                                    <span className="text-xs text-red-300">Passwords don't match</span>
                                                 </>
                                             )}
                                         </div>
@@ -623,16 +647,16 @@ const RegisterPage = () => {
                         </div>
 
                         {/* 🎓 Academic Info Section */}
-                        <div className="border-b border-gray-200 pb-6">
-                            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                                <GraduationCap className="w-5 h-5 mr-2 text-green-500" />
+                        <div className="border-b border-white/20 pb-6">
+                            <h2 className="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
+                                <GraduationCap className="w-5 h-5 mr-2 text-[#D4E5EE]" />
                                 Academic Information
                             </h2>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <BookOpen className="w-4 h-4 mr-2 text-green-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <BookOpen className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         College/University *
                                     </label>
                                     <input
@@ -640,14 +664,14 @@ const RegisterPage = () => {
                                         placeholder="Enter your college name"
                                         value={formData.college}
                                         onChange={(e) => handleInputChange("college", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <BookOpen className="w-4 h-4 mr-2 text-green-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <BookOpen className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         Course/Program *
                                     </label>
                                     <input
@@ -655,103 +679,98 @@ const RegisterPage = () => {
                                         placeholder="e.g., B.Tech, B.Sc, BCA"
                                         value={formData.course}
                                         onChange={(e) => handleInputChange("course", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                         required
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <BookOpen className="w-4 h-4 mr-2 text-green-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <BookOpen className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         Year of Study *
                                     </label>
                                     <select
                                         value={formData.yearOfStudy}
                                         onChange={(e) => handleInputChange("yearOfStudy", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
-                                        required
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200 appearance-none"
                                     >
-                                        <option value="">Select Year</option>
-                                        <option value="1">1st Year</option>
-                                        <option value="2">2nd Year</option>
-                                        <option value="3">3rd Year</option>
-                                        <option value="4">4th Year</option>
-                                        {/* 📘 Diploma Levels */}
-                                        <option value="Post Diploma">Post Diploma</option>
-                                        <option value="Higher Diploma">Higher Diploma (HD)</option>
-                                        {/* 🎓 Completed */}
-                                        <option value="Graduate">Graduated</option>
+                                        <option value="" className="bg-[#0D5D84]">Select Year</option>
+                                        <option value="1" className="bg-[#0D5D84]">1st Year</option>
+                                        <option value="2" className="bg-[#0D5D84]">2nd Year</option>
+                                        <option value="3" className="bg-[#0D5D84]">3rd Year</option>
+                                        <option value="4" className="bg-[#0D5D84]">4th Year</option>
                                     </select>
+                                    <span className="text-xs text-green-300 mt-1 block"># If you have already passed, please skip this step.</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* 💼 Professional Info Section */}
-                        <div className="border-b border-gray-200 pb-6">
-                            <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-                                <Briefcase className="w-5 h-5 mr-2 text-purple-500" />
+                        <div className="border-b border-white/20 pb-6">
+                            <h2 className="text-lg sm:text-xl font-semibold text-white mb-4 flex items-center">
+                                <Briefcase className="w-5 h-5 mr-2 text-[#D4E5EE]" />
                                 Professional Information
                             </h2>
 
                             <div className="mb-4">
-                                <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                    <BookOpen className="w-4 h-4 mr-2 text-green-500" />
+                                <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                    <BookOpen className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                     Domain
                                 </label>
 
                                 <select
                                     value={formData.domain}
                                     onChange={(e) => handleInputChange("domain", e.target.value)}
-                                    className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white"
+                                    className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200 appearance-none"
                                 >
-                                    <option value="">Select Domain</option>
-                                    <optgroup label="Technical Domains">
-                                        <option value="Frontend Development">Frontend Development</option>
-                                        <option value="Backend Development">Backend Development</option>
-                                        <option value="Full Stack Development">Full Stack Development</option>
-                                        <option value="MERN Stack">MERN Stack</option>
-                                        <option value="MEAN Stack">MEAN Stack</option>
-                                        <option value="Data Science">Data Science</option>
-                                        <option value="Machine Learning">Machine Learning</option>
-                                        <option value="Artificial Intelligence">Artificial Intelligence</option>
-                                        <option value="DevOps">DevOps</option>
-                                        <option value="Cloud Computing">Cloud Computing</option>
-                                        <option value="Cyber Security">Cyber Security</option>
-                                        <option value="UI/UX Design">UI / UX Design</option>
-                                        <option value="Android Development">Android Development</option>
-                                        <option value="iOS Development">iOS Development</option>
-                                        <option value="Software Testing / QA">Software Testing / QA</option>
-                                        <option value="Blockchain Development">Blockchain Development</option>
-                                        <option value="Game Development">Game Development</option>
+                                    <option value="" className="bg-[#0D5D84]">Select Domain</option>
+                                    <optgroup label="Technical Domains" className="bg-[#0D5D84]">
+                                        <option value="Frontend Development" className="bg-[#0D5D84]">Frontend Development</option>
+                                        <option value="Backend Development" className="bg-[#0D5D84]">Backend Development</option>
+                                        <option value="Full Stack Development" className="bg-[#0D5D84]">Full Stack Development</option>
+                                        <option value="MERN Stack" className="bg-[#0D5D84]">MERN Stack</option>
+                                        <option value="MEAN Stack" className="bg-[#0D5D84]">MEAN Stack</option>
+                                        <option value="Data Science" className="bg-[#0D5D84]">Data Science</option>
+                                        <option value="Machine Learning" className="bg-[#0D5D84]">Machine Learning</option>
+                                        <option value="Artificial Intelligence" className="bg-[#0D5D84]">Artificial Intelligence</option>
+                                        <option value="DevOps" className="bg-[#0D5D84]">DevOps</option>
+                                        <option value="Cloud Computing" className="bg-[#0D5D84]">Cloud Computing</option>
+                                        <option value="Cyber Security" className="bg-[#0D5D84]">Cyber Security</option>
+                                        <option value="UI/UX Design" className="bg-[#0D5D84]">UI / UX Design</option>
+                                        <option value="Android Development" className="bg-[#0D5D84]">Android Development</option>
+                                        <option value="iOS Development" className="bg-[#0D5D84]">iOS Development</option>
+                                        <option value="Software Testing / QA" className="bg-[#0D5D84]">Software Testing / QA</option>
+                                        <option value="Blockchain Development" className="bg-[#0D5D84]">Blockchain Development</option>
+                                        <option value="Game Development" className="bg-[#0D5D84]">Game Development</option>
                                     </optgroup>
-                                    <optgroup label="Non-Technical Domains">
-                                        <option value="Human Resources">Human Resources (HR)</option>
-                                        <option value="Business Development">Business Development (BD)</option>
-                                        <option value="Digital Marketing">Digital Marketing</option>
-                                        <option value="Social Media Management">Social Media Management</option>
-                                        <option value="Content Writing">Content Writing</option>
-                                        <option value="Graphic Design">Graphic Design</option>
-                                        <option value="Finance">Finance</option>
-                                        <option value="Accounting">Accounting</option>
-                                        <option value="Sales & Marketing">Sales & Marketing</option>
-                                        <option value="Customer Support">Customer Support</option>
-                                        <option value="Operations Management">Operations Management</option>
-                                        <option value="Project Management">Project Management</option>
-                                        <option value="Email and Outreaching">Email and Outreaching</option>
-                                        <option value="Event Management">Event Management</option>
-                                        <option value="Quality Assurance">Quality Assurance</option>
+                                    <optgroup label="Non-Technical Domains" className="bg-[#0D5D84]">
+                                        <option value="Human Resources" className="bg-[#0D5D84]">Human Resources (HR)</option>
+                                        <option value="Business Development" className="bg-[#0D5D84]">Business Development (BD)</option>
+                                        <option value="Digital Marketing" className="bg-[#0D5D84]">Digital Marketing</option>
+                                        <option value="Social Media Management" className="bg-[#0D5D84]">Social Media Management</option>
+                                        <option value="Content Writing" className="bg-[#0D5D84]">Content Writing</option>
+                                        <option value="Graphic Design" className="bg-[#0D5D84]">Graphic Design</option>
+                                        <option value="Finance" className="bg-[#0D5D84]">Finance</option>
+                                        <option value="Accounting" className="bg-[#0D5D84]">Accounting</option>
+                                        <option value="Sales & Marketing" className="bg-[#0D5D84]">Sales & Marketing</option>
+                                        <option value="Customer Support" className="bg-[#0D5D84]">Customer Support</option>
+                                        <option value="Operations Management" className="bg-[#0D5D84]">Operations Management</option>
+                                        <option value="Project Management" className="bg-[#0D5D84]">Project Management</option>
+                                        <option value="Email and Outreaching" className="bg-[#0D5D84]">Email and Outreaching</option>
+                                        <option value="Event Management" className="bg-[#0D5D84]">Event Management</option>
+                                        <option value="Quality Assurance" className="bg-[#0D5D84]">Quality Assurance</option>
                                     </optgroup>
                                 </select>
 
-                                <span className="text-xs text-green-500 block mt-1 ml-2">
+                                <span className="text-xs text-green-300 block mt-1">
                                     # Select your domain as per Graphura India Private Limited Internship Programme.
                                 </span>
                             </div>
 
                             {/* Skills Input */}
                             <div className="mb-4">
-                                <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                    <Code className="w-4 h-4 mr-2 text-purple-500" />
+                                <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                    <Code className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                     Skills *
                                 </label>
 
@@ -764,12 +783,12 @@ const RegisterPage = () => {
                                             value={formData.currentSkill}
                                             onChange={(e) => handleSkillInput(e.target.value)}
                                             onKeyPress={handleSkillKeyPress}
-                                            className="flex-1 p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                            className="flex-1 p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                         />
                                         <button
                                             type="button"
                                             onClick={addSkill}
-                                            className="px-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors"
+                                            className="px-4 bg-gradient-to-r from-[#3287B1] to-[#09435F] text-white rounded-lg hover:from-[#3287B1]/90 hover:to-[#09435F]/90 transition-colors"
                                         >
                                             Add
                                         </button>
@@ -777,12 +796,12 @@ const RegisterPage = () => {
 
                                     {/* 🔽 Auto Suggestions Dropdown */}
                                     {suggestions.length > 0 && (
-                                        <div className="absolute z-20 bg-white border border-gray-200 rounded-xl shadow-lg w-full max-h-48 overflow-y-auto">
+                                        <div className="absolute z-20 bg-[#0D5D84] border border-white/20 rounded-lg shadow-lg w-full max-h-48 overflow-y-auto">
                                             {suggestions.map((skill, index) => (
                                                 <div
                                                     key={index}
                                                     onClick={() => addSuggestedSkill(skill)}
-                                                    className="px-3 py-2 cursor-pointer hover:bg-blue-50 text-sm"
+                                                    className="px-3 py-2 cursor-pointer hover:bg-white/10 text-sm text-white"
                                                 >
                                                     {skill}
                                                 </div>
@@ -796,13 +815,13 @@ const RegisterPage = () => {
                                     {formData.skills.map((skill, index) => (
                                         <div
                                             key={index}
-                                            className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center space-x-2"
+                                            className="bg-[#D4E5EE]/20 text-white px-3 py-1 rounded-full text-sm flex items-center space-x-2 border border-[#D4E5EE]/30"
                                         >
                                             <span>{skill}</span>
                                             <button
                                                 type="button"
                                                 onClick={() => removeSkill(skill)}
-                                                className="text-blue-600 hover:text-blue-800 ml-1"
+                                                className="text-white hover:text-red-300 ml-1 transition-colors"
                                             >
                                                 ×
                                             </button>
@@ -811,14 +830,14 @@ const RegisterPage = () => {
                                 </div>
 
                                 {formData.skills.length === 0 && (
-                                    <p className="text-sm text-gray-500 mt-2">Add at least one skill</p>
+                                    <p className="text-sm text-white/60 mt-2">Add at least one skill</p>
                                 )}
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <FileText className="w-4 h-4 mr-2 text-purple-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <FileText className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         Resume URL
                                     </label>
                                     <input
@@ -827,13 +846,13 @@ const RegisterPage = () => {
                                         value={formData.resumeUrl}
                                         required
                                         onChange={(e) => handleInputChange("resumeUrl", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <Linkedin className="w-4 h-4 mr-2 text-purple-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <Linkedin className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         LinkedIn Profile
                                     </label>
                                     <input
@@ -841,13 +860,13 @@ const RegisterPage = () => {
                                         placeholder="https://linkedin.com/in/yourprofile"
                                         value={formData.linkedinUrl}
                                         onChange={(e) => handleInputChange("linkedinUrl", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                     />
                                 </div>
 
                                 <div>
-                                    <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                        <Github className="w-4 h-4 mr-2 text-purple-500" />
+                                    <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                        <Github className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                         GitHub Profile
                                     </label>
                                     <input
@@ -855,7 +874,7 @@ const RegisterPage = () => {
                                         placeholder="https://github.com/yourusername"
                                         value={formData.githubUrl}
                                         onChange={(e) => handleInputChange("githubUrl", e.target.value)}
-                                        className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        className="w-full p-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                                     />
                                 </div>
                             </div>
@@ -863,35 +882,35 @@ const RegisterPage = () => {
 
                         {/* 🔒 Security Check */}
                         <div>
-                            <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
-                                <Shield className="w-4 h-4 mr-2 text-green-500" />
+                            <label className="flex items-center text-sm font-medium text-white/90 mb-2">
+                                <Shield className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                                 Security Check *
                             </label>
-                            <div className="bg-gradient-to-r from-gray-50 to-blue-50/30 border-2 border-gray-200 rounded-xl p-4">
+                            <div className="bg-white/5 border border-white/20 rounded-lg p-4">
                                 <div className="flex items-center justify-between mb-3">
-                                    <span className="text-sm font-medium text-gray-700">Solve this:</span>
+                                    <span className="text-sm font-medium text-white/90">Solve this:</span>
                                     <button
                                         type="button"
                                         onClick={refreshCaptcha}
-                                        className="flex items-center space-x-1 text-blue-600 hover:text-blue-700 transition-colors text-sm font-medium"
+                                        className="flex items-center space-x-1 text-[#D4E5EE] hover:text-white transition-colors text-sm font-medium"
                                     >
                                         <RefreshCw className="w-4 h-4" />
                                         <span>New Challenge</span>
                                     </button>
                                 </div>
                                 <div className="flex items-center justify-between space-x-4">
-                                    <div className="flex-1 bg-white border-2 border-gray-300 rounded-lg p-3 text-center">
-                                        <span className="text-xl font-bold text-gray-800 font-mono">
+                                    <div className="flex-1 bg-white/10 border border-white/20 rounded-lg p-3 text-center">
+                                        <span className="text-xl font-bold text-white font-mono">
                                             {captcha.question}
                                         </span>
                                     </div>
-                                    <span className="text-xl font-bold text-gray-600">=</span>
+                                    <span className="text-xl font-bold text-white">=</span>
                                     <input
                                         type="text"
                                         placeholder="?"
                                         value={captchaInput}
                                         onChange={(e) => setCaptchaInput(e.target.value)}
-                                        className="w-20 p-3 border-2 border-gray-300 rounded-lg text-center text-xl font-bold font-mono focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                                        className="w-20 p-3 bg-white/10 border border-white/20 rounded-lg text-center text-xl font-bold font-mono focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white transition-all duration-200"
                                         required
                                     />
                                 </div>
@@ -900,8 +919,8 @@ const RegisterPage = () => {
 
                         {/* Error/Success Messages */}
                         {error && (
-                            <div className={`bg-red-50 border-2 border-red-200 rounded-xl p-4 transform transition-all duration-300 ${shake ? 'animate-shake' : ''}`}>
-                                <div className="flex items-center space-x-2 text-red-700">
+                            <div className={`bg-red-500/20 border border-red-500/30 rounded-lg p-4 transform transition-all duration-300 ${shake ? 'animate-shake' : ''}`}>
+                                <div className="flex items-center space-x-2 text-red-200">
                                     <XCircle className="w-5 h-5" />
                                     <span className="font-medium">{error}</span>
                                 </div>
@@ -909,8 +928,8 @@ const RegisterPage = () => {
                         )}
 
                         {success && (
-                            <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4">
-                                <div className="flex items-center space-x-2 text-green-700">
+                            <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
+                                <div className="flex items-center space-x-2 text-green-200">
                                     <CheckCircle className="w-5 h-5" />
                                     <span className="font-medium">{success}</span>
                                 </div>
@@ -921,22 +940,24 @@ const RegisterPage = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold p-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl text-lg"
+                            className="w-full bg-gradient-to-r from-[#3287B1] to-[#09435F] hover:from-[#3287B1]/90 hover:to-[#09435F]/90 text-white font-semibold p-4 rounded-lg transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:transform-none flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl text-lg"
                         >
                             {isLoading ? (
                                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            ) : null}
+                            ) : (
+                                <LogIn className="w-5 h-5" />
+                            )}
                             <span>{isLoading ? "Creating Account..." : "Create Account"}</span>
                         </button>
                     </form>
 
                     {/* Footer */}
                     <div className="mt-6 text-center">
-                        <p className="text-gray-600">
+                        <p className="text-white/70">
                             Already have an account?{" "}
                             <button
                                 onClick={() => navigate("/intern-login")}
-                                className="font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200 underline underline-offset-2"
+                                className="font-semibold text-[#D4E5EE] hover:text-white transition-colors duration-200 underline underline-offset-2"
                             >
                                 Sign In
                             </button>
@@ -945,17 +966,49 @@ const RegisterPage = () => {
                 </div>
             </div>
 
-            {/* Custom CSS for shake animation */}
+            {/* Decorative Elements */}
+            <div className="absolute -top-6 -right-6 w-32 h-32 bg-[#3287B1]/20 rounded-full blur-xl -z-10"></div>
+            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[#09435F]/20 rounded-full blur-xl -z-10"></div>
+
+            {/* Custom CSS */}
             <style jsx>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-5px); }
-          75% { transform: translateX(5px); }
-        }
-        .animate-shake {
-          animation: shake 0.5s ease-in-out;
-        }
-      `}</style>
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    25% { transform: translateX(-5px); }
+                    75% { transform: translateX(5px); }
+                }
+                .animate-shake {
+                    animation: shake 0.5s ease-in-out;
+                }
+                
+                /* Custom scrollbar */
+                ::-webkit-scrollbar {
+                    width: 8px;
+                }
+                
+                ::-webkit-scrollbar-track {
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 4px;
+                }
+                
+                ::-webkit-scrollbar-thumb {
+                    background: rgba(212, 229, 238, 0.3);
+                    border-radius: 4px;
+                }
+                
+                ::-webkit-scrollbar-thumb:hover {
+                    background: rgba(212, 229, 238, 0.5);
+                }
+
+                /* Select dropdown arrow */
+                select {
+                    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23D4E5EE'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+                    background-repeat: no-repeat;
+                    background-position: right 1rem center;
+                    background-size: 1em;
+                    padding-right: 2.5rem;
+                }
+            `}</style>
         </div>
     );
 };

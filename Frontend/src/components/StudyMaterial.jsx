@@ -1,640 +1,540 @@
 // components/StudyMaterial.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {
-  FiSearch,
-  FiFileText,
-  FiCalendar,
-  FiBook,
-  FiDownload,
+  FiBookOpen,
   FiX,
-  FiLock,
   FiChevronLeft,
   FiChevronRight,
-  FiAlertCircle,
-  FiCheckCircle
+  FiSearch,
+  FiBook,
+  FiFilter
 } from 'react-icons/fi';
-import { GraduationCap, Sparkles, CheckCircle } from 'lucide-react';
-import { MdOutlinePictureAsPdf } from 'react-icons/md';
+import { BookOpen, Search } from 'lucide-react';
 
 const StudyMaterial = () => {
+  const [materials, setMaterials] = useState([]);
   const [filteredMaterials, setFilteredMaterials] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [previewMaterial, setPreviewMaterial] = useState(null);
-  const [previewLoading, setPreviewLoading] = useState(false);
-  const [planInfo, setPlanInfo] = useState(null);
-  const [hasAccess, setHasAccess] = useState(false);
-  const [loadingPlan, setLoadingPlan] = useState(true);
-  
-  const itemsPerPage = 9;
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('All');
+  const [subjects, setSubjects] = useState([]);
 
-  // Fetch user's current plan
-  useEffect(() => {
-    const fetchPlan = async () => {
-      try {
-        const { data } = await axios.get('/api/payments/current-plan');
-        if (data.success) {
-          setPlanInfo(data);
-          const paidPlan = data.planCategory && data.planCategory !== 'NONE';
-          setHasAccess(paidPlan);
-        } else {
-          setHasAccess(false);
-        }
-      } catch (err) {
-        console.error('Error fetching plan info:', err);
-        setHasAccess(false);
-      } finally {
-        setLoadingPlan(false);
-      }
-    };
-    fetchPlan();
-  }, []);
+  const itemsPerPage = 9
+
+  // Subject icons
+  const subjectIcons = {
+    'Web Development': '🌐',
+    'Mobile Development': '📱',
+    'Backend Development': '⚙️',
+    'Frontend Development': '🎨',
+    'Full Stack Development': '🔄',
+    'AI/ML': '🤖',
+    'Data Science': '📊',
+    'Deep Learning': '🧠',
+    'Natural Language Processing': '🗣️',
+    'Computer Vision': '👁️',
+    'DevOps': '🚀',
+    'Cloud Computing': '☁️',
+    'Containerization': '📦',
+    'CI/CD': '🔄',
+    'Infrastructure as Code': '🏗️',
+    'Database Management': '🗄️',
+    'Big Data': '📈',
+    'Data Analytics': '📉',
+    'Data Engineering': '🔧',
+    'Cybersecurity': '🛡️',
+    'Network Security': '🔒',
+    'Ethical Hacking': '💻',
+    'Blockchain': '⛓️',
+    'IoT': '📡',
+    'Game Development': '🎮',
+    'AR/VR': '👓',
+    'Programming Fundamentals': '💻',
+    'Algorithms & Data Structures': '📚',
+    'Software Engineering': '🏗️',
+    'System Design': '🎯',
+    'Project Management': '📋',
+    'UI/UX Design': '🎨',
+    'Business Analytics': '💹'
+  };
+
+
+  // Get subject icon
+  const getSubjectIcon = (subject) => {
+    return subjectIcons[subject] || '📖';
+  };
 
   // Fetch materials from backend API
   const fetchMaterials = async (page = 1) => {
-    if (!hasAccess) {
-      setLoading(false);
-      return;
-    }
-
     try {
       setLoading(true);
       const response = await axios.get(`/api/intern/study-materials`, {
         params: {
           page,
-          limit: itemsPerPage
+          limit: itemsPerPage,
+          sortBy: 'createdAt',
+          order: 'desc'
         }
       });
-      
-      setFilteredMaterials(response.data.materials);
-      setTotalPages(response.data.totalPages);
-      setCurrentPage(response.data.currentPage);
+
+      const materialsData = response.data.materials || [];
+      setMaterials(materialsData);
+      setFilteredMaterials(materialsData);
+      setTotalPages(response.data.totalPages || 1);
+      setCurrentPage(response.data.currentPage || 1);
       setError(null);
+
+      // Extract unique subjects for filter
+      if (materialsData.length > 0) {
+        const uniqueSubjects = ['All', ...new Set(materialsData.map(m => m.subject))];
+        setSubjects(uniqueSubjects);
+      }
     } catch (err) {
-      setError('Failed to fetch study materials');
+      setError('Failed to fetch study materials. Please try again later.');
       console.error('Error fetching materials:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Search materials by title, description, or subject
-  const searchMaterials = async (searchQuery) => {
-    if (!hasAccess) return;
-    
-    if (!searchQuery.trim()) {
-      fetchMaterials(currentPage);
-      return;
+  // Filter materials based on search and subject
+  const filterMaterials = useCallback(() => {
+    let filtered = [...materials];
+
+    // Apply subject filter
+    if (selectedSubject !== 'All') {
+      filtered = filtered.filter(material =>
+        material.subject === selectedSubject
+      );
     }
 
-    try {
-      setLoading(true);
-      const response = await axios.get(`/api/intern/study-materials/search`, {
-        params: {
-          query: searchQuery,
-          page: 1,
-          limit: itemsPerPage
-        }
-      });
-      
-      setFilteredMaterials(response.data.materials);
-      setTotalPages(response.data.totalPages);
-      setCurrentPage(response.data.currentPage);
-    } catch (err) {
-      setError('Search failed');
-      console.error('Error searching materials:', err);
-    } finally {
-      setLoading(false);
+    // Apply search filter (case-insensitive, includes search)
+    if (searchTerm.trim() !== '') {
+      const searchLower = searchTerm.toLowerCase().trim();
+      filtered = filtered.filter(material =>
+        material.title?.toLowerCase().includes(searchLower) ||
+        material.description?.toLowerCase().includes(searchLower) ||
+        material.subject?.toLowerCase().includes(searchLower) ||
+        material.tags?.some(tag => tag.toLowerCase().includes(searchLower)) ||
+        material.author?.toLowerCase().includes(searchLower)
+      );
     }
-  };
 
-  // Handle preview material
-  const handlePreview = async (material) => {
-    if (!hasAccess) return;
-    
-    try {
-      setPreviewLoading(true);
-      
-      // Create proper PDF viewer URL
-      let pdfViewerUrl = material.pdfUrl;
-      
-      if (material.pdfUrl.includes('cloudinary')) {
-        // Use Google Docs viewer for Cloudinary PDFs
-        pdfViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(material.pdfUrl)}&embedded=true`;
-      }
-      
-      setPreviewMaterial({
-        id: material._id,
-        title: material.title,
-        description: material.description,
-        subject: material.subject,
-        pdfUrl: material.pdfUrl,
-        viewerUrl: pdfViewerUrl,
-        uploadedBy: material.uploadedBy,
-        createdAt: material.createdAt
-      });
-    } catch (err) {
-      alert('Failed to load preview');
-      console.error('Preview error:', err);
-    } finally {
-      setPreviewLoading(false);
-    }
-  };
+    // Calculate pagination
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginated = filtered.slice(startIndex, endIndex);
 
-  // Close preview
-  const closePreview = () => {
-    setPreviewMaterial(null);
-  };
-
-  // Enhanced security for iframe
-  const iframeSecurityProps = {
-    sandbox: "allow-scripts allow-same-origin",
-    allow: "autoplay",
-    onContextMenu: (e) => e.preventDefault(),
-    onKeyDown: (e) => {
-      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p')) {
-        e.preventDefault();
-      }
-    }
-  };
-
-  // Handle search with debouncing
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (searchTerm) {
-        searchMaterials(searchTerm);
-      } else {
-        fetchMaterials(currentPage);
-      }
-    }, 500);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm]);
+    setFilteredMaterials(paginated);
+    setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+  }, [materials, selectedSubject, searchTerm, currentPage, itemsPerPage]);
 
   // Handle page change
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
       setCurrentPage(newPage);
-      if (searchTerm) {
-        searchMaterials(searchTerm, newPage);
-      } else {
-        fetchMaterials(newPage);
-      }
     }
   };
+
+  // Open PDF Modal
+  const openPdfModal = async (material) => {
+    setSelectedMaterial(material);
+    setPdfLoading(true);
+
+    // Track view
+    try {
+      await axios.post(`/api/intern/study-materials/${material._id}/view`);
+    } catch (err) {
+      console.error('Error tracking view:', err);
+    }
+
+    setTimeout(() => setPdfLoading(false), 500);
+  };
+
+  // Close PDF Modal
+  const closePdfModal = () => {
+    setSelectedMaterial(null);
+  };
+
+  // Get direct PDF URL - fix URL if needed
+  const getPdfViewerUrl = (pdfUrl) => {
+    if (!pdfUrl) return '';
+    return `https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+  };
+
 
   // Initial fetch
   useEffect(() => {
-    if (hasAccess) {
-      fetchMaterials(1);
-    }
-  }, [hasAccess]);
+    fetchMaterials(1);
+  }, []);
 
-  // Enhanced security measures for preview
+  // Apply filters when search term or subject changes
   useEffect(() => {
-    if (previewMaterial) {
-      const preventDefault = (e) => {
-        if (e.type === 'contextmenu') {
-          e.preventDefault();
-          return false;
-        }
-        
-        if (e.type === 'selectstart') {
-          e.preventDefault();
-          return false;
-        }
-        
-        if ((e.ctrlKey || e.metaKey) && 
-            (e.key === 's' || e.key === 'p' || e.key === 'o' || e.key === 'u')) {
-          e.preventDefault();
-          return false;
-        }
-      };
+    filterMaterials();
+  }, [filterMaterials]);
 
-      document.addEventListener('contextmenu', preventDefault);
-      document.addEventListener('selectstart', preventDefault);
-      document.addEventListener('keydown', preventDefault);
+  // Reset to page 1 when search or subject changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedSubject]);
 
-      return () => {
-        document.removeEventListener('contextmenu', preventDefault);
-        document.removeEventListener('selectstart', preventDefault);
-        document.removeEventListener('keydown', preventDefault);
-      };
-    }
-  }, [previewMaterial]);
-
-  // Render PDF preview
-  const renderPDFPreview = () => {
-    if (!previewMaterial) return null;
-
-    return (
-      <div className="w-full h-full">
-        <iframe
-          src={previewMaterial.viewerUrl}
-          className="w-full h-[75vh] border-0 rounded-lg shadow-inner"
-          title={`Preview: ${previewMaterial.title}`}
-          {...iframeSecurityProps}
-        />
-        
-        <div className="hidden" id="fallback-message">
-          <div className="text-center p-8 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg">
-            <p className="text-yellow-800 mb-4">
-              If the PDF is not loading, you can{' '}
-              <a 
-                href={previewMaterial.pdfUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-blue-600 underline hover:text-blue-800"
-              >
-                open it in a new tab
-              </a>
-            </p>
-            <button
-              onClick={() => window.open(previewMaterial.pdfUrl, '_blank')}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg"
-            >
-              Open in New Tab
-            </button>
+  // Loading State
+  const LoadingState = () => (
+    <div className="py-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3, 4, 5, 6].map((n) => (
+          <div key={n} className="bg-white rounded-2xl p-6 border border-gray-200 animate-pulse">
+            <div className="flex justify-between items-start mb-4">
+              <div className="h-6 bg-gray-200 rounded w-1/4"></div>
+              <div className="h-6 bg-gray-200 rounded w-1/4"></div>
+            </div>
+            <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+            <div className="h-20 bg-gray-200 rounded mb-6"></div>
+            <div className="h-10 bg-gray-200 rounded"></div>
           </div>
-        </div>
+        ))}
       </div>
-    );
-  };
-
-  // Get subject color
-  const getSubjectColor = (subject) => {
-    const colors = {
-      'Mathematics': 'from-purple-500 to-pink-500',
-      'Science': 'from-green-500 to-teal-500',
-      'History': 'from-amber-500 to-orange-500',
-      'Literature': 'from-blue-500 to-indigo-500',
-      'Technology': 'from-cyan-500 to-blue-500',
-      'Business': 'from-emerald-500 to-green-500',
-      'Arts': 'from-rose-500 to-pink-500',
-      'Languages': 'from-violet-500 to-purple-500'
-    };
-    return colors[subject] || 'from-gray-500 to-gray-700';
-  };
-
-  // Access Denied Component
-  const AccessDenied = () => (
-     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
-          <div className="relative h-48 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black opacity-10"></div>
-            <div className="relative z-10 text-center">
-              <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-white/30">
-                <GraduationCap className="w-10 h-10 text-white" />
-              </div>
-              <h1 className="text-2xl font-bold text-white">Premium Study Material</h1>
-            </div>
-          </div>
-          
-          <div className="p-8">
-            <div className="flex items-center justify-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-yellow-500" />
-              <span className="text-sm font-medium text-yellow-600">PREMIUM FEATURE</span>
-            </div>
-            
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">
-              Unlock Exclusive Learning Resources
-            </h2>
-            
-            <p className="text-gray-600 text-center mb-8">
-              Access a curated library of premium study materials designed to enhance your learning experience and help you excel in your career.
-            </p>
-
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">Comprehensive study guides and notes</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">Interactive quizzes and practice tests</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">Detailed explanations and examples</span>
-              </div>
-            </div>
-
-            {planInfo && (
-              <p className="text-center text-sm text-gray-500">
-                Current plan: <span className="font-semibold text-gray-700">{planInfo.planCategory || 'Free Tier'}</span>
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
+    </div>
   );
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-10">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Study Material Library
-              </h1>
-              <p className="text-gray-600 mt-2 flex items-center">
-                <FiBook className="mr-2" />
-                Preview and explore premium learning resources
-              </p>
-            </div>
-            
-            {hasAccess && planInfo && (
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
-                <div className="flex items-center">
-                  <FiCheckCircle className="w-5 h-5 text-green-600 mr-2" />
-                  <div>
-                    <p className="font-semibold text-green-800">{planInfo.planName}</p>
-                    <p className="text-sm text-green-600">Full Access Granted</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+  // Error State
+  const ErrorState = () => (
+    <div className="bg-gradient-to-br from-red-50 to-red-100 border border-red-200 rounded-2xl p-8 text-center mb-8">
+      <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+        <FiBook className="w-8 h-8 text-white" />
+      </div>
+      <h3 className="text-xl font-bold text-red-800 mb-2">Oops! Something went wrong</h3>
+      <p className="text-red-600 mb-4">{error}</p>
+      <button
+        onClick={() => fetchMaterials(currentPage)}
+        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-semibold hover:from-red-600 hover:to-red-700 transition-all shadow-md"
+      >
+        Try Again
+      </button>
+    </div>
+  );
 
-          {/* Search Bar */}
-          {hasAccess && (
-            <div className="mb-8">
-              <div className="relative max-w-2xl">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <FiSearch className="text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search by title, description, or subject..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 focus:outline-none transition-all text-lg"
-                  disabled={!hasAccess}
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center"
-                  >
-                    <FiX className="text-gray-400 hover:text-gray-600" />
-                  </button>
-                )}
-              </div>
-            </div>
+  // Material Card
+  const MaterialCard = ({ material }) => (
+    <div className="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-gray-300 overflow-hidden hover:-translate-y-1">
+      <div className="p-6">
+        {/* Subject Badge */}
+        <div className="flex justify-between items-start mb-4">
+          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${(material.subject)} border`}>
+            <span className="text-sm">{getSubjectIcon(material.subject)}</span>
+            {material.subject}
+          </span>
+          <FiBookOpen className="w-5 h-5 text-gray-400 group-hover:text-gray-600" />
+        </div>
+
+        {/* Title */}
+        <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors min-h-[3.5rem]">
+          {material.title}
+        </h3>
+
+        {/* Description with highlighted search term */}
+        <p className="text-gray-600 text-sm mb-5 line-clamp-3 min-h-[3.5rem]">
+          {searchTerm ? highlightSearchTerm(material.description || '', searchTerm) : material.description}
+        </p>
+
+        <a href={material.link} target="_blank" rel="noopener noreferrer" className='text-blue-600 underline'>Visit Resources</a>
+
+        {/* Stats */}
+        <div className="flex items-center justify-between text-xs text-gray-500 mb-6">
+          <span className="text-gray-400">
+            {material.pages ? `${material.pages} pages` : 'PDF Document'}
+          </span>
+          {material.difficulty && (
+            <span className={`px-2 py-1 rounded text-xs font-medium ${material.difficulty === 'Beginner' ? 'bg-green-100 text-green-800' :
+              material.difficulty === 'Intermediate' ? 'bg-yellow-100 text-yellow-800' :
+                'bg-red-100 text-red-800'
+              }`}>
+              {material.difficulty}
+            </span>
           )}
         </div>
 
-        {/* Loading State for Plan */}
-        {loadingPlan && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mb-4"></div>
-            <p className="text-gray-600 text-lg">Checking your access permissions...</p>
-          </div>
-        )}
+        {/* Preview Button */}
+        <button
+          onClick={() => openPdfModal(material)}
+          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center group/btn"
+        >
+          <FiBookOpen className="mr-2 w-5 h-5" />
+          <span>Preview PDF</span>
+        </button>
+      </div>
+    </div>
+  );
 
-        {/* Access Denied State */}
-        {!loadingPlan && !hasAccess && !loading && <AccessDenied />}
+  // Highlight search term in text
+  const highlightSearchTerm = (text, term) => {
+    if (!text || !term) return text;
 
-        {/* Loading State for Materials */}
-        {hasAccess && loading && (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="relative">
-              <div className="animate-spin rounded-full h-20 w-20 border-4 border-blue-100"></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse">
-                <MdOutlinePictureAsPdf className="w-10 h-10 text-blue-600" />
+    const regex = new RegExp(`(${term})`, 'gi');
+    const parts = text.split(regex);
+
+    return parts.map((part, index) =>
+      part.toLowerCase() === term.toLowerCase() ?
+        <mark key={index} className="bg-yellow-200 font-semibold">{part}</mark> :
+        part
+    );
+  };
+
+  // PDF Modal Component
+  const PdfModal = () => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-white w-full h-full md:h-[95vh] md:max-w-6xl rounded-none md:rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+
+        {/* Modal Header */}
+        <div className="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-6 flex-shrink-0">
+          <div className="flex justify-between items-start">
+            <div className="flex-1 mr-4">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${(selectedMaterial.subject)}`}>
+                  <span className="text-sm">{getSubjectIcon(selectedMaterial.subject)}</span>
+                  {selectedMaterial.subject}
+                </span>
+                {selectedMaterial.difficulty && (
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${selectedMaterial.difficulty === 'Beginner' ? 'bg-green-500 text-white' :
+                    selectedMaterial.difficulty === 'Intermediate' ? 'bg-yellow-500 text-white' :
+                      'bg-red-500 text-white'
+                    }`}>
+                    {selectedMaterial.difficulty}
+                  </span>
+                )}
               </div>
+              <h3 className="text-2xl font-bold mb-2 line-clamp-2">
+                {selectedMaterial.title}
+              </h3>
             </div>
-            <p className="text-gray-600 text-lg mt-4">Loading study materials...</p>
+            <button
+              onClick={closePdfModal}
+              className="ml-4 p-2 rounded-lg hover:bg-gray-700 transition-colors flex-shrink-0"
+            >
+              <FiX className="w-6 h-6" />
+            </button>
           </div>
-        )}
+        </div>
 
-        {/* Error State */}
-        {hasAccess && error && (
-          <div className="bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-200 rounded-2xl p-6 mb-8">
-            <div className="flex items-center">
-              <FiAlertCircle className="w-6 h-6 text-rose-600 mr-3" />
-              <div className="flex-1">
-                <p className="text-rose-800 font-medium">{error}</p>
-                <button
-                  onClick={() => fetchMaterials(currentPage)}
-                  className="mt-2 text-rose-600 hover:text-rose-800 text-sm font-medium inline-flex items-center"
-                >
-                  <FiRefreshCw className="w-3 h-3 mr-1" />
-                  Try Again
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Materials Grid */}
-        {hasAccess && !loading && !error && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {filteredMaterials.map((material) => (
-                <div 
-                  key={material._id} 
-                  className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-blue-200 overflow-hidden transform hover:-translate-y-1"
-                >
-                  <div className={`h-2 bg-gradient-to-r ${getSubjectColor(material.subject)}`}></div>
-                  <div className="p-6">
-                    {/* Subject Badge */}
-                    <div className="flex justify-between items-start mb-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${getSubjectColor(material.subject)} text-white`}>
-                        {material.subject}
-                      </span>
-                      <MdOutlinePictureAsPdf className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
-                    </div>
-
-                    {/* Title and Description */}
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-1 group-hover:text-blue-600 transition-colors">
-                      {material.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-6 line-clamp-3 min-h-[60px]">
-                      {material.description || 'No description available'}
-                    </p>
-
-                    {/* Material Details */}
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
-                      <div className="flex items-center space-x-4">
-                        <span className="flex items-center">
-                          <FiCalendar className="w-4 h-4 mr-1" />
-                          {new Date(material.createdAt).toLocaleDateString()}
-                        </span>
-                        <span className="flex items-center">
-                          <FiFileText className="w-4 h-4 mr-1" />
-                          PDF
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Preview Button */}
-                    <button
-                      onClick={() => handlePreview(material)}
-                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center group/btn"
-                    >
-                      <span>Preview Material</span>
-                      <FiDownload className="ml-2 w-4 h-4 opacity-0 group-hover/btn:opacity-100 transform group-hover/btn:translate-y-0.5 transition-all" />
-                    </button>
-                  </div>
+        {/* Modal Content - Full PDF Viewer */}
+        <div className="flex-1 min-h-0 bg-gray-100">
+          {pdfLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full mb-4">
+                  <FiBookOpen className="w-8 h-8 text-white animate-pulse" />
                 </div>
+                <p className="text-gray-600 font-medium">Loading PDF...</p>
+              </div>
+            </div>
+          ) : (
+            <iframe
+              src={getPdfViewerUrl(selectedMaterial.pdfUrl)}
+              className="w-full h-full border-0"
+              title={`${selectedMaterial.title} - PDF Viewer`}
+              loading="lazy"
+              allowFullScreen
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  // Pagination Component
+  const PaginationComponent = () => (
+    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 p-6 bg-white rounded-2xl shadow-md border border-gray-200">
+      <div className="text-sm text-gray-600">
+        Page <span className="font-bold">{currentPage}</span> of <span className="font-bold">{totalPages}</span> •
+        Showing <span className="font-bold">{filteredMaterials.length}</span> of {materials.length} materials
+      </div>
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-all hover:shadow-md"
+        >
+          <FiChevronLeft className="w-5 h-5" />
+        </button>
+
+        <div className="flex items-center space-x-1">
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+
+            return (
+              <button
+                key={pageNum}
+                onClick={() => handlePageChange(pageNum)}
+                className={`w-10 h-10 rounded-xl font-medium transition-all text-sm ${currentPage === pageNum
+                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:bg-gray-50 hover:shadow-md'
+                  }`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+        </div>
+
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="flex items-center justify-center w-10 h-10 rounded-xl border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-all hover:shadow-md"
+        >
+          <FiChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl font-bold text-gray-900">Study Materials</h1>
+                <p className="text-gray-600 mt-2">
+                  Browse through our comprehensive collection of learning resources
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <FiFilter className="w-4 h-4" />
+              <span>
+                {selectedSubject === 'All' ? 'All Subjects' : selectedSubject}
+                {searchTerm && ` • Searching: "${searchTerm}"`}
+              </span>
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="mb-8">
+            <div className="relative max-w-2xl mx-auto">
+              <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search in titles, descriptions, subjects, tags, or authors..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-white rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <FiX className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            <div className="mt-2 text-sm text-gray-500">
+              Search includes: Title, Description, Subject, Tags, and Author
+            </div>
+          </div>
+
+          {/* Subject Filters */}
+          <div className="mb-8">
+            <div className="flex flex-wrap gap-2">
+              {subjects.map((subject) => (
+                <button
+                  key={subject}
+                  onClick={() => setSelectedSubject(subject)}
+                  className={`flex-shrink-0 px-4 py-2 rounded-xl font-medium text-sm transition-all ${selectedSubject === subject
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                    : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                    }`}
+                >
+                  {subject === 'All' ? 'All Subjects' : subject}
+                </button>
               ))}
             </div>
-
-            {/* No Materials Message */}
-            {filteredMaterials.length === 0 && !loading && (
-              <div className="text-center py-16">
-                <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full mb-6">
-                  <FiBook className="w-12 h-12 text-gray-400" />
-                </div>
-                <h3 className="text-2xl font-semibold text-gray-900 mb-3">No study materials found</h3>
-                <p className="text-gray-600 max-w-md mx-auto">
-                  {searchTerm 
-                    ? `No materials found for "${searchTerm}". Try a different search term.`
-                    : 'Study materials will appear here once available.'
-                  }
-                </p>
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="mt-6 text-blue-600 hover:text-blue-800 font-medium inline-flex items-center"
-                  >
-                    <FiX className="w-4 h-4 mr-1" />
-                    Clear Search
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Pagination */}
-            {totalPages > 1 && filteredMaterials.length > 0 && (
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-12 p-6 bg-white rounded-2xl shadow-sm border border-gray-100">
-                <div className="text-sm text-gray-600">
-                  Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredMaterials.length)} materials
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-                  >
-                    <FiChevronLeft className="w-5 h-5" />
-                  </button>
-                  
-                  <div className="flex items-center space-x-1">
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                      let pageNum;
-                      if (totalPages <= 5) {
-                        pageNum = i + 1;
-                      } else if (currentPage <= 3) {
-                        pageNum = i + 1;
-                      } else if (currentPage >= totalPages - 2) {
-                        pageNum = totalPages - 4 + i;
-                      } else {
-                        pageNum = currentPage - 2 + i;
-                      }
-                      
-                      return (
-                        <button
-                          key={pageNum}
-                          onClick={() => handlePageChange(pageNum)}
-                          className={`w-10 h-10 rounded-lg font-medium transition-all ${
-                            currentPage === pageNum
-                              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
-                              : 'text-gray-600 hover:bg-gray-50'
-                          }`}
-                        >
-                          {pageNum}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="flex items-center justify-center w-10 h-10 rounded-lg border border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-                  >
-                    <FiChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            )}
-          </>
-        )}
-
-        {/* Preview Modal */}
-        {previewMaterial && (
-          <div className="fixed inset-0 backdrop-blur-md bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
-              {/* Preview Header */}
-              <div className="flex justify-between items-center p-6 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white sticky top-0 z-10">
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-2xl font-bold text-gray-900 truncate">{previewMaterial.title}</h3>
-                  <div className="flex items-center flex-wrap gap-2 mt-2">
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-gradient-to-r ${getSubjectColor(previewMaterial.subject)} text-white`}>
-                      {previewMaterial.subject}
-                    </span>
-                    <span className="text-gray-500 text-sm flex items-center">
-                      <FiCalendar className="w-3 h-3 mr-1" />
-                      {new Date(previewMaterial.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-                <button
-                  onClick={closePreview}
-                  className="ml-6 flex-shrink-0 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 flex items-center justify-center transition-colors"
-                  aria-label="Close preview"
-                >
-                  <FiX className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Preview Content */}
-              <div className="p-4 bg-gradient-to-br from-gray-50 to-blue-50 h-full">
-                {previewLoading ? (
-                  <div className="flex flex-col items-center justify-center h-96">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-100 border-t-blue-600 mb-4"></div>
-                    <span className="text-gray-600 text-lg">Loading preview...</span>
-                  </div>
-                ) : (
-                  renderPDFPreview()
-                )}
-              </div>
-
-              {/* Preview Footer */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 border-t border-gray-200 bg-white">
-                <div className="flex-1 min-w-0">
-                  <p className="text-gray-600 truncate">
-                    {previewMaterial.description || 'No description available'}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-4 flex-shrink-0">
-                  <button
-                    onClick={() => window.open(previewMaterial.pdfUrl, '_blank')}
-                    className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
-                  >
-                    <FiDownload className="w-4 h-4 mr-2" />
-                    Download
-                  </button>
-                  <button
-                    onClick={closePreview}
-                    className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
-        )}
+
+          {/* Search Results Info */}
+          {(searchTerm || selectedSubject !== 'All') && filteredMaterials.length > 0 && (
+            <div className="mb-4 p-4 bg-blue-50 rounded-xl border border-blue-200">
+              <p className="text-blue-800 text-sm">
+                Found <span className="font-bold">{filteredMaterials.length}</span> materials
+                {searchTerm && ` matching "${searchTerm}"`}
+                {selectedSubject !== 'All' && ` in ${selectedSubject}`}
+              </p>
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading && <LoadingState />}
+
+          {/* Error State */}
+          {error && <ErrorState />}
+
+          {/* Materials Grid */}
+          {!loading && !error && (
+            <>
+              {filteredMaterials.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    {filteredMaterials.map((material) => (
+                      <MaterialCard key={material._id} material={material} />
+                    ))}
+                  </div>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && <PaginationComponent />}
+                </>
+              ) : (
+                /* No Materials Message */
+                <div className="text-center py-16 bg-white rounded-3xl border border-gray-200 shadow-sm">
+                  <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full mb-6 shadow-inner">
+                    <Search className="w-12 h-12 text-gray-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">No materials found</h3>
+                  <p className="text-gray-600 max-w-md mx-auto text-lg mb-6">
+                    {searchTerm || selectedSubject !== 'All'
+                      ? 'Try adjusting your search or filter criteria'
+                      : 'New materials are being added regularly. Check back soon!'}
+                  </p>
+                  {(searchTerm || selectedSubject !== 'All') && (
+                    <button
+                      onClick={() => {
+                        setSearchTerm('');
+                        setSelectedSubject('All');
+                      }}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md"
+                    >
+                      Clear Filters
+                    </button>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
+
+      {/* PDF Modal */}
+      {selectedMaterial && <PdfModal />}
     </div>
   );
 };

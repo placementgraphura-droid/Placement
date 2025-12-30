@@ -31,13 +31,11 @@ const Partners = () => {
 
        
         <div className="
-            grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7
+            grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7
             gap-10 justify-items-center ">
         
           {partners.map((p, i) => (
             <div key={i} className="flex flex-col items-center">
-
-              
               <div className="
                   md:w-[150px] md:h-[150px] w-[100px] h-[100px] rounded-2xl
                   bg-white/50 backdrop-blur-md

@@ -13,11 +13,12 @@ const MentorStudyMaterials = () => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [previewMaterial, setPreviewMaterial] = useState(null);
   const [previewDialog, setPreviewDialog] = useState(false);
-
+  const [expandedId, setExpandedId] = useState(null);
   const [newMaterial, setNewMaterial] = useState({
     title: '',
     subject: '',
     description: '',
+    link: '',
     file: null
   });
 
@@ -29,7 +30,7 @@ const MentorStudyMaterials = () => {
     'Frontend Development': 'bg-sky-100 text-sky-800 border-sky-200',
     'Full Stack Development': 'bg-indigo-100 text-indigo-800 border-indigo-200',
 
-    // AI & Data Science
+    // AI & Data Science  
     'AI/ML': 'bg-purple-100 text-purple-800 border-purple-200',
     'Data Science': 'bg-purple-200 text-purple-900 border-purple-300',
     'Deep Learning': 'bg-violet-100 text-violet-800 border-violet-200',
@@ -95,9 +96,9 @@ const MentorStudyMaterials = () => {
 
 
   const getPdfViewerUrl = (pdfUrl) => {
-  if (!pdfUrl) return "";
-  return `https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
-};
+    if (!pdfUrl) return "";
+    return `https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`;
+  };
 
 
   // Filter materials based on search term and subject
@@ -139,6 +140,7 @@ const MentorStudyMaterials = () => {
       formData.append('title', newMaterial.title);
       formData.append('subject', newMaterial.subject);
       formData.append('description', newMaterial.description);
+      formData.append('link', newMaterial.link);
       formData.append('file', newMaterial.file);
 
       const response = await axios.post('/api/mentor/study-materials/upload', formData, {
@@ -326,61 +328,103 @@ const MentorStudyMaterials = () => {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredMaterials.map((material) => (
-            <div
-              key={material._id}
-              className="bg-white rounded-2xl shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col h-full"
-            >
-              <div className="p-6 flex-1">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${subjectColors[material.subject] || 'bg-blue-100 text-blue-800 border border-blue-200'
-                    }`}>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredMaterials.map((material) => {
+            const isExpanded = expandedId === material._id;
+
+            return (
+              <div
+                key={material._id}
+                className="group bg-white/80 backdrop-blur-md rounded-3xl border border-gray-200 shadow-sm 
+        hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden"
+              >
+                {/* 🔷 Header */}
+                <div className="p-6 flex-1">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-11 h-11 rounded-xl flex items-center justify-center shadow-sm 
+                ${subjectColors[material.subject] || "bg-blue-100 text-blue-700 border border-blue-200"}`}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
+                        </svg>
+                      </div>
+
+                      <span
+                        className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide border 
+                ${subjectColors[material.subject] || "bg-blue-100 text-blue-700 border-blue-200"}`}
+                      >
+                        {material.subject}
+                      </span>
+                    </div>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium border ${subjectColors[material.subject] || 'bg-blue-100 text-blue-800 border-blue-200'
-                    }`}>
-                    {material.subject}
-                  </span>
+
+                  {/* 📌 Title */}
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 leading-snug group-hover:text-blue-600 transition">
+                    {material.title}
+                  </h3>
+
+                  {/* 📝 Description */}
+                  <p className={`text-gray-600 text-sm leading-relaxed ${isExpanded ? "" : "line-clamp-3"}`}>
+                    {material.description}
+                  </p>
+
+                  {material.description.length > 120 && (
+                    <button
+                      onClick={() =>
+                        setExpandedId(isExpanded ? null : material._id)
+                      }
+                      className="mt-3 text-blue-600 text-sm font-medium hover:underline"
+                    >
+                      {isExpanded ? "View Less ↑" : "View More ↓"}
+                    </button>
+                  )}
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mb-3 leading-tight">
-                  {material.title}
-                </h3>
+                {/* 🔗 Link */}
+                {material.link && (
+                  <div className="px-6 py-3 border-t bg-gray-50">
+                    <a
+                      href={material.link}
+                      target="_blank"
+                      className="text-sm font-medium text-green-600 hover:underline"
+                    >
+                      🔗 Visit Resource
+                    </a>
+                  </div>
+                )}
 
-                <p className="text-gray-600 mb-4 leading-relaxed">
-                  {material.description}
-                </p>
-                <p className="text-sm text-gray-500 mt-3">
+                {/* 🎯 Actions */}
+                <div className="p-5 flex gap-3">
+                  <button
+                    onClick={() => handlePreview(material)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2.5 
+            rounded-xl font-medium hover:bg-blue-700 transition"
+                  >
+                    👁 Preview
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(material._id)}
+                    className="flex items-center justify-center px-4 py-2.5 rounded-xl 
+            bg-red-100 text-red-600 hover:bg-red-200 transition"
+                  >
+                    🗑
+                  </button>
+                </div>
+
+                {/* ⏱ Footer */}
+                <div className="px-6 pb-4 text-xs text-gray-500">
                   Uploaded: {new Date(material.uploadDate || material.createdAt).toLocaleDateString()}
-                </p>
+                </div>
               </div>
-
-              <div className="p-4 pt-0 flex gap-2">
-                <button
-                  onClick={() => handlePreview(material)}
-                  className="flex-1 bg-blue-50 text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-100 transition-colors flex items-center justify-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  Preview
-                </button>
-                <button
-                  onClick={() => handleDelete(material._id)}
-                  className="bg-red-50 text-red-600 px-4 py-2 rounded-lg font-medium hover:bg-red-100 transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
+
       )}
 
       {/* Upload Dialog */}
@@ -424,6 +468,15 @@ const MentorStudyMaterials = () => {
                   disabled={uploading}
                   rows={3}
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none disabled:opacity-50"
+                />
+
+                <input
+                  type="text"
+                  placeholder="Link (optional)"
+                  value={newMaterial.link}
+                  onChange={(e) => setNewMaterial(prev => ({ ...prev, link: e.target.value }))}
+                  disabled={uploading}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
                 />
 
                 <label className={`block w-full px-4 py-4 border-2 border-dashed rounded-xl text-center cursor-pointer transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-400 hover:bg-blue-50'
@@ -477,7 +530,6 @@ const MentorStudyMaterials = () => {
         </div>
       )}
 
-      {/* PDF Preview Dialog */}
       {/* PDF Preview Dialog */}
       {previewDialog && previewMaterial && (
         <div className="fixed inset-0 backdrop-blur-sm bg-opacity-50 flex items-center justify-center p-4 z-50">

@@ -24,6 +24,47 @@ export const getInternProfile = async (req, res) => {
 };
 
 
+export const uploadProfileImage = async (req, res) => {
+  try {
+    // multer + cloudinary already uploaded the file
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No image file uploaded",
+      });
+    }
+
+    const internId = req.user.id; // from auth middleware
+    const imageUrl = req.file.path; // cloudinary secure_url
+
+    const intern = await Intern.findByIdAndUpdate(
+      internId,
+      { profileImage: imageUrl },
+      { new: true }
+    );
+
+    if (!intern) {
+      return res.status(404).json({
+        success: false,
+        message: "Intern not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile image uploaded successfully",
+      profileImage: intern.profileImage,
+    });
+
+  } catch (error) {
+    console.error("Upload profile image error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error while uploading profile image",
+    });
+  }
+};
+
 export const updateInternProfile = async (req, res) => {
   try {
     const internId = req.user.id;
@@ -97,7 +138,7 @@ export const updateInternProfile = async (req, res) => {
 
 
 export const getInternClasses = async (req, res) => {
-   try {
+  try {
     const classes = await Class.find().sort({ startTime: 1 });
 
     res.json({
@@ -106,7 +147,7 @@ export const getInternClasses = async (req, res) => {
         _id: cls._id,
         title: cls.title,
         description: cls.description,
-        subject: cls.subject,
+        courseType: cls.category,
         classType: cls.classType,
         meetingLink: cls.meetingLink,
         startTime: cls.startTime,
@@ -134,7 +175,7 @@ export const getStudyMaterials = async (req, res) => {
     const total = await StudyMaterial.countDocuments();
 
     const materials = await StudyMaterial.find()
-      
+
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -205,7 +246,7 @@ export const getVideoLectures = async (req, res) => {
         id: video._id,
         title: video.title,
         description: video.description,
-        subject: video.subject,
+        category: video.category,
         thumbnail: video.thumbnailUrl,
         duration: video.duration,
         videoUrl: video.videoUrl
@@ -226,27 +267,39 @@ export const getDashboardStats = async (req, res) => {
   try {
     const internId = req.user.id;
 
+    // 1️⃣ Fetch intern feedback counts
     const intern = await Intern.findById(internId).select(
-      "mentorFeedback hiringTeamFeedback jobCredits creditHistory"
+      "mentorFeedback hiringTeamFeedback"
     );
 
     if (!intern) {
-      return res.status(404).json({ message: "Intern not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Intern not found",
+      });
     }
 
-    const jobsApplied = intern.creditHistory.filter(
-      item => item.action === "APPLIED JOB"
-    ).length;
+    // 2️⃣ Count jobs applied by THIS intern
+    const jobsApplied = await JobApplication.countDocuments({
+      intern: internId,
+      status: "APPLIED",
+    });
+
 
     res.status(200).json({
+      success: true,
       jobsApplied,
-      freeApplicationsLeft: intern.jobCredits,
-      mentorFeedbackCount: intern.mentorFeedback.length,
-      hiringFeedbackCount: intern.hiringTeamFeedback.length,
-      studyProgress: 0, // you can add later
+      mentorFeedbackCount: intern.mentorFeedback?.length || 0,
+      hiringFeedbackCount: intern.hiringTeamFeedback?.length || 0,
+      studyProgress: 0, // you can wire later
     });
+
   } catch (error) {
-    res.status(500).json({ message: "Failed to load dashboard stats" });
+    console.error("Dashboard stats error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to load dashboard stats",
+    });
   }
 };
 
@@ -323,35 +376,35 @@ export const getRecentFeedback = async (req, res) => {
 export const getInternJobApplicationForm = async (req, res) => {
   try {
     const job = await JobPost.findById(req.params.jobId);
-    
+
     if (!job) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'Job not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'Job not found'
       });
     }
-    
+
     // Check if job is still open
     if (job.status !== 'Open' || !job.isActive) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'This job is no longer accepting applications' 
+      return res.status(400).json({
+        success: false,
+        message: 'This job is no longer accepting applications'
       });
     }
-    
+
     // Check if user has already applied
     const existingApplication = await JobApplication.findOne({
       jobId: job._id,
       userId: req.user.id
     });
-    
+
     if (existingApplication) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'You have already applied for this job' 
+      return res.status(400).json({
+        success: false,
+        message: 'You have already applied for this job'
       });
     }
-    
+
     res.json({
       success: true,
       data: {
@@ -359,9 +412,265 @@ export const getInternJobApplicationForm = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: 'Failed to fetch application form' 
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch application form'
     });
   }
 }
+
+
+export const applyForJob = async (req, res) => {
+  try {
+    const internId = req.user.id;
+    const { jobId, formData } = req.body;
+
+    if (!jobId || !formData) {
+      return res.status(400).json({
+        success: false,
+        message: "Job ID and form data are required",
+      });
+    }
+
+    // 1️⃣ Prevent duplicate application
+    const alreadyApplied = await JobApplication.findOne({
+      intern: internId,
+      job: jobId,
+    });
+
+    if (alreadyApplied) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already applied for this job",
+      });
+    }
+
+    // 2️⃣ Validate job
+    const job = await JobPost.findById(jobId);
+    if (!job || job.status !== "Open" || !job.isActive) {
+      return res.status(400).json({
+        success: false,
+        message: "Job is not accepting applications",
+      });
+    }
+
+    // 3️⃣ Fetch intern with purchases
+    const intern = await Intern.findById(internId);
+
+    if (!intern) {
+      return res.status(404).json({
+        success: false,
+        message: "Intern not found",
+      });
+    }
+
+    // 4️⃣ Get ALL successful job packages
+    const jobPackages = intern.purchases
+      .filter(p =>
+        p.purchaseCategory === "JOB_PACKAGE" &&
+        p.paymentStatus === "SUCCESS"
+      )
+      .sort((a, b) => new Date(a.purchasedAt) - new Date(b.purchasedAt));
+
+    if (jobPackages.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No active job package found",
+      });
+    }
+
+    // 5️⃣ Pick LATEST package (last index)
+    const latestPackage = jobPackages[jobPackages.length - 1];
+
+    if (latestPackage.jobPackageDetails.creditsRemaining <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "No job credits remaining",
+      });
+    }
+
+    // 6️⃣ Extract static fields
+    const {
+      full_name,
+      email,
+      mobile_number,
+      resume,
+      cover_letter,
+      ...dynamicFields
+    } = formData;
+
+    if (!full_name || !email || !mobile_number || !resume) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required application fields",
+      });
+    }
+
+    // 7️⃣ Create application
+    const application = await JobApplication.create({
+      intern: internId,
+      job: jobId,
+      full_name,
+      email,
+      mobile_number,
+      resume,
+      cover_letter,
+      customResponses: dynamicFields,
+    });
+
+    // 8️⃣ Increment job applicant count
+    await JobPost.findByIdAndUpdate(jobId, {
+      $inc: { applicantsCount: 1 },
+    });
+
+    // 9️⃣ Deduct credit from LATEST package
+    latestPackage.jobPackageDetails.creditsRemaining -= 1;
+
+    await intern.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Job application submitted successfully",
+      data: application,
+      creditsRemaining: latestPackage.jobPackageDetails.creditsRemaining,
+    });
+
+  } catch (error) {
+    console.error("Apply job error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to submit job application",
+    });
+  }
+};
+
+
+
+export const getAppliedJobs = async (req, res) => {
+  try {
+    const internId = req.user.id;
+
+    const applications = await JobApplication.find({ intern: internId })
+      .select("job")
+      .lean();
+
+    const appliedJobs = applications.map(a => a.job);
+
+    res.json({
+      success: true,
+      data: { appliedJobs },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false });
+  }
+};
+
+
+export const uploadResume = async (req, res) => {
+  try {
+    // multer + cloudinary already handled upload
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded",
+      });
+    }
+
+    // Cloudinary gives secure URL here
+    const fileUrl = req.file.path;
+
+    return res.status(200).json({
+      success: true,
+      message: "Resume uploaded successfully",
+      fileUrl, // send back URL to frontend
+    });
+
+  } catch (error) {
+    console.error("Resume upload error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to upload resume",
+    });
+  }
+};
+
+
+export const joinLiveClass = async (req, res) => {
+  try {
+    const internId = req.user.id;
+    const { classId } = req.params;
+
+    // 🔹 Fetch class
+    const liveClass = await Class.findById(classId);
+
+    if (!liveClass) {
+      return res.status(404).json({
+        success: false,
+        message: "Class not found",
+      });
+    }
+
+    // 🔹 Check class timing
+    const now = new Date();
+    if (now < new Date(liveClass.startTime) || now > new Date(liveClass.endTime)) {
+      return res.status(400).json({
+        success: false,
+        message: "Class is not live right now",
+      });
+    }
+
+    // 🔹 Fetch intern with purchases
+    const intern = await Intern.findById(internId);
+
+    if (!intern) {
+      return res.status(404).json({
+        success: false,
+        message: "Intern not found",
+      });
+    }
+
+    // 🔹 Get latest COURSE package (last index)
+    const coursePackages = intern.purchases
+      .filter(p =>
+        p.purchaseCategory === "COURSE" &&
+        p.paymentStatus === "SUCCESS"
+      )
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    if (coursePackages.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "No active course package found",
+      });
+    }
+
+    const latestCourse = coursePackages[coursePackages.length - 1];
+
+    // 🔹 Check live sessions
+    if (latestCourse.courseDetails.liveSessions <= 0) {
+      return res.status(403).json({
+        success: false,
+        message: "No live sessions remaining in your package",
+      });
+    }
+
+    // 🔹 Deduct live session
+    latestCourse.courseDetails.liveSessions -= 1;
+
+    await intern.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Access granted to live class",
+      meetingLink: liveClass.meetingLink,
+      liveSessionsRemaining: latestCourse.courseDetails.liveSessions,
+    });
+
+  } catch (error) {
+    console.error("Join live class error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to join live class",
+    });
+  }
+};

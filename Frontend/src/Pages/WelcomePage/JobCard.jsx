@@ -1,11 +1,11 @@
 // src/components/JobCard.jsx
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function JobCard({ job }) {
   return (
     <div
-      className="snap-start mb-5 h-75 ml-[0.8rem]  min-w-[320px] max-w-xs bg-transparent backdrop-blur-mdborder border-white/20 rounded-2xl p-5 shadow-lg relative hover:shadow-[0_24px_55px_rgba(15,23,42,0.35)] transition-shadow duration-300 max-w-[380px]:ml-[0.3rem] "
-      
+      className="snap-start mb-5 h-75 ml-[0.8rem]  min-w-[320px] max-w-xs bg-transparent backdrop-blur-md border-2 border-white rounded-2xl p-5 shadow-lg relative hover:shadow-[0_24px_55px_rgba(15,23,42,0.35)] transition-shadow duration-300 max-w-[380px]:ml-[0.3rem] "
     >
       
       <div className="absolute left-4 top-4">
@@ -34,7 +34,9 @@ export default function JobCard({ job }) {
         <p className="text-sm text-slate-800"><span className="font-semibold">📍 </span>{job.location}</p>
         <p className="mt-2 text-sm text-slate-800"><span className="font-semibold">💰 </span>{job.salary}</p>
 
-       
+        <Link to="/intern-login" className="mt-4 pointer-coarse: inline-block text-sm font-medium text-indigo-600 hover:text-indigo-800">
+          View Details
+        </Link>
       </div>
 
       

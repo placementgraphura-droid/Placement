@@ -10,28 +10,44 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Courses", path: "/courses" },
-    { name: "Internships", path: "/internship" },
   ];
 
   return (
-    <nav className="
-      fixed top-0 left-0 z-50
-      w-full md:w-[85%] h-25 md:h-18
-      bg-white/80 backdrop-blur-xl
-      border border-white/30
-      shadow-[0_8px_30px_rgba(0,0,0,0.1)]
-      md:rounded-full
-      px-6 py-3
-      flex items-center justify-between
-      mx-auto md:left-1/2 md:-translate-x-1/2 md:mt-8 
-    ">
-      
-    
-      <Link to="/" className="flex items-center">
-        <img src="/GraphuraLogo.jpg" className="h-15 w-auto" alt="logo" />
+    <nav
+      className="
+    fixed top-0 left-0 z-50
+    w-full md:w-[85%]
+    h-12 md:h-16
+    bg-white/80 backdrop-blur-xl
+    border border-white/30
+    shadow-[0_8px_30px_rgba(0,0,0,0.1)]
+    md:rounded-full
+    px-4 sm:px-6 md:px-8
+    flex items-center justify-between
+    mx-auto
+    md:left-1/2 md:-translate-x-1/2
+    mt-0 md:mt-6
+  "
+    >
+
+
+      <Link to="/" className="flex items-center gap-2">
+        <img
+          src="/GraphuraLogo.jpg"
+          alt="Graphura logo"
+          className="
+      h-10 
+      sm:h-11 
+      md:h-12 
+      lg:h-13
+      w-auto
+      object-contain
+    "
+        />
       </Link>
 
-      
+
+
       <div className="hidden md:flex items-center space-x-8">
         {navLinks.map((link) => (
           <NavLink
@@ -48,7 +64,7 @@ const Navbar = () => {
           </NavLink>
         ))}
 
-       
+
         <div className="relative">
           <button
             className="bg-sky-600 text-white px-5 py-2 rounded-lg shadow-sm font-medium 
@@ -68,8 +84,8 @@ const Navbar = () => {
                 to="/intern-login"
                 className="block px-4 py-3 hover:bg-blue-50 border-b border-blue-50"
               >
-                <div className="font-medium text-gray-800">Intern Login</div>
-                <div className="text-xs text-gray-500">For intern candidates</div>
+                <div className="font-medium text-gray-800">Portal Login</div>
+                <div className="text-xs text-gray-500">For Placement candidates</div>
               </Link>
 
               <Link
@@ -84,7 +100,7 @@ const Navbar = () => {
                 to="/hiring-team-login"
                 className="block px-4 py-3 hover:bg-blue-50 border-b border-blue-50"
               >
-                <div className="font-medium text-gray-800">Hiring Team</div>
+                <div className="font-medium text-gray-800">HR Team</div>
                 <div className="text-xs text-gray-500">For HR & hiring</div>
               </Link>
 
@@ -100,14 +116,14 @@ const Navbar = () => {
         </div>
       </div>
 
- 
+
       <div className="md:hidden">
         <button onClick={() => setIsOpen(!isOpen)}>
           {isOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
-   
+
       {isOpen && (
         <div className="
           absolute top-[70px] left-1/2 -translate-x-1/2
@@ -135,7 +151,7 @@ const Navbar = () => {
           <button
             onClick={() => {
               setIsOpen(false);
-              navigate("/login");
+              navigate("/intern-login");
             }}
             className="bg-indigo-600 text-white px-6 py-2 rounded-full"
           >

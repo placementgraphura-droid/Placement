@@ -3,7 +3,7 @@ import React from "react";
 const Hero = () => {
   return (
     <div
-      className="w-full md:min-h-[95vh] min-h-[80vh]  flex flex-col md:flex-row items-center justify-between px-10 md:px-20 md:pt-30 md:pl-25"
+      className="w-full h-screen min-h-[80vh]  flex flex-col md:flex-row items-center justify-between px-10 md:px-20 md:pt-30 md:pl-25"
       style={{
         background: "radial-gradient(circle, #88D9FF 0%, #0D6691 100%)",
       }}

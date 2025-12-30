@@ -23,7 +23,7 @@ const createCaptcha = () => {
   };
 };
 
-const LoginAdmin= () => {
+const LoginAdmin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -43,28 +43,25 @@ const LoginAdmin= () => {
     }
   }, [error]);
 
-
   useEffect(() => {
-  const verifyAuth = async () => {
-    const token = localStorage.getItem("AdminToken");
-    if (!token) return;
+    const verifyAuth = async () => {
+      const token = localStorage.getItem("adminToken");
+      if (!token) return;
 
-    try {
-      await axios.get("/api/check-auth/admin", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // Token valid → redirect
-      navigate("/dashboard/admin");
-    } catch (err) {
-      localStorage.removeItem("token", err);
-    }
-  };
+      try {
+        await axios.get("/api/check-auth/admin", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        navigate("/dashboard/admin");
+      } catch (err) {
+        localStorage.removeItem("adminToken", err);
+      }
+    };
 
-  verifyAuth();
-}, []);
-
+    verifyAuth();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -86,7 +83,7 @@ const LoginAdmin= () => {
     }
 
     try {
-        const res = await axios.post("/api/login/admin", {
+      const res = await axios.post("/api/login/admin", {
         email,
         password,
       });
@@ -108,63 +105,75 @@ const LoginAdmin= () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 flex items-center justify-center p-3 sm:p-4 overflow-hidden">
-        
-        <div className="absolute top-6 left-6">
-        <img src="/GraphuraLogo.jpg" alt="Graphura Logo" className="h-24 rounded-full" />
-        </div>
+<div
+  className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-cover bg-center"
+  style={{
+    backgroundImage: `
+      linear-gradient(
+        to bottom right,
+        rgba(13,93,132,0.85),
+        rgba(42,151,206,0.85),
+        rgba(9,67,95,0.85)
+      ),
+      url('/herobg.png')
+    `
+  }}
+>
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 opacity-10 ">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(#FEFEFE 10px, transparent 10px)`,
+          backgroundSize: '30px 30px'
+        }}></div>
+      </div>
 
-        {/* Left Section - Image */}
-        <div className="hidden lg:flex relative w-full xl:w-1/2">
-          <img
-            src="/image.png"
-            alt="Student Illustration"
-            className="w-full h-full object-cover"
-          />
-          
-        </div>
+      {/* Logo */}
+      <div className="absolute top-6 left-6">
+        <img 
+          src="/logoWhite.png" 
+          alt="Graphura Logo" 
+          className="w-60 border-4shadow-lg" 
+        />
+      </div>
 
-        {/* Right Section - Login Form */}
-        <div className="w-full xl:w-1/2 flex flex-col justify-center p-4 sm:p-5 md:p-6 lg:p-8">
-          {/* Mobile Header */}
-          <div className="lg:hidden mb-4 sm:mb-5">
-            <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+      {/* Main Container */}
+      <div className="w-full top-5 max-w-lg mx-auto relative">
+        {/* Transparent Glass Form */}
+        <div className="bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-4 sm:p-8 shadow-2xl">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
               Admin Login
-            </h2>
-            <p className="text-gray-600 text-sm">Welcome back! Please sign in to your account</p>
+            </h1>
+            <p className="text-white/80 text-sm sm:text-base">
+              Welcome back! Please sign in to your account
+            </p>
           </div>
 
-          {/* Desktop Header */}
-          <div className="hidden lg:block mb-5 lg:mb-6">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              Admin  Login
-            </h2>
-            <p className="text-gray-600 text-sm">Welcome back! Please sign in to your account</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 lg:space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email Field */}
-            <div className="space-y-1">
-              <label className="flex items-center text-sm font-medium text-gray-700">
-                <Mail className="w-4 h-4 mr-2 text-blue-500" />
+            <div className="space-y-2">
+              <label className="flex items-center text-sm font-medium text-white/90">
+                <Mail className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                 Email Address
               </label>
               <div className="relative">
                 <input
                   type="email"
-                  placeholder="Enter your email address"
+                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-2.5 sm:p-3 lg:p-3 pl-9 sm:pl-10 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-gray-50/50 text-sm"
+                  className="w-full p-3 pl-10 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                   required
                 />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#D4E5EE]" />
               </div>
             </div>
 
             {/* Password Field */}
-            <div className="space-y-1">
-              <label className="flex items-center text-sm font-medium text-gray-700">
-                <Lock className="w-4 h-4 mr-2 text-blue-500" />
+            <div className="space-y-2">
+              <label className="flex items-center text-sm font-medium text-white/90">
+                <Lock className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                 Password
               </label>
               <div className="relative">
@@ -173,62 +182,63 @@ const LoginAdmin= () => {
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-2.5 sm:p-3 lg:p-3 pl-9 sm:pl-10 pr-9 sm:pr-10 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-gray-50/50 text-sm"
+                  className="w-full p-3 pl-10 pr-10 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white placeholder-white/50 transition-all duration-200"
                   required
                 />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[#D4E5EE]" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2.5 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            {/* Enhanced Captcha Section */}
-            <div className="space-y-1">
-              <label className="flex items-center text-sm font-medium text-gray-700">
-                <Shield className="w-4 h-4 mr-2 text-green-500" />
+            {/* Captcha Section */}
+            <div className="space-y-2">
+              <label className="flex items-center text-sm font-medium text-white/90">
+                <Shield className="w-4 h-4 mr-2 text-[#D4E5EE]" />
                 Security Check
               </label>
-              <div className="bg-gradient-to-r from-gray-50 to-blue-50/30 border-2 border-gray-200 rounded-xl p-2.5 sm:p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-700">Solve this:</span>
+              <div className="bg-white/5 border border-white/20 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-medium text-white/90">Solve this:</span>
                   <button
                     type="button"
                     onClick={refreshCaptcha}
-                    className="flex items-center space-x-1 text-blue-600 hover:text-blue-700 transition-colors text-sm font-medium"
+                    className="flex items-center space-x-1 text-[#D4E5EE] hover:text-white transition-colors text-sm"
                   >
                     <RefreshCw className="w-4 h-4" />
-                    <span className="text-xs sm:text-sm">New</span>
+                    <span>New</span>
                   </button>
                 </div>
-                <div className="flex items-center justify-between space-x-2">
-                  <div className="flex-1 bg-white border-2 border-gray-300 rounded-lg p-2 text-center min-w-0">
-                    <span className="text-base sm:text-lg font-bold text-gray-800 font-mono break-all">
+                <div className="flex items-center justify-between space-x-3">
+                  <div className="flex-1 bg-white/10 border border-white/20 rounded-lg p-3 text-center">
+                    <span className="text-lg font-bold text-white font-mono">
                       {captcha.question}
                     </span>
                   </div>
-                  <span className="text-base sm:text-lg font-bold text-gray-600 flex-shrink-0">=</span>
+                  <span className="text-lg font-bold text-white">=</span>
                   <input
                     type="text"
                     placeholder="?"
                     value={captchaInput}
                     onChange={(e) => setCaptchaInput(e.target.value)}
-                    className="w-12 sm:w-16 p-2 border-2 border-gray-300 rounded-lg text-center text-base sm:text-lg font-bold font-mono focus:border-blue-500 focus:ring-2 focus:ring-blue-200 flex-shrink-0"
+                    className="w-16 p-3 bg-white/10 border border-white/20 rounded-lg text-center text-lg font-bold font-mono focus:outline-none focus:border-[#D4E5EE] focus:ring-2 focus:ring-[#D4E5EE]/30 text-white transition-all duration-200"
                     required
                   />
                 </div>
               </div>
             </div>
 
-            {/* Error Message with Animation */}
+            {/* Error Message */}
             {error && (
-              <div className={`bg-red-50 border-2 border-red-200 rounded-xl p-2.5 sm:p-3 transform transition-all duration-300 ${shake ? 'animate-shake' : ''}`}>
-                <div className="flex items-center space-x-2 text-red-700">
-                  <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-xs sm:text-sm font-medium">{error}</span>
+              <div className={`bg-red-500/20 border border-red-500/30 rounded-lg p-3 transform transition-all duration-300 ${shake ? 'animate-shake' : ''}`}>
+                <div className="flex items-center space-x-2 text-red-200">
+                  <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium">{error}</span>
                 </div>
               </div>
             )}
@@ -237,33 +247,37 @@ const LoginAdmin= () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold p-2.5 sm:p-3 rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:transform-none flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl text-sm"
+              className="w-full bg-gradient-to-r from-[#3287B1] to-[#09435F] hover:from-[#3287B1]/90 hover:to-[#09435F]/90 text-white font-semibold p-3 rounded-lg transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center space-x-2 shadow-lg"
             >
               {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <LogIn className="w-4 h-4" />
+                <LogIn className="w-5 h-5" />
               )}
               <span>{isLoading ? "Signing In..." : "Sign In"}</span>
             </button>
           </form>
 
           {/* Footer */}
-          <div className="mt-4 sm:mt-5 text-center">
-            <p className="text-gray-600 text-xs">
+          <div className="mt-6 text-center">
+            <p className="text-white/70 text-sm">
               Don't have an account?{" "}
               <a 
                 href="/register-admin" 
-                className="font-semibold text-blue-600 hover:text-blue-700 transition-colors duration-200 underline underline-offset-2"
+                className="font-semibold text-[#D4E5EE] hover:text-white transition-colors duration-200"
               >
                 Create Account
               </a>
             </p>
           </div>
         </div>
-    
 
-      {/* Custom CSS for shake animation */}
+        {/* Decorative Elements */}
+        <div className="absolute -top-6 -right-6 w-32 h-32 bg-[#3287B1]/20 rounded-full blur-xl -z-10"></div>
+        <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-[#09435F]/20 rounded-full blur-xl -z-10"></div>
+      </div>
+
+      {/* Custom CSS */}
       <style jsx>{`
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
@@ -272,6 +286,25 @@ const LoginAdmin= () => {
         }
         .animate-shake {
           animation: shake 0.5s ease-in-out;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+          background: rgba(212, 229, 238, 0.3);
+          border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(212, 229, 238, 0.5);
         }
       `}</style>
     </div>

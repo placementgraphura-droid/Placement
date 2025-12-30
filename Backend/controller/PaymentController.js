@@ -7,48 +7,40 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-
 export const purchasePlan = async (req, res) => {
   try {
     const internId = req.user.id;
-    const { planId, planCategory, amount, credits } = req.body;
 
-    if (!planId || !planCategory || !amount || !credits) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Plan details are missing" });
-    }
+    const {
+      purchaseCategory,
+      amount, 
+      packageType,
+      creditsGiven,
+      maxPackageLPA,
+      courseType,
+      totalSessions,
+      liveSessions,
+      recordedSessions
+    } = req.body;
 
-    const intern = await Intern.findById(internId);
-
-    const hasPurchasedSilver = intern.paymentHistory.some(
-      payment => payment.planPurchased === "SILVER"
-    );
-
-    if (hasPurchasedSilver) {
+    if (!purchaseCategory || !amount) {
       return res.status(400).json({
         success: false,
-        message: "You have already purchased the SILVER plan"
+        message: "Missing required payment fields"
       });
     }
 
-    // Razorpay needs amount in paise
-    const amountInPaise = amount * 100;
-
-    // keep receipt length < 40 chars
-    const shortInternId = internId.toString().slice(-6);
-    const receiptId = `rcpt_${shortInternId}_${Date.now()}`; // ~25 chars
-
+    // Amount must be in paise
     const options = {
-      amount: amountInPaise,
+      amount: amount,
       currency: "INR",
-      receipt: receiptId,
+      receipt: `rcpt_${internId.slice(-5)}_${Date.now()}`,
       notes: {
         internId,
-        planId,
-        planCategory,
-        credits,
-      },
+        purchaseCategory,
+        packageType,
+        courseType
+      }
     };
 
     const order = await razorpay.orders.create(options);
@@ -59,120 +51,156 @@ export const purchasePlan = async (req, res) => {
       amount: order.amount,
       currency: order.currency,
       key: process.env.RAZORPAY_KEY_ID,
+      orderData: {
+        purchaseCategory,
+        packageType,
+        creditsGiven,
+        maxPackageLPA,
+        courseType,
+        totalSessions,
+        liveSessions,
+        recordedSessions,
+        amountPaid: amount / 100
+      }
     });
+
   } catch (error) {
     console.error("Create Order Error:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Error creating Razorpay order" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to create Razorpay order"
+    });
   }
 };
+
 
 
 export const verifyPayment = async (req, res) => {
   try {
     const internId = req.user.id;
+
     const {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
-      planId,
-      planCategory,
-      amount,
-      credits,
+      orderData
     } = req.body;
 
-    // 1️⃣ Verify signature
+    // 🔐 Verify signature
     const body = razorpay_order_id + "|" + razorpay_payment_id;
-
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
-      .update(body.toString())
+      .update(body)
       .digest("hex");
 
     if (expectedSignature !== razorpay_signature) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid payment signature" });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid payment signature"
+      });
     }
 
-    // 2️⃣ Find intern
     const intern = await Intern.findById(internId);
     if (!intern) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Intern not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Intern not found"
+      });
     }
 
-    // 3️⃣ Update credits & plan (one-time purchase logic)
-    const creditsToAdd = Number(credits) || 0;
-    const amountNumber = Number(amount) || 0;
-
-    intern.jobCredits = (intern.jobCredits || 0) + creditsToAdd;
-    intern.planCategory = planCategory || intern.planCategory || "NONE";
-
-    intern.paymentHistory.push({
-      amount: amountNumber,
-      currency: "INR",
+    // 🧾 Build purchase object
+    const purchase = {
+      purchaseCategory: orderData.purchaseCategory,
+      amountPaid: orderData.amountPaid,
       paymentId: razorpay_payment_id,
-      status: "success",
-      planPurchased: planCategory,
-    });
+      paymentStatus: "SUCCESS",
+    };
 
+    if (orderData.purchaseCategory === "JOB_PACKAGE") {
+      purchase.jobPackageDetails = {
+        packageType: orderData.packageType,
+        creditsGiven: orderData.creditsGiven,
+        creditsRemaining: orderData.creditsGiven,
+        maxPackageLPA: orderData.maxPackageLPA
+      };
+    }
+
+    if (orderData.purchaseCategory === "COURSE") {
+      purchase.courseDetails = {
+        courseType: orderData.courseType,
+        totalSessions: orderData.totalSessions,
+        liveSessions: orderData.liveSessions,
+        recordedSessions: orderData.recordedSessions
+      };
+    }
+
+    intern.purchases.push(purchase);
     await intern.save();
 
     return res.status(200).json({
       success: true,
-      message: "Payment verified and plan activated",
-      jobCredits: intern.jobCredits,
-      planCategory: intern.planCategory,
+      message: "Payment verified & purchase activated"
     });
+
   } catch (error) {
     console.error("Verify Payment Error:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Error verifying payment" });
+    res.status(500).json({
+      success: false,
+      message: "Payment verification failed"
+    });
   }
 };
+
 
 //get current plan
 export const getCurrentPlan = async (req, res) => {
   try {
-    const internId = req.user.id;
-    const intern = await Intern.findById(internId);
+    const intern = await Intern.findById(req.user.id);
     if (!intern) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Intern not found" });
+      return res.status(404).json({ success: false });
     }
+
+    // 🔢 Calculate job credits
+    const jobCredits = intern.purchases
+      .filter(p => p.purchaseCategory === "JOB_PACKAGE")
+      .reduce((sum, p) => sum + (p.jobPackageDetails?.creditsRemaining || 0), 0);
+
+    // 🎓 Purchased courses
+    const purchasedCourses = intern.purchases
+      .filter(p => p.purchaseCategory === "COURSE")
+      .map(p => p.courseDetails);
+
     return res.status(200).json({
       success: true,
-      planCategory: intern.planCategory,
-      jobCredits: intern.jobCredits,
+      jobCredits,
+      purchasedCourses,
+      activePlans: intern.purchases
     });
+
   } catch (error) {
-    console.error("Get Current Plan Error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Error fetching current plan",
-    });
+    console.error(error);
+    res.status(500).json({ success: false });
   }
 };
+
 
 //get payment history
 export const getPaymentHistory = async (req, res) => {
   try {
-    const internId = req.user.id;
-    const intern = await Intern.findById(internId);
+    const intern = await Intern.findById(req.user.id);
     if (!intern) {
-      return res.status(404).json({ success: false, message: "Intern not found" });
+      return res.status(404).json({ success: false });
     }
+
     return res.status(200).json({
       success: true,
-      paymentHistory: intern.paymentHistory || [],
+      paymentHistory: intern.purchases.sort(
+        (a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt)
+      )
     });
+
   } catch (error) {
-    console.error("Get Payment History Error:", error);
-    return res.status(500).json({ success: false, message: "Error fetching payment history" });
+    res.status(500).json({ success: false });
   }
 };
+

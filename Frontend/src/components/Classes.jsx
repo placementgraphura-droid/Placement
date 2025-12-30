@@ -23,20 +23,26 @@ import {
   Cloud,
   Server,
   Layout,
-  Globe
+  Globe,
+  Lock,
+  Briefcase,
+  Mic,
+  Award
 } from 'lucide-react';
 
 const Classes = () => {
   const [classes, setClasses] = useState([]);
   const [filteredClasses, setFilteredClasses] = useState([]);
-  const [planInfo, setPlanInfo] = useState(null);
+  const [courseType, setCourseType] = useState(null);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadingClasses, setLoadingClasses] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const [allowedCategories, setAllowedCategories] = useState([]);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [sortBy, setSortBy] = useState('upcoming');
+  const [joinedClasses, setJoinedClasses] = useState([]);
 
   // Filters configuration
   const filters = [
@@ -46,40 +52,56 @@ const Classes = () => {
     { id: 'completed', label: 'Completed', icon: CheckCircle },
   ];
 
-
-  // Subject icons mapping
-  const subjectIcons = {
-    'Frontend': { icon: Layout, color: 'bg-blue-500' },
-    'Backend': { icon: Server, color: 'bg-green-500' },
-    'Full Stack': { icon: Code, color: 'bg-purple-500' },
-    'Database': { icon: Database, color: 'bg-orange-500' },
-    'Mobile': { icon: Smartphone, color: 'bg-pink-500' },
-    'DevOps': { icon: Cloud, color: 'bg-cyan-500' },
-    'Architecture': { icon: Globe, color: 'bg-indigo-500' },
-    'default': { icon: GraduationCap, color: 'bg-gray-500' }
+  // Category icons mapping
+  const categoryIcons = {
+    'CV_BUILDING': { icon: Briefcase, color: 'bg-blue-500', label: 'CV Building' },
+    'INTERVIEW_PREP': { icon: Mic, color: 'bg-green-500', label: 'Interview Prep' },
+    'COMBO': { icon: Award, color: 'bg-purple-500', label: 'Combo Session' },
+    'default': { icon: GraduationCap, color: 'bg-gray-500', label: 'General' }
   };
 
-  // Fetch user's plan information
+  // Fetch user's plan information and course type
   useEffect(() => {
     const fetchPlan = async () => {
       try {
-        const { data } = await axios.get('/api/payments/current-plan');
-        if (data.success) {
-          setPlanInfo(data);
-          const paidPlan = data.planCategory && data.planCategory !== 'NONE';
-          setHasAccess(paidPlan);
+        const { data } = await axios.get('/api/payments/current-plan', {
+          withCredentials: true
+        });
+
+        if (data.success && Array.isArray(data.purchasedCourses) && data.purchasedCourses.length > 0) {
+
+          // ✅ LAST purchased course = ACTIVE COURSE
+          const lastCourse = data.purchasedCourses.at(-1);
+
+          const courseType = lastCourse.courseType;
+          setCourseType(courseType);
+
+          let allowed = [];
+
+          if (courseType === "CV_BUILDING") {
+            allowed = ["CV_BUILDING"];
+          } else if (courseType === "INTERVIEW_PREP") {
+            allowed = ["INTERVIEW_PREP"];
+          } else if (courseType === "COMBO") {
+            allowed = ["CV_BUILDING", "INTERVIEW_PREP", "COMBO"];
+          }
+
+          setAllowedCategories(allowed);
+          setHasAccess(true);
         } else {
           setHasAccess(false);
         }
       } catch (err) {
-        console.error('Error fetching plan info:', err);
+        console.error("Error fetching plan info:", err);
         setHasAccess(false);
       } finally {
         setLoadingPlan(false);
       }
     };
+
     fetchPlan();
   }, []);
+
 
   // Fetch classes data from backend
   useEffect(() => {
@@ -87,10 +109,15 @@ const Classes = () => {
       try {
         setLoadingClasses(true);
         const { data } = await axios.get('/api/intern/classes');
-        
+
         if (data.success) {
-          setClasses(data.classes);
-          setFilteredClasses(data.classes);
+          // Filter classes based on allowed categories
+          const filtered = data.classes.filter(classItem =>
+            allowedCategories.includes(classItem.courseType)
+          );
+
+          setClasses(filtered);
+          setFilteredClasses(filtered);
         } else {
           setError('Failed to load classes');
         }
@@ -102,10 +129,12 @@ const Classes = () => {
       }
     };
 
-    if (hasAccess) {
+    if (hasAccess && allowedCategories.length > 0) {
       fetchClasses();
+    } else if (hasAccess) {
+      setLoadingClasses(false);
     }
-  }, [hasAccess]);
+  }, [hasAccess, allowedCategories]);
 
   // Filter and search classes
   useEffect(() => {
@@ -117,7 +146,7 @@ const Classes = () => {
       result = result.filter(classItem =>
         classItem.title.toLowerCase().includes(query) ||
         classItem.description.toLowerCase().includes(query) ||
-        classItem.subject.toLowerCase().includes(query) ||
+        (classItem.courseType && classItem.courseType.toLowerCase().includes(query)) ||
         classItem.instructor?.name?.toLowerCase().includes(query)
       );
     }
@@ -148,7 +177,13 @@ const Classes = () => {
     setFilteredClasses(result);
   }, [searchQuery, selectedFilter, sortBy, classes]);
 
-  const handleJoin = (classItem) => {
+  const handleJoin = async (classItem) => {
+    // ❌ Prevent re-joining same class
+    if (joinedClasses.includes(classItem._id)) {
+      alert('You have already joined this class.');
+      return;
+    }
+
     const now = new Date();
     const startTime = new Date(classItem.startTime);
     const endTime = new Date(classItem.endTime);
@@ -163,26 +198,52 @@ const Classes = () => {
       return;
     }
 
-    if (classItem.meetingLink) {
-      window.open(classItem.meetingLink, '_blank');
-    } else {
-      alert('Meeting link is not available for this class.');
+    try {
+      const { data } = await axios.post(
+        `/api/intern/classes/${classItem._id}/join`,
+        {},
+        { withCredentials: true }
+      );
+
+      if (!data.success) {
+        alert(data.message || 'Unable to join class');
+        return;
+      }
+
+      // ✅ Mark class as joined
+      setJoinedClasses(prev => [...prev, classItem._id]);
+
+      // ✅ Open meeting link
+      if (data.meetingLink) {
+        window.open(data.meetingLink, '_blank');
+      } else {
+        alert('Meeting link is not available for this class.');
+      }
+
+    } catch (error) {
+      console.error('Join class error:', error);
+      alert(
+        error.response?.data?.message ||
+        'You do not have remaining live sessions'
+      );
     }
   };
+
+
 
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     return {
       day: date.toLocaleDateString('en-US', { weekday: 'long' }),
-      date: date.toLocaleDateString('en-US', { 
-        month: 'short', 
+      date: date.toLocaleDateString('en-US', {
+        month: 'short',
         day: 'numeric',
         year: 'numeric'
       }),
-      time: date.toLocaleTimeString('en-US', { 
-        hour: '2-digit', 
+      time: date.toLocaleTimeString('en-US', {
+        hour: '2-digit',
         minute: '2-digit',
-        hour12: true 
+        hour12: true
       })
     };
   };
@@ -193,7 +254,7 @@ const Classes = () => {
     const durationMs = end - start;
     const durationHours = Math.floor(durationMs / (1000 * 60 * 60));
     const durationMinutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (durationHours > 0) {
       return `${durationHours}h ${durationMinutes > 0 ? `${durationMinutes}m` : ''}`;
     }
@@ -204,7 +265,7 @@ const Classes = () => {
     const now = new Date();
     const start = new Date(startTime);
     const end = new Date(endTime);
-    
+
     if (now >= start && now <= end) return 'live';
     if (now < start) return 'upcoming';
     return 'completed';
@@ -237,25 +298,28 @@ const Classes = () => {
     }
   };
 
-  const getSubjectIcon = (subject) => {
-    return subjectIcons[subject] || subjectIcons.default;
+  const getCategoryIcon = (category) => {
+    return categoryIcons[category] || categoryIcons.default;
   };
 
-  const getInstructorInitials = (name) => {
-    if (!name) return 'AI';
-    return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
+  const getCategoryLabel = (category) => {
+    return categoryIcons[category]?.label || category || 'General';
   };
-
 
   const handleClearFilters = () => {
     setSearchQuery('');
     setSelectedFilter('all');
     setSortBy('upcoming');
+  };
+
+  // Get course type display name
+  const getCourseTypeDisplay = (type) => {
+    const types = {
+      'CV_BUILDING': 'CV Building',
+      'INTERVIEW_PREP': 'Interview Preparation',
+      'COMBO': 'Combo Package'
+    };
+    return types[type] || type || 'No Course';
   };
 
   // ⏳ While checking plan
@@ -274,8 +338,8 @@ const Classes = () => {
     );
   }
 
-  // ❌ No active plan → show upgrade screen
-  if (!hasAccess) {
+  // ❌ No active plan or no course purchased → show upgrade screen
+  if (!hasAccess || !courseType) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
@@ -285,44 +349,124 @@ const Classes = () => {
               <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-white/30">
                 <GraduationCap className="w-10 h-10 text-white" />
               </div>
-              <h1 className="text-2xl font-bold text-white">Premium Classes</h1>
+              <h1 className="text-2xl font-bold text-white">Live Classes Access</h1>
             </div>
           </div>
-          
+
           <div className="p-8">
             <div className="flex items-center justify-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-yellow-500" />
-              <span className="text-sm font-medium text-yellow-600">PREMIUM FEATURE</span>
+              <Lock className="w-5 h-5 text-yellow-500" />
+              <span className="text-sm font-medium text-yellow-600">COURSE REQUIRED</span>
             </div>
-            
+
             <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">
               Unlock Live Classes
             </h2>
-            
+
             <p className="text-gray-600 text-center mb-8">
-              Access expert-led live sessions, interactive workshops, and real-time Q&A by upgrading to a premium plan.
+              Access live interactive sessions by purchasing one of our career development courses.
             </p>
 
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">Live sessions with industry experts</span>
+                <span className="text-gray-700">CV Building Masterclasses</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">Interactive Q&A and doubt solving</span>
+                <span className="text-gray-700">Interview Preparation Sessions</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">Recordings for later review</span>
+                <span className="text-gray-700">Live Q&A with Industry Experts</span>
               </div>
             </div>
 
-            {planInfo && (
-              <p className="text-center text-sm text-gray-500">
-                Current plan: <span className="font-semibold text-gray-700">{planInfo.planCategory || 'Free Tier'}</span>
-              </p>
+            {courseType ? (
+              <div className="text-center">
+                <p className="text-sm text-gray-500">
+                  Your course: <span className="font-semibold text-gray-700">
+                    {getCourseTypeDisplay(courseType)}
+                  </span>
+                </p>
+                <p className="text-sm text-green-600 mt-2">
+                  ✓ You have access to classes in your purchased course
+                </p>
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="text-sm text-gray-500">
+                  No course purchased yet. Choose a plan to get started!
+                </p>
+              </div>
             )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show access message when user has access but no classes in their category
+  if (hasAccess && loadingClasses === false && classes.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-4 md:p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg">
+                  <Video className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                    Live Classes
+                  </h1>
+                  <p className="text-gray-600 text-sm mt-1">
+                    Your access: {allowedCategories.map(cat => getCategoryLabel(cat)).join(' & ')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Empty State with Access Info */}
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-12 text-center">
+            <div className="w-24 h-24 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <BookOpen className="w-12 h-12 text-blue-500" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              No Classes Available for Your Course
+            </h3>
+            <p className="text-gray-600 text-lg max-w-md mx-auto mb-6">
+              You have access to <span className="font-semibold text-blue-600">
+                {getCourseTypeDisplay(courseType)}
+              </span> classes, but there are no scheduled sessions at the moment.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              {allowedCategories.map(category => {
+                const catConfig = getCategoryIcon(category);
+                const CatIcon = catConfig.icon;
+                return (
+                  <div
+                    key={category}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full"
+                  >
+                    <div className={`w-6 h-6 ${catConfig.color} rounded-full flex items-center justify-center`}>
+                      <CatIcon className="w-3 h-3 text-white" />
+                    </div>
+                    <span className="text-sm font-medium text-blue-700">
+                      {getCategoryLabel(category)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <p className="text-gray-500 text-sm">
+              New classes will be scheduled soon. Check back later or contact support for updates.
+            </p>
           </div>
         </div>
       </div>
@@ -341,7 +485,7 @@ const Classes = () => {
             </div>
             <div className="h-12 bg-gray-200 rounded-xl w-48 animate-pulse"></div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div key={n} className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 animate-pulse">
@@ -372,21 +516,32 @@ const Classes = () => {
               <div className="p-2.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg">
                 <Video className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                Live Classes
-              </h1>
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                  Live Classes
+                </h1>
+                <div className="flex items-center gap-3 mt-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-gray-600">
+                      Course: <span className="font-semibold text-gray-800">
+                        {getCourseTypeDisplay(courseType)}
+                      </span>
+                    </span>
+                  </div>
+                  <span className="text-gray-300">•</span>
+                  <div className="flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-blue-500" />
+                    <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                      {allowedCategories.length} category{allowedCategories.length > 1 ? 's' : ''} accessible
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             <p className="text-gray-600 text-lg max-w-2xl">
-              Join interactive live sessions with industry experts and enhance your skills in real-time
+              Join interactive live sessions in your purchased course categories
             </p>
-            {planInfo?.planName && (
-              <div className="flex items-center gap-2 mt-3">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-sm text-gray-500">
-                  Premium plan: <span className="font-semibold text-gray-700">{planInfo.planName}</span>
-                </span>
-              </div>
-            )}
           </div>
 
           <div className="flex items-center gap-3">
@@ -400,6 +555,43 @@ const Classes = () => {
           </div>
         </div>
 
+        {/* Course Access Banner */}
+        <div className="mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl shadow-lg">
+                <GraduationCap className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">Your Course Access</h3>
+                <p className="text-sm text-gray-600">
+                  You can access classes in the following categories:
+                </p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {allowedCategories.map(category => {
+                const catConfig = getCategoryIcon(category);
+                const CatIcon = catConfig.icon;
+                return (
+                  <div
+                    key={category}
+                    className="flex items-center gap-2 px-3 py-2 bg-white border border-blue-100 rounded-lg shadow-sm"
+                  >
+                    <div className={`w-8 h-8 ${catConfig.color} rounded-lg flex items-center justify-center`}>
+                      <CatIcon className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-gray-900">{catConfig.label}</div>
+                      <div className="text-xs text-gray-500">Included</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
         {/* Search and Filter Section */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -407,7 +599,7 @@ const Classes = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search classes by title, topic, or instructor..."
+                placeholder="Search classes by title, description, or instructor..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
@@ -431,11 +623,10 @@ const Classes = () => {
                   <button
                     key={filter.id}
                     onClick={() => setSelectedFilter(filter.id)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 ${
-                      isActive
-                        ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
-                    }`}
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-300 ${isActive
+                      ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
+                      }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span className="text-sm font-medium">{filter.label}</span>
@@ -495,30 +686,37 @@ const Classes = () => {
           <>
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-xl font-bold text-gray-900">
-                {selectedFilter === 'all' ? 'All Classes' : 
-                 selectedFilter === 'live' ? 'Live Classes' :
-                 selectedFilter === 'upcoming' ? 'Upcoming Classes' : 'Completed Classes'}
+                {selectedFilter === 'all' ? 'All Classes' :
+                  selectedFilter === 'live' ? 'Live Classes' :
+                    selectedFilter === 'upcoming' ? 'Upcoming Classes' : 'Completed Classes'}
                 <span className="ml-2 text-gray-500 font-normal">
                   ({filteredClasses.length} {filteredClasses.length === 1 ? 'class' : 'classes'})
                 </span>
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
               {filteredClasses.map((classItem) => {
                 const startDateTime = formatDateTime(classItem.startTime);
                 const endDateTime = formatDateTime(classItem.endTime);
                 const statusConfig = getStatusConfig(classItem.startTime, classItem.endTime);
-                const subjectConfig = getSubjectIcon(classItem.subject);
-                const SubjectIcon = subjectConfig.icon;
+                const categoryConfig = getCategoryIcon(classItem.courseType);
+                const CategoryIcon = categoryConfig.icon;
                 const isLive = getClassStatus(classItem.startTime, classItem.endTime) === 'live';
-                const isUpcoming = getClassStatus(classItem.startTime, classItem.endTime) === 'upcoming';
 
                 return (
-                  <div 
-                    key={classItem._id} 
+                  <div
+                    key={classItem._id}
                     className="bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden group relative"
                   >
+                    {/* Category Badge */}
+                    <div className="absolute top-4 left-4 z-10">
+                      <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${categoryConfig.color} bg-opacity-90 text-white text-xs font-semibold shadow-lg`}>
+                        <CategoryIcon className="w-3.5 h-3.5" />
+                        <span>{categoryConfig.label}</span>
+                      </div>
+                    </div>
+
                     {/* Status Badge */}
                     <div className="absolute top-4 right-4 z-10">
                       <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${statusConfig.color} text-white text-xs font-semibold shadow-lg`}>
@@ -530,20 +728,18 @@ const Classes = () => {
                       )}
                     </div>
 
+                    <div className="bg-gray-100 h-72 flex items-center justify-center">
+                      <img
+                        src={classItem.thumbnailUrl}
+                        alt={classItem.title}
+                        className="w-full h-full object-fit rounded-t-2xl"
+                      />
+                    </div>
+
                     {/* Class Header */}
-                    <div className={`relative p-6 ${isLive ? 'bg-gradient-to-br from-blue-50 to-indigo-50' : 'bg-gradient-to-br from-gray-50 to-blue-50'}`}>
+                    <div className={`relative pt-16 pb-6 px-6 ${isLive ? 'bg-gradient-to-br from-blue-50 to-indigo-50' : 'bg-gradient-to-br from-gray-50 to-blue-50'}`}>
                       <div className="flex items-start gap-4">
-                        <div className={`p-3 rounded-xl ${subjectConfig.color} shadow-lg`}>
-                          <SubjectIcon className="w-6 h-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-black/5 text-gray-700">
-                              {classItem.subject}
-                            </span>
-                            <span className="text-xs text-gray-500">•</span>
-                            <span className="text-xs text-gray-500 capitalize">{classItem.classType}</span>
-                          </div>
+                        <div>
                           <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
                             {classItem.title}
                           </h3>
@@ -552,24 +748,11 @@ const Classes = () => {
                           </p>
                         </div>
                       </div>
-
-                      {/* Instructor Info */}
-                      {classItem.instructor && (
-                        <div className="flex items-center gap-3 mt-6 p-3 bg-white/50 rounded-xl border border-white/80 backdrop-blur-sm">
-                          <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            {getInstructorInitials(classItem.instructor.name)}
-                          </div>
-                          <div>
-                            <div className="font-medium text-gray-900">{classItem.instructor.name}</div>
-                            <div className="text-xs text-gray-500">{classItem.instructor.role || 'Expert Instructor'}</div>
-                          </div>
-                        </div>
-                      )}
                     </div>
 
                     {/* Class Details */}
-                    <div className="p-6">
-                      <div className="space-y-4 mb-6">
+                    <div className="p-6 pt-0">
+                      <div className="space-y-4 mt-5 mb-6">
                         {/* Date Card */}
                         <div className="flex items-center gap-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
                           <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg flex items-center justify-center shadow-lg">
@@ -589,65 +772,47 @@ const Classes = () => {
                           <div>
                             <div className="font-semibold text-gray-900">{startDateTime.time} - {endDateTime.time}</div>
                             <div className="text-gray-600 text-sm">
-                              {getClassDuration(classItem.startTime, classItem.endTime)} • {classItem.difficulty || 'Intermediate'}
+                              {getClassDuration(classItem.startTime, classItem.endTime)}
                             </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Action Buttons */}
-                      <div className="space-y-3">
-                        {isLive || isUpcoming ? (
-                          <button
-                            onClick={() => handleJoin(classItem)}
-                            className={`w-full py-3.5 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-3 ${
-                              isLive
-                                ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700'
-                                : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600'
-                            }`}
-                          >
-                            {isLive ? (
-                              <>
-                                <Video className="w-5 h-5" />
-                                <span>Join Live Class</span>
-                                <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-                              </>
-                            ) : (
-                              <>
-                                <Calendar className="w-5 h-5" />
-                                <span>Join in {getClassDuration(new Date(), classItem.startTime)}</span>
-                              </>
-                            )}
-                          </button>
+                      <button
+                        onClick={() => handleJoin(classItem)}
+                        disabled={joinedClasses.includes(classItem._id)}
+                        className={`w-full py-3.5 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-3
+    ${joinedClasses.includes(classItem._id)
+                            ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                            : isLive
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700'
+                              : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white hover:from-blue-600 hover:to-indigo-600'
+                          }`}
+                      >
+                        {joinedClasses.includes(classItem._id) ? (
+                          <>
+                            <CheckCircle className="w-5 h-5" />
+                            <span>Already Joined</span>
+                          </>
+                        ) : isLive ? (
+                          <>
+                            <Video className="w-5 h-5" />
+                            <span>Join Live Class</span>
+                          </>
                         ) : (
-                          <div className="w-full py-3.5 bg-gray-100 text-gray-500 rounded-xl font-semibold text-center cursor-not-allowed border border-gray-200">
-                            <CheckCircle className="w-5 h-5 inline-block mr-2" />
-                            Class Completed
-                          </div>
+                          <>
+                            <Calendar className="w-5 h-5" />
+                            <span>Join in {getClassDuration(new Date(), classItem.startTime)}</span>
+                          </>
                         )}
-                      
-                      </div>
-                    </div>
+                      </button>
 
-                    {/* Additional Info */}
-                    <div className="px-6 pb-6 pt-4 border-t border-gray-100">
-                      <div className="flex items-center justify-between text-sm">
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-1.5">
-                            <Users className="w-4 h-4 text-gray-400" />
-                            <span className="text-gray-600">{classItem.enrolledCount || 0} enrolled</span>
-                          </div>
-                          <div className="flex items-center gap-1.5">
-                            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                            <span className="text-gray-600">{classItem.rating || 'New'}</span>
-                          </div>
+                      {joinedClasses.includes(classItem._id) ? (
+                        <div className="mt-3 text-center text-sm text-green-600">
+                          Meeting Link : {classItem.meetingLink} 
                         </div>
-                        {classItem.prerequisites && classItem.prerequisites.length > 0 && (
-                          <div className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded">
-                            {classItem.prerequisites.length} prerequisites
-                          </div>
-                        )}
-                      </div>
+                      ) : null}
                     </div>
                   </div>
                 );
@@ -661,9 +826,9 @@ const Classes = () => {
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">No Classes Found</h3>
             <p className="text-gray-600 text-lg max-w-md mx-auto mb-8">
-              {searchQuery 
-                ? `No classes found matching "${searchQuery}"`
-                : 'There are no live classes scheduled at the moment. Check back later for upcoming sessions.'
+              {searchQuery
+                ? `No classes found matching "${searchQuery}" in your accessible categories`
+                : `No ${selectedFilter !== 'all' ? selectedFilter : ''} classes available for your course at the moment.`
               }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

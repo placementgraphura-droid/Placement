@@ -424,29 +424,45 @@ const handleUpdateJob = async () => {
   }
 
   // Export Job Applicants
-  const handleExportApplicants = async (jobId) => {
-    try {
-      const token = getToken();
-      const response = await axios.get(`/api/hiring/jobs/${jobId}/export-applicants`, {
+const handleExportApplicants = async (job) => {
+  try {
+    const token = getToken();
+
+    const response = await axios.get(
+      `/api/hiring/jobs/${job._id}/export-applicants`,
+      {
         headers: { Authorization: `Bearer ${token}` },
-        responseType: 'blob'
-      });
+        responseType: "blob",
+      }
+    );
 
-      // Create download link
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `applicants_${jobId}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+    // ✅ Make job title safe for filename
+    const safeJobTitle = job.title
+      .replace(/[^a-zA-Z0-9-_ ]/g, "")
+      .replace(/\s+/g, "_")
+      .toLowerCase();
 
-      toast.success("Applicants exported successfully!");
-    } catch (error) {
-      console.error("Failed to export applicants:", error);
-      toast.error("Failed to export applicants");
-    }
-  };
+    // Create download link
+    const blob = new Blob([response.data], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `applicants_of_${safeJobTitle}.csv`);
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    toast.success("Applicants exported successfully!");
+  } catch (error) {
+    console.error("Failed to export applicants:", error);
+    toast.error("Failed to export applicants");
+  }
+};
+
 
   // ===============================
   // HANDLER FUNCTIONS
@@ -2076,7 +2092,7 @@ const handleUpdateJob = async () => {
                         </button>
                         {job.applicantsCount > 0 && (
                           <button
-                            onClick={() => handleExportApplicants(job._id)}
+                            onClick={() => handleExportApplicants(job)}
                             className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                             title="Export Applicants"
                           >

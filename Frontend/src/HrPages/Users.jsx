@@ -31,7 +31,11 @@ import {
   Download,
   Share2,
   Bookmark,
-  Clock
+  Clock,
+  CreditCard,
+  Package,
+  Video,
+  Layers
 } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -109,30 +113,168 @@ const InternsPage = () => {
     setShowFeedbackModal(true);
   };
 
-  const getPlanColor = (plan) => {
-    switch (plan?.toUpperCase()) {
+  // Get the latest purchase for an intern
+  const getLatestPurchase = (intern) => {
+    if (!intern.purchases || intern.purchases.length === 0) {
+      return null;
+    }
+    
+    // Sort purchases by purchasedAt date descending and get the latest
+    const sortedPurchases = [...intern.purchases].sort(
+      (a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt)
+    );
+    
+    return sortedPurchases[0];
+  };
+
+  // Get all active purchases grouped by category
+  const getActivePurchases = (intern) => {
+    if (!intern.purchases || intern.purchases.length === 0) {
+      return { course: null, jobPackage: null };
+    }
+    
+    const activePurchases = { course: null, jobPackage: null };
+    
+    // Sort purchases by purchasedAt date descending
+    const sortedPurchases = [...intern.purchases].sort(
+      (a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt)
+    );
+    
+    // Find the latest purchase for each category
+    for (const purchase of sortedPurchases) {
+      if (purchase.purchaseCategory === "COURSE" && !activePurchases.course) {
+        activePurchases.course = purchase;
+      } else if (purchase.purchaseCategory === "JOB_PACKAGE" && !activePurchases.jobPackage) {
+        activePurchases.jobPackage = purchase;
+      }
+      
+      // Break if we found both
+      if (activePurchases.course && activePurchases.jobPackage) break;
+    }
+    
+    return activePurchases;
+  };
+
+  // Get combined plan display for main card
+  const getCombinedPlanDisplay = (intern) => {
+    const activePurchases = getActivePurchases(intern);
+    const latestPurchase = getLatestPurchase(intern);
+    
+    if (!latestPurchase) {
+      return {
+        planCategory: "NONE",
+        displayText: "Basic",
+        planIcon: null,
+        planColor: "bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700",
+        isCombo: false
+      };
+    }
+    
+    // Check if it's a COMBO course (contains multiple types)
+    let isCombo = false;
+    let displayText = "";
+    let planCategory = "";
+    
+    if (latestPurchase.purchaseCategory === "COURSE") {
+      if (latestPurchase.courseDetails?.courseType === "COMBO") {
+        isCombo = true;
+        displayText = "COMBO Course";
+        planCategory = "COMBO";
+      } else {
+        displayText = `${latestPurchase.courseDetails?.courseType || "Course"} Plan`;
+        planCategory = "COURSE";
+      }
+    } else if (latestPurchase.purchaseCategory === "JOB_PACKAGE") {
+      displayText = `${latestPurchase.jobPackageDetails?.packageType || "Job"} Package`;
+      planCategory = latestPurchase.jobPackageDetails?.packageType || "JOB_PACKAGE";
+    }
+    
+    // If both course and job package exist, show as "Premium"
+    if (activePurchases.course && activePurchases.jobPackage) {
+      return {
+        planCategory: "PREMIUM",
+        displayText: "Premium Combo",
+        planIcon: <Layers size={14} />,
+        planColor: "bg-gradient-to-r from-purple-600 to-pink-600 text-white",
+        isCombo: true
+      };
+    }
+    
+    // Return based on purchase type
+    switch (planCategory.toUpperCase()) {
       case "PLATINUM":
-        return "bg-gradient-to-r from-purple-500 to-pink-500 text-white";
+      case "PREMIUM":
+        return {
+          planCategory,
+          displayText,
+          planIcon: <Sparkles size={14} />,
+          planColor: "bg-gradient-to-r from-purple-500 to-pink-500 text-white",
+          isCombo
+        };
       case "GOLD":
-        return "bg-gradient-to-r from-yellow-500 to-orange-500 text-white";
+        return {
+          planCategory,
+          displayText,
+          planIcon: <Award size={14} />,
+          planColor: "bg-gradient-to-r from-yellow-500 to-orange-500 text-white",
+          isCombo
+        };
       case "SILVER":
-        return "bg-gradient-to-r from-gray-400 to-blue-400 text-white";
+        return {
+          planCategory,
+          displayText,
+          planIcon: <Award size={14} />,
+          planColor: "bg-gradient-to-r from-gray-400 to-blue-400 text-white",
+          isCombo
+        };
+      case "COMBO":
+        return {
+          planCategory,
+          displayText,
+          planIcon: <Layers size={14} />,
+          planColor: "bg-gradient-to-r from-green-500 to-blue-500 text-white",
+          isCombo: true
+        };
+      case "BLUE":
+      case "SUPER_BLUE":
+      case "NON_BLUE":
+        return {
+          planCategory,
+          displayText,
+          planIcon: <Package size={14} />,
+          planColor: "bg-gradient-to-r from-blue-500 to-teal-500 text-white",
+          isCombo
+        };
+      case "CV_BUILDING":
+      case "INTERVIEW_PREP":
+        return {
+          planCategory,
+          displayText,
+          planIcon: <Video size={14} />,
+          planColor: "bg-gradient-to-r from-indigo-500 to-purple-500 text-white",
+          isCombo
+        };
       default:
-        return "bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700";
+        return {
+          planCategory: planCategory || "NONE",
+          displayText: displayText || "Basic",
+          planIcon: null,
+          planColor: "bg-gradient-to-r from-gray-200 to-gray-300 text-gray-700",
+          isCombo
+        };
     }
   };
 
-  const getPlanIcon = (plan) => {
-    switch (plan?.toUpperCase()) {
-      case "PLATINUM":
-        return <Sparkles size={14} />;
-      case "GOLD":
-        return <Award size={14} />;
-      case "SILVER":
-        return <Award size={14} />;
-      default:
-        return null;
+  // Get remaining job credits
+  const getRemainingCredits = (intern) => {
+    const activePurchases = getActivePurchases(intern);
+    
+    if (activePurchases.jobPackage) {
+      return activePurchases.jobPackage.jobPackageDetails?.creditsRemaining || 0;
     }
+    
+    // If no active job package, check credit history or return 0
+    return intern.jobCredits || 0;
   };
 
   const getDomainIcon = (domain) => {
@@ -169,8 +311,12 @@ const InternsPage = () => {
       return false;
     }
 
-    if (selectedFilters.planCategory !== "all" && intern.planCategory !== selectedFilters.planCategory) {
-      return false;
+    // Filter by plan category
+    if (selectedFilters.planCategory !== "all") {
+      const planInfo = getCombinedPlanDisplay(intern);
+      if (selectedFilters.planCategory !== planInfo.planCategory) {
+        return false;
+      }
     }
 
     return true;
@@ -185,7 +331,10 @@ const InternsPage = () => {
     },
     { 
       label: "Active Plans", 
-      value: interns.filter(i => i.planCategory !== "NONE").length, 
+      value: interns.filter(i => {
+        const purchases = getActivePurchases(i);
+        return purchases.course || purchases.jobPackage;
+      }).length, 
       color: "#2E84AE",
       icon: <Award className="text-[#2E84AE]" size={24} />
     },
@@ -204,9 +353,9 @@ const InternsPage = () => {
     },
     { 
       label: "Available Credits", 
-      value: interns.reduce((sum, i) => sum + (i.jobCredits || 0), 0), 
+      value: interns.reduce((sum, i) => sum + getRemainingCredits(i), 0), 
       color: "#09435F",
-      icon: <BookOpen className="text-[#09435F]" size={24} />
+      icon: <CreditCard className="text-[#09435F]" size={24} />
     },
   ];
 
@@ -234,6 +383,120 @@ const InternsPage = () => {
       </div>
     </div>
   );
+
+  // Component to display package details in profile modal
+  const PackageDetails = ({ intern }) => {
+    const activePurchases = getActivePurchases(intern);
+    const hasCourse = activePurchases.course;
+    const hasJobPackage = activePurchases.jobPackage;
+    
+    if (!hasCourse && !hasJobPackage) {
+      return (
+        <div className="text-center py-6">
+          <Package size={32} className="mx-auto text-gray-400 mb-3" />
+          <p className="text-gray-600">No active package</p>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="space-y-4">
+        {/* Course Package Details */}
+        {hasCourse && (
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border border-indigo-100">
+            <div className="flex items-center mb-3">
+              <Video size={18} className="text-indigo-600 mr-2" />
+              <h4 className="font-bold text-indigo-800">Course Package</h4>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-gray-600 text-xs">Type</p>
+                <p className="font-semibold text-gray-800">
+                  {activePurchases.course.courseDetails?.courseType || "Course"}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs">Total Sessions</p>
+                <p className="font-semibold text-gray-800">
+                  {activePurchases.course.courseDetails?.totalSessions || 0}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs">Live Sessions</p>
+                <p className="font-semibold text-gray-800">
+                  {activePurchases.course.courseDetails?.liveSessions || 0}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs">Recorded</p>
+                <p className="font-semibold text-gray-800">
+                  {activePurchases.course.courseDetails?.recordedSessions || 0}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-indigo-100">
+              <p className="text-xs text-gray-600">
+                Purchased: {new Date(activePurchases.course.purchasedAt).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+        )}
+        
+        {/* Job Package Details */}
+        {hasJobPackage && (
+          <div className="bg-gradient-to-r from-blue-50 to-teal-50 rounded-xl p-4 border border-blue-100">
+            <div className="flex items-center mb-3">
+              <Package size={18} className="text-blue-600 mr-2" />
+              <h4 className="font-bold text-blue-800">Job Package</h4>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-gray-600 text-xs">Package Type</p>
+                <p className="font-semibold text-gray-800">
+                  {activePurchases.jobPackage.jobPackageDetails?.packageType || "Job Package"}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs">Max Package</p>
+                <p className="font-semibold text-gray-800">
+                  {activePurchases.jobPackage.jobPackageDetails?.maxPackageLPA 
+                    ? `${activePurchases.jobPackage.jobPackageDetails.maxPackageLPA} LPA`
+                    : "Unlimited"}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs">Total Credits</p>
+                <p className="font-semibold text-gray-800">
+                  {activePurchases.jobPackage.jobPackageDetails?.creditsGiven || 0}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-600 text-xs">Remaining</p>
+                <p className="font-semibold text-gray-800">
+                  {activePurchases.jobPackage.jobPackageDetails?.creditsRemaining || 0}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3 pt-3 border-t border-blue-100">
+              <p className="text-xs text-gray-600">
+                Purchased: {new Date(activePurchases.jobPackage.purchasedAt).toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+        )}
+        
+        {/* Combo Indicator */}
+        {hasCourse && hasJobPackage && (
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-3 text-center border border-purple-100">
+            <div className="flex items-center justify-center">
+              <Layers size={16} className="text-purple-600 mr-2" />
+              <span className="text-sm font-semibold text-purple-800">Premium Combo Package</span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -327,9 +590,14 @@ const InternsPage = () => {
             >
               <option value="all">💎 All Plans</option>
               <option value="NONE">Basic</option>
-              <option value="SILVER">Silver</option>
-              <option value="GOLD">Gold</option>
-              <option value="PLATINUM">Platinum</option>
+              <option value="PREMIUM">Premium Combo</option>
+              <option value="COMBO">COMBO Course</option>
+              <option value="CV_BUILDING">CV Building</option>
+              <option value="INTERVIEW_PREP">Interview Prep</option>
+              <option value="SILVER">Silver Package</option>
+              <option value="BLUE">Blue Package</option>
+              <option value="SUPER_BLUE">Super Blue</option>
+              <option value="NON_BLUE">Non Blue</option>
             </select>
           </div>
         </div>
@@ -340,165 +608,171 @@ const InternsPage = () => {
         {loading ? (
           Array.from({ length: 6 }).map((_, index) => <LoadingCard key={index} />)
         ) : filteredInterns.length > 0 ? (
-          filteredInterns.map((intern) => (
-            <div 
-              key={intern._id} 
-              className="group bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden"
-            >
-              {/* Gradient Header */}
-              <div className="h-2 bg-gradient-to-r from-[#09435F] via-[#2E84AE] to-[#CDE7F4]"></div>
-              
-              <div className="p-6">
-                {/* Intern Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="relative">
-                      <img
-                        src={intern.profileImage || `https://ui-avatars.com/api/?name=${intern.name}&background=2E84AE&color=fff&bold=true`}
-                        alt={intern.name}
-                        className="w-20 h-20 rounded-2xl border-4 border-white shadow-lg"
-                      />
-                      <div className="absolute -bottom-1 -right-1 p-1.5 bg-white rounded-full shadow-lg">
-                        {getDomainIcon(intern.domain)}
+          filteredInterns.map((intern) => {
+            const planInfo = getCombinedPlanDisplay(intern);
+            const remainingCredits = getRemainingCredits(intern);
+            
+            return (
+              <div 
+                key={intern._id} 
+                className="group bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden"
+              >
+                {/* Gradient Header */}
+                <div className="h-2 bg-gradient-to-r from-[#09435F] via-[#2E84AE] to-[#CDE7F4]"></div>
+                
+                <div className="p-6">
+                  {/* Intern Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="relative">
+                        <img
+                          src={intern.profileImage || `https://ui-avatars.com/api/?name=${intern.name}&background=2E84AE&color=fff&bold=true`}
+                          alt={intern.name}
+                          className="w-20 h-20 rounded-2xl border-4 border-white shadow-lg"
+                        />
+                        <div className="absolute -bottom-1 -right-1 p-1.5 bg-white rounded-full shadow-lg">
+                          {getDomainIcon(intern.domain)}
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-xl text-[#09435F] group-hover:text-[#2E84AE] transition-colors">
+                          {intern.name}
+                        </h3>
+                        <p className="text-gray-600 text-sm flex items-center mt-1">
+                          <GraduationCap size={14} className="mr-2" />
+                          {intern.college}
+                        </p>
+                        <div className="flex items-center mt-2">
+                          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${planInfo.planColor}`}>
+                            {planInfo.planIcon}
+                            <span className="ml-1.5">{planInfo.displayText}</span>
+                          </span>
+                          <span className="ml-3 text-xs text-gray-500 flex items-center">
+                            <CreditCard size={12} className="mr-1" />
+                            {remainingCredits} credits
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-xl text-[#09435F] group-hover:text-[#2E84AE] transition-colors">
-                        {intern.name}
-                      </h3>
-                      <p className="text-gray-600 text-sm flex items-center mt-1">
-                        <GraduationCap size={14} className="mr-2" />
-                        {intern.college}
-                      </p>
-                      <div className="flex items-center mt-2">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold ${getPlanColor(intern.planCategory)}`}>
-                          {getPlanIcon(intern.planCategory)}
-                          <span className="ml-1.5">{intern.planCategory || "Basic"}</span>
-                        </span>
-                        <span className="ml-3 text-xs text-gray-500">
-                          {intern.jobCredits || 0} credits
-                        </span>
-                      </div>
-                    </div>
                   </div>
-                </div>
 
-                {/* Rating */}
-                <div className="mb-4">
-                  <div className="flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={16}
-                        className={`mr-1 ${
-                          i < Math.floor(
-                            intern.hiringTeamFeedback?.length > 0
-                              ? intern.hiringTeamFeedback.reduce((sum, f) => sum + f.rating, 0) / 
-                                intern.hiringTeamFeedback.length
-                              : 0
-                          )
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                    <span className="text-sm text-gray-600 ml-2">
-                      {intern.hiringTeamFeedback?.length > 0
-                        ? (intern.hiringTeamFeedback.reduce((sum, f) => sum + f.rating, 0) / 
-                           intern.hiringTeamFeedback.length).toFixed(1)
-                        : "No ratings"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Quick Info */}
-                <div className="space-y-3 mb-4">
-                  <div className="flex items-center text-gray-700">
-                    <Mail size={14} className="mr-3 text-[#2E84AE]" />
-                    <span className="text-sm truncate">{intern.email}</span>
-                  </div>
-                  <div className="flex items-center text-gray-700">
-                    <GraduationCap size={14} className="mr-3 text-[#2E84AE]" />
-                    <span className="text-sm">{intern.course} • Year {intern.yearOfStudy}</span>
-                  </div>
-                  <div className="flex items-center text-gray-700">
-                    <Briefcase size={14} className="mr-3 text-[#2E84AE]" />
-                    <span className="text-sm">{intern.domain}</span>
-                  </div>
-                </div>
-
-                {/* Skills */}
-                <div className="mb-6">
-                  <p className="text-sm font-semibold text-gray-700 mb-3">Top Skills</p>
-                  <div className="flex flex-wrap gap-2">
-                    {intern.skills?.slice(0, 4).map((skill, index) => (
-                      <SkillBadge key={index} skill={skill} />
-                    ))}
-                    {intern.skills?.length > 4 && (
-                      <span className="px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-                        +{intern.skills.length - 4}
+                  {/* Rating */}
+                  <div className="mb-4">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={16}
+                          className={`mr-1 ${
+                            i < Math.floor(
+                              intern.hiringTeamFeedback?.length > 0
+                                ? intern.hiringTeamFeedback.reduce((sum, f) => sum + f.rating, 0) / 
+                                  intern.hiringTeamFeedback.length
+                                : 0
+                            )
+                              ? "text-yellow-400 fill-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                      <span className="text-sm text-gray-600 ml-2">
+                        {intern.hiringTeamFeedback?.length > 0
+                          ? (intern.hiringTeamFeedback.reduce((sum, f) => sum + f.rating, 0) / 
+                             intern.hiringTeamFeedback.length).toFixed(1)
+                          : "No ratings"}
                       </span>
-                    )}
+                    </div>
                   </div>
-                </div>
 
-                {/* Social & Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <div className="flex space-x-2">
-                    {intern.githubUrl && (
-                      <a
-                        href={intern.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 bg-gray-900 text-white hover:bg-black rounded-xl transition-colors shadow-sm"
-                        title="GitHub"
-                      >
-                        <Github size={18} />
-                      </a>
-                    )}
-                    {intern.linkedinUrl && (
-                      <a
-                        href={intern.linkedinUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 bg-blue-600 text-white hover:bg-blue-700 rounded-xl transition-colors shadow-sm"
-                        title="LinkedIn"
-                      >
-                        <Linkedin size={18} />
-                      </a>
-                    )}
-                    {intern.resumeUrl && (
-                      <a
-                        href={intern.resumeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 bg-green-600 text-white hover:bg-green-700 rounded-xl transition-colors shadow-sm"
-                        title="Resume"
-                      >
-                        <FileText size={18} />
-                      </a>
-                    )}
+                  {/* Quick Info */}
+                  <div className="space-y-3 mb-4">
+                    <div className="flex items-center text-gray-700">
+                      <Mail size={14} className="mr-3 text-[#2E84AE]" />
+                      <span className="text-sm truncate">{intern.email}</span>
+                    </div>
+                    <div className="flex items-center text-gray-700">
+                      <GraduationCap size={14} className="mr-3 text-[#2E84AE]" />
+                      <span className="text-sm">{intern.course} • Year {intern.yearOfStudy}</span>
+                    </div>
+                    <div className="flex items-center text-gray-700">
+                      <Briefcase size={14} className="mr-3 text-[#2E84AE]" />
+                      <span className="text-sm">{intern.domain}</span>
+                    </div>
                   </div>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => openFeedbackModal(intern)}
-                      className="p-2.5 bg-gradient-to-r from-[#2E84AE] to-[#09435F] text-white rounded-xl hover:shadow-lg transition-all duration-300"
-                      title="Give Feedback"
-                    >
-                      <ThumbsUp size={18} />
-                    </button>
-                    <button
-                      onClick={() => openProfileModal(intern)}
-                      className="flex items-center space-x-2 px-4 py-2.5 bg-white border border-gray-200 text-[#2E84AE] rounded-xl hover:bg-gray-50 hover:shadow-lg transition-all duration-300"
-                    >
-                      <Eye size={16} />
-                      <span className="text-sm font-medium">View</span>
-                    </button>
+
+                  {/* Skills */}
+                  <div className="mb-6">
+                    <p className="text-sm font-semibold text-gray-700 mb-3">Top Skills</p>
+                    <div className="flex flex-wrap gap-2">
+                      {intern.skills?.slice(0, 4).map((skill, index) => (
+                        <SkillBadge key={index} skill={skill} />
+                      ))}
+                      {intern.skills?.length > 4 && (
+                        <span className="px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
+                          +{intern.skills.length - 4}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Social & Actions */}
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex space-x-2">
+                      {intern.githubUrl && (
+                        <a
+                          href={intern.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-gray-900 text-white hover:bg-black rounded-xl transition-colors shadow-sm"
+                          title="GitHub"
+                        >
+                          <Github size={18} />
+                        </a>
+                      )}
+                      {intern.linkedinUrl && (
+                        <a
+                          href={intern.linkedinUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-blue-600 text-white hover:bg-blue-700 rounded-xl transition-colors shadow-sm"
+                          title="LinkedIn"
+                        >
+                          <Linkedin size={18} />
+                        </a>
+                      )}
+                      {intern.resumeUrl && (
+                        <a
+                          href={intern.resumeUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-green-600 text-white hover:bg-green-700 rounded-xl transition-colors shadow-sm"
+                          title="Resume"
+                        >
+                          <FileText size={18} />
+                        </a>
+                      )}
+                    </div>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => openFeedbackModal(intern)}
+                        className="p-2.5 bg-gradient-to-r from-[#2E84AE] to-[#09435F] text-white rounded-xl hover:shadow-lg transition-all duration-300"
+                        title="Give Feedback"
+                      >
+                        <ThumbsUp size={18} />
+                      </button>
+                      <button
+                        onClick={() => openProfileModal(intern)}
+                        className="flex items-center space-x-2 px-4 py-2.5 bg-white border border-gray-200 text-[#2E84AE] rounded-xl hover:bg-gray-50 hover:shadow-lg transition-all duration-300"
+                      >
+                        <Eye size={16} />
+                        <span className="text-sm font-medium">View</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <div className="col-span-full bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg p-12 text-center border border-gray-100">
             <div className="inline-flex p-4 bg-gradient-to-r from-[#CDE7F4] to-[#E3F2FD] rounded-2xl mb-6">
@@ -545,9 +819,9 @@ const InternsPage = () => {
                   <div>
                     <h2 className="text-3xl font-bold text-[#09435F] mb-2">{selectedIntern.name}</h2>
                     <div className="flex items-center space-x-4">
-                      <span className={`inline-flex items-center px-4 py-2 rounded-full font-bold ${getPlanColor(selectedIntern.planCategory)}`}>
-                        {getPlanIcon(selectedIntern.planCategory)}
-                        <span className="ml-2">{selectedIntern.planCategory || "Basic"}</span>
+                      <span className={`inline-flex items-center px-4 py-2 rounded-full font-bold ${getCombinedPlanDisplay(selectedIntern).planColor}`}>
+                        {getCombinedPlanDisplay(selectedIntern).planIcon}
+                        <span className="ml-2">{getCombinedPlanDisplay(selectedIntern).displayText}</span>
                       </span>
                       <span className="text-gray-600">
                         <GraduationCap size={16} className="inline mr-2" />
@@ -583,9 +857,18 @@ const InternsPage = () => {
                       </div>
                       <div>
                         <p className="text-sm text-gray-600 mb-1">Credits Available</p>
-                        <p className="font-medium text-[#09435F]">{selectedIntern.jobCredits || 0}</p>
+                        <p className="font-medium text-[#09435F]">{getRemainingCredits(selectedIntern)}</p>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Package Details */}
+                  <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg">
+                    <h3 className="text-xl font-bold text-[#09435F] mb-4 flex items-center">
+                      <Package size={20} className="mr-2" />
+                      Package Details
+                    </h3>
+                    <PackageDetails intern={selectedIntern} />
                   </div>
 
                   {/* Skills */}
@@ -669,6 +952,46 @@ const InternsPage = () => {
                           <ExternalLink size={16} />
                         </a>
                       )}
+                    </div>
+                  </div>
+
+                  {/* Feedback Stats */}
+                  <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg">
+                    <h3 className="text-xl font-bold text-[#09435F] mb-4">Performance</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Avg. Rating</span>
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              size={16}
+                              className={`mr-1 ${
+                                i < Math.floor(
+                                  selectedIntern.hiringTeamFeedback?.length > 0
+                                    ? selectedIntern.hiringTeamFeedback.reduce((sum, f) => sum + f.rating, 0) / 
+                                      selectedIntern.hiringTeamFeedback.length
+                                    : 0
+                                )
+                                  ? "text-yellow-400 fill-yellow-400"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
+                          <span className="ml-2 font-semibold text-[#09435F]">
+                            {selectedIntern.hiringTeamFeedback?.length > 0
+                              ? (selectedIntern.hiringTeamFeedback.reduce((sum, f) => sum + f.rating, 0) / 
+                                 selectedIntern.hiringTeamFeedback.length).toFixed(1)
+                              : "N/A"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Total Feedback</span>
+                        <span className="font-semibold text-[#09435F]">
+                          {selectedIntern.hiringTeamFeedback?.length || 0}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -12,7 +12,8 @@ const classSchema = new mongoose.Schema({
     default: "",
   },
 
-  subject: {
+  category: {
+    enum: ["CV_BUILDING", "INTERVIEW_PREP", "COMBO"],
     type: String,
     required: true,
   },

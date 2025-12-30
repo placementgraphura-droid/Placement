@@ -84,17 +84,14 @@ const JobsSlider = () => {
 
   return (
     <div
-      className="relative w-full overflow-hidden"
+      className="relative w-full overflow-hidden "
       style={{
         minHeight: "320px",
-        backgroundImage: `url("/mnt/data/d56a3172-a35e-4e02-a283-f703ccab9961.png")`,
+        backgroundImage: `url("/Capsule.png")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      
-      <div className="absolute inset-0 bg-gradient-to-r from-[#63B6DD] via-[#9AD6F2] to-[#1C7EAC] pointer-events-none" />
-
      
       <div className="p-8 relative z-10">
         <h2 className="text-3xl font-semibold text-slate-900 pl-6 border-l-4 border-slate-900/30">
@@ -102,7 +99,7 @@ const JobsSlider = () => {
         </h2>
       </div>
 
-      <div className="relative px-10 pb-10 z-20">
+      <div className="relative px-15 pb-15 z-20">
         <Swiper
           modules={[Navigation]}
           navigation={{

@@ -2,7 +2,7 @@ import Mentor from "../model/RegisterDB/mentorSchema.js"
 import StudyMaterial from "../model/MentorDB/studyMaterial.js"
 import VideoLecture from "../model/MentorDB/VideoLectures.js"
 import Intern from "../model/RegisterDB/internSchema.js"
-import Class from "../model/MentorDB/classes.js "
+import Class from "../model/MentorDB/classes.js"
 
 
 import mongoose from "mongoose";
@@ -16,6 +16,7 @@ export const getMentorDashboard = async (req, res) => {
     const materialsCount = await StudyMaterial.countDocuments({ uploadedBy: mentorId });
     const videosCount = await VideoLecture.countDocuments();
     const internsCount = await Intern.countDocuments({ isActive: true });
+    const classesCount = await Class.countDocuments();
 
     // Get recent study materials
     const recentMaterials = await StudyMaterial.find({ uploadedBy: mentorId })
@@ -34,7 +35,7 @@ export const getMentorDashboard = async (req, res) => {
         students: internsCount,
         materials: materialsCount,
         videos: videosCount,
-        classes: 0, // Add your classes model count if available
+        classes: classesCount, // Add your classes model count if available
         users: internsCount,
         interns: internsCount
       },
@@ -165,8 +166,8 @@ export const uploadStudyMaterial = async (req, res) => {
       title,
       subject,
       description,
+      link : req.body.link || "",
       pdfUrl: fileUrl,      // ✅ always valid now
-      uploadedBy: req.user.id,
     });
 
     res.status(201).json({
@@ -179,7 +180,7 @@ export const uploadStudyMaterial = async (req, res) => {
   }
 };
 
-
+ 
 
 /**
  * ✅ Get Logged-in Mentor Materials
@@ -187,9 +188,7 @@ export const uploadStudyMaterial = async (req, res) => {
  */
 export const getMentorStudyMaterials = async (req, res) => {
   try {
-    const materials = await StudyMaterial.find({
-      uploadedBy: req.user.id,
-    })
+    const materials = await StudyMaterial.find()
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -220,7 +219,6 @@ export const deleteStudyMaterial = async (req, res) => {
 
     const material = await StudyMaterial.findOne({
       _id: req.params.id,
-      uploadedBy: req.user.id, // ✅ FIXED
     });
 
     if (!material) {
@@ -274,7 +272,7 @@ export const getMentorVideos = async (req, res) => {
 
 export const uploadVideoLecture = async (req, res) => {
   try {
-    const { title, subject, description, duration } = req.body;
+    const { title, category, description, duration } = req.body;
 
     if (!req.files?.video || !req.files?.thumbnail) {
       return res.status(400).json({ message: "Video & thumbnail required" });
@@ -285,12 +283,11 @@ export const uploadVideoLecture = async (req, res) => {
 
     const newVideo = await VideoLecture.create({
       title,
-      subject,
+      category,
       description,
       duration,
       videoUrl,
       thumbnailUrl,
-      uploadedBy: req.user.id,
     });
 
     res.status(201).json(newVideo);
@@ -310,14 +307,10 @@ export const updateVideoLecture = async (req, res) => {
       return res.status(404).json({ message: "Video not found" });
     }
 
-    if (video.uploadedBy.toString() !== req.user.id) {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
-
-    const { title, subject, description, duration } = req.body;
+    const { title, category, description, duration } = req.body;
 
     video.title = title || video.title;
-    video.subject = subject || video.subject;
+    video.category = category || video.category;
     video.description = description ?? video.description;
     video.duration = duration || video.duration;
 
@@ -356,11 +349,6 @@ export const deleteVideoLecture = async (req, res) => {
     }
 
     // ✅ 3. Authorization check
-    if (video.uploadedBy.toString() !== req.user.id.toString()) {
-      return res
-        .status(403)
-        .json({ message: "You can't delete others uploaded videos" });
-    }
 
     await video.deleteOne();
 
@@ -455,7 +443,6 @@ export const submitMentorFeedback = async (req, res) => {
 
 export const getMentorClasses = async (req, res) => {
   try {
-    const mentorId = req.user.id;
     // Replace with your actual Class model
     const classes = await Class.find().sort({ startTime: 1 });
     res.status(200).json({ classes });
@@ -467,10 +454,35 @@ export const getMentorClasses = async (req, res) => {
 
 export const createMentorClass = async (req, res) => {
   try {
-    const mentorId = req.user.id;
-    const classData = { ...req.body, mentorId };
-    // Replace with your actual Class model
-    const newClass = await Class.create(classData);
+    const {
+      title,
+      category,
+      classType,
+      startTime,
+      endTime,
+      meetingLink,
+      description,
+      thumbnailUrl,
+    } = req.body;
+
+    // Thumbnail handling (Cloudinary auto upload)
+    let finalThumbnailUrl = thumbnailUrl || "";
+
+    if (req.file) {
+      finalThumbnailUrl = req.file.path; // ✅ Cloudinary URL
+    }
+
+    const newClass = await Class.create({
+      title,
+      category,
+      classType,
+      startTime,
+      endTime,
+      meetingLink,
+      description,
+      thumbnailUrl: finalThumbnailUrl,
+    });
+
     res.status(201).json(newClass);
   } catch (error) {
     console.error("Create class error:", error);
@@ -478,54 +490,54 @@ export const createMentorClass = async (req, res) => {
   }
 };
 
+
 export const updateMentorClass = async (req, res) => {
   try {
-    const { id } = req.params;
+    const classId = req.params.id;
 
-    // ✅ 1. Check ID exists
-    if (!id) {
-      return res.status(400).json({
-        success: false,
-        message: "Class ID is required",
-      });
+    const existingClass = await Class.findById(classId);
+    if (!existingClass) {
+      return res.status(404).json({ message: "Class not found" });
     }
 
-    // ✅ 2. Validate ObjectId
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Class ID",
-      });
+    const {
+      title,
+      category,
+      classType,
+      startTime,
+      endTime,
+      meetingLink,
+      description,
+      thumbnailUrl,
+    } = req.body;
+
+    // ✅ Thumbnail handling (Cloudinary auto-upload)
+    let finalThumbnailUrl =
+      thumbnailUrl || existingClass.thumbnailUrl;
+
+    if (req.file) {
+      finalThumbnailUrl = req.file.path; // 🌥️ Cloudinary URL
     }
 
-    const updatedClass = await Class.findOneAndUpdate(
-      { _id: id },   // ✅ Secure (mentor ownership check)
-      { $set: req.body },     // ✅ Prevent accidental overwrite
-      { new: true, runValidators: true }
-    );
+    // Update fields
+    existingClass.title = title;
+    existingClass.category = category;
+    existingClass.classType = classType;
+    existingClass.startTime = startTime;
+    existingClass.endTime = endTime;
+    existingClass.meetingLink = meetingLink;
+    existingClass.description = description;
+    existingClass.thumbnailUrl = finalThumbnailUrl;
 
-    // ✅ 3. Not found
-    if (!updatedClass) {
-      return res.status(404).json({
-        success: false,
-        message: "Class not found or unauthorized",
-      });
-    }
+    await existingClass.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Class updated successfully",
-      data: updatedClass,
-    });
-
+    res.json(existingClass);
   } catch (error) {
     console.error("Update class error:", error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to update class",
-    });
+    res.status(500).json({ message: "Failed to update class" });
   }
 };
+
 
 export const deleteMentorClass = async (req, res) => {
   try {

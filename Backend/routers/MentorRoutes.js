@@ -69,8 +69,8 @@ router.post("/mentors/feedback", authMiddleware, submitMentorFeedback)
 
 
 router.get("/mentors/classes", authMiddleware, getMentorClasses);
-router.post("/mentors/classes", authMiddleware, createMentorClass);
-router.put("/mentors/classes/:id", authMiddleware, updateMentorClass);
+router.post("/mentors/classes", authMiddleware, upload.single("thumbnail"), createMentorClass);
+router.put("/mentors/classes/:id", authMiddleware, upload.single("thumbnail"), updateMentorClass);
 router.delete("/mentors/classes/:id", authMiddleware, deleteMentorClass);
 
 

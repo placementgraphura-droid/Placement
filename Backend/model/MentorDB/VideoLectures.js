@@ -10,12 +10,7 @@ const videoLectureSchema = new mongoose.Schema({
   description: {
     type: String,
     default: "",
-  },
-
-  subject: {
-    type: String,
-    required: true,
-  },
+  },  
 
   thumbnailUrl: {
     type: String,
@@ -33,11 +28,12 @@ const videoLectureSchema = new mongoose.Schema({
     default: "",
   },
 
-  uploadedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "mentor",
-    required: true
+  category: {
+    enum: ["CV_BUILDING", "INTERVIEW_PREP"],
+    type: String,
+    required: true,
   },
+
 
 }, { timestamps: true });
 

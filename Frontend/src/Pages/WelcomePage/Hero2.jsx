@@ -1,18 +1,24 @@
 import React from "react";
-import hero from "/hero2bg.png"; // make sure path is correct
+import hero from "/hero2bg.png";
 
 const Hero2 = () => {
   return (
-    <div
-      className="min-h-[95vh] bg-cover bg-center flex flex-col relative"
-      style={{
-        backgroundImage: `url(${hero})`,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-      }}
+    <section
+      className="
+        relative 
+        w-full 
+        min-h-[40vh] 
+        md:min-h-screen
+        flex 
+        items-center 
+        justify-center
+        bg-center 
+        bg-no-repeat 
+        bg-cover
+      "
+      style={{ backgroundImage: `url(${hero})` }}
     >
-      
-    </div>
+    </section>
   );
 };
 
