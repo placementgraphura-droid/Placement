@@ -1,0 +1,36 @@
+import { Link } from "react-router-dom";
+import JobsSlider from "./JobsSlider";
+import Navbar from "./Navbar";
+import Testimonials from "./Testimonial";
+import Opening from "./Opening";
+import JobSuccessSlider from "./JobSuccessSlider";
+import Partners from "./Partners";
+import Footer from "./Footer";
+import Hero2 from "./Hero2";
+import Coursess from "./Courses";
+
+function WelcomePage() {
+
+  return (
+    <>
+     
+      <div className=" bg-gradient-to-br from-sky-50 via-blue-50 to-sky-100 overflow-auto">
+        
+              <Hero2 />
+              <Navbar />
+              {/* <Hero /> */}
+              <Opening />
+              <Coursess/>
+              <JobsSlider />
+              <JobSuccessSlider />
+              <Testimonials />
+              <Partners />
+              <Footer />
+        </div>
+
+    
+    </>
+  );
+}
+
+export default WelcomePage;

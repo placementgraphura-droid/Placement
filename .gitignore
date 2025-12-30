@@ -63,5 +63,5 @@ Frontend/.parcel-cache/
 Backend/node_modules/
 Backend/dist/
 Backend/build/
-
+Backend/.env
 
