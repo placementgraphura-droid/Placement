@@ -61,7 +61,7 @@ const ROLE_COLORS = {
 // ===============================
 // ADMIN HR MANAGEMENT COMPONENT
 // ===============================
-const HR_Page = () => {
+const HRPage = () => {
   const [hrMembers, setHrMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -739,4 +739,4 @@ const HR_Page = () => {
   );
 };
 
-export default HR_Page;
+export default HRPage;

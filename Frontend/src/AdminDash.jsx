@@ -22,14 +22,14 @@ import { useNavigate } from "react-router-dom";
 
 // Import admin pages
 import AdminUsers from "./AdminPages/AdminUsers";
-import AdminCourses from "./AdminPages/AdminCourses.jsx";
-import AdminMaterials from "./AdminPages/AdminMaterials.jsx";
+import AdminCourses from "./AdminPages/AdminCourses";
+import AdminMaterials from "./AdminPages/AdminMaterials";
 import AdminVideos from "./AdminPages/AdminVideos";
-import AdminJobs from "./AdminPages/AdminJobs.jsx";
+import AdminJobs from "./AdminPages/AdminJobs";
 import AdminPayments from "./AdminPages/AdminPayments";
-import AdminDashboardHome from "./AdminPages/dminHomeDashboard.jsx"
-import Mentor from "./AdminPages/MentorPage.jsx";
-import HR_Page from "./AdminPages/HR_page.jsx";
+import AdminDashboardHome from "./AdminPages/dminHomeDashboard"
+import Mentor from "./AdminPages/MentorPage";
+import HRPage from "./AdminPages/HR_Page";
 
 const AdminDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
@@ -74,7 +74,7 @@ const AdminDashboard = () => {
       case "mentors":
         return <Mentor />;
       case "hr_team":
-        return <HR_Page />;
+        return <HRPage />;
       default:
         case "Dashboard":
         return <AdminDashboardHome />;
