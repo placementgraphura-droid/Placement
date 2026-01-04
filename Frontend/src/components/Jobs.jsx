@@ -1490,12 +1490,6 @@ const fetchPlan = async () => {
                   </div>
                 </div>
               </div>
-              <a
-                href="/pricing"
-                className="inline-block px-5 py-2.5 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors text-center text-sm md:text-base mt-4 md:mt-0"
-              >
-                View Packages
-              </a>
             </div>
           </div>
         )}
