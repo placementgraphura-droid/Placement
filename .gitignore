@@ -80,3 +80,4 @@ Frontend/.parcel-cache/
 # =========================
 Backend/dist/
 Backend/build/
+Backend/.env
