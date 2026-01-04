@@ -477,20 +477,6 @@ const DashboardHome = () => {
                 </ul>
               </div>
             </div>
-
-            <div className="text-center">
-              <button
-                onClick={() => navigate('/pricing')}
-                className="group inline-flex items-center gap-3 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] hover:from-[#0A2E40] hover:to-[#0E5C7E] text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-lg font-semibold"
-              >
-                <Rocket className="w-6 h-6 group-hover:rotate-12 transition-transform" />
-                View Packages & Pricing
-                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <p className="text-sm text-[#0E5C7E]/80 mt-4">
-                Choose the package that matches your career goals
-              </p>
-            </div>
           </div>
         </div>
       </div>
