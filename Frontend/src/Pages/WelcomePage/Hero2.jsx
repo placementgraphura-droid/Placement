@@ -1,5 +1,4 @@
 import React from "react";
-import hero from "/hero2bg.png";
 
 const Hero2 = () => {
   return (
@@ -16,7 +15,7 @@ const Hero2 = () => {
         bg-no-repeat 
         bg-cover
       "
-      style={{ backgroundImage: `url(${hero})` }}
+      style={{ backgroundImage: `url(${'/hero2bg.png'})` }}
     >
     </section>
   );
