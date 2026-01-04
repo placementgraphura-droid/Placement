@@ -28,8 +28,8 @@ import AdminVideos from "./AdminPages/AdminVideos";
 import AdminJobs from "./AdminPages/AdminJobs.jsx";
 import AdminPayments from "./AdminPages/AdminPayments";
 import AdminDashboardHome from "./AdminPages/dminHomeDashboard.jsx"
-import HR_page from "./AdminPages/HR_page.jsx";
 import Mentor from "./AdminPages/MentorPage.jsx";
+import HR_Page from "./AdminPages/HR_page.jsx";
 
 const AdminDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
@@ -74,7 +74,7 @@ const AdminDashboard = () => {
       case "mentors":
         return <Mentor />;
       case "hr_team":
-        return <HR_page />;
+        return <HR_Page />;
       default:
         case "Dashboard":
         return <AdminDashboardHome />;
