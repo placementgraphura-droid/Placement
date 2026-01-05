@@ -19,48 +19,55 @@ import FAQPage from './Pages/FAQ/Faq';
 import ScrollToTopSelective from './Pages/ScrollToTop';
 import Interview from './Pages/Interviews/Interview';
 import PrivacyPolicy from './Pages/Privacy/Privacy';
+import RefundPolicy from './Pages/Refund';
+import TermsAndConditions from './Pages/Privacy/Terms';
+import UserGuidelines from './Pages/Privacy/Guidelines';
 
 function App() {
   return (
     <Router>
-        <ScrollToTopSelective />
+      <ScrollToTopSelective />
       <Routes>
 
-        <Route path="/" element={<WelcomePage/>} />
-        <Route path='/courses' element={<Course />}/>
-        <Route path='/Interviews' element={<Interview />}/>
-        <Route path='/FAQ' element={<FAQPage />}/>
-        <Route path='/privacy-policy' element={<PrivacyPolicy />}/>
-
-
-         <Route path="/intern-login" element={<LoginPage/>} />
-         <Route path="/register-intern" element={<RegisterPage/>} />
-
-         <Route path="/mentor-login" element={<LoginMentor/>} />
-         <Route path="/register-mentor" element={<MentorRegister/>} />
-
-
-         <Route path="/hiring-team-login" element={<LoginHiringTeam/>} />
-         <Route path="/register-hiring-team" element={<HiringTeamRegistration/>} />
-        
-
-          <Route path="/admin-login" element={<LoginAdmin/>} />
-          <Route path="/register-admin" element={<AdminRegister/>} />
+        <Route path="/" element={<WelcomePage />} />
+        <Route path='/courses' element={<Course />} />
+        <Route path='/Interviews' element={<Interview />} />
+        <Route path='/FAQ' element={<FAQPage />} />
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+        <Route path="/refund-policy" element={<RefundPolicy />} />
+        <Route path="/terms-of-service" element={<TermsAndConditions />} />
+        <Route path="/guidelines" element={<UserGuidelines />} />
 
 
 
-          
-          <Route path="/dashboard/intern" element={<Dashboard />} />
-          <Route path="/dashboard/mentor" element={<MentorDashboard />} />
-          <Route path="/dashboard/hiring-team" element={<HiringTeamDashboard />} />
-          <Route path="/dashboard/admin" element={<AdminDashboard />} />
-          
+        <Route path="/intern-login" element={<LoginPage />} />
+        <Route path="/register-intern" element={<RegisterPage />} />
 
-          {/* //payment gateway route to be added here */}
-          <Route path='/payments' element={<Payments />} />
+        <Route path="/mentor-login" element={<LoginMentor />} />
+        <Route path="/register-mentor" element={<MentorRegister />} />
 
 
-    
+        <Route path="/hiring-team-login" element={<LoginHiringTeam />} />
+        <Route path="/register-hiring-team" element={<HiringTeamRegistration />} />
+
+
+        <Route path="/admin-login" element={<LoginAdmin />} />
+        <Route path="/register-admin" element={<AdminRegister />} />
+
+
+
+
+        <Route path="/dashboard/intern" element={<Dashboard />} />
+        <Route path="/dashboard/mentor" element={<MentorDashboard />} />
+        <Route path="/dashboard/hiring-team" element={<HiringTeamDashboard />} />
+        <Route path="/dashboard/admin" element={<AdminDashboard />} />
+
+
+        {/* //payment gateway route to be added here */}
+        <Route path='/payments' element={<Payments />} />
+
+
+
       </Routes>
     </Router>
   );
