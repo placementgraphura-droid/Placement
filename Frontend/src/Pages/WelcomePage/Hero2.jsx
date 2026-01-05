@@ -15,7 +15,7 @@ const Hero2 = () => {
         bg-no-repeat 
         bg-cover
       "
-      style={{ backgroundImage: `url(${'/hero2bg.png'})` }}
+      style={{ backgroundImage: `url(${'/hero2bg.webp'})` }}
     >
     </section>
   );

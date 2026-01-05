@@ -7,47 +7,48 @@ const MODULES = [
     title: "Unlock Role Secrets: Prepare Like a Top Candidate Every Time",
     meta: "Module 1 • Around 1 hour to complete",
     summary:
-      "Tailor your interview approach based on company type—from startups to MNCs.",
+      "Understand how different companies—from startups to MNCs—expect candidates to perform.",
     details:
-      "Learn how different organizations evaluate candidates, what they prioritize, and how to adapt your answers strategically to match their expectations.",
+      "Learn how organizations evaluate candidates, what they prioritize, and how to strategically tailor your responses to align with company expectations and stand out as a top choice.",
   },
   {
     id: 2,
     title: "Mock Interview Mastery: Turn Practice Into Performance",
     meta: "Module 2 • Around 1 hour to complete",
     summary:
-      "Experience realistic HR interviews and build confidence through structured practice.",
+      "Experience HR interviews like never before and build confidence through structured practice.",
     details:
-      "Practice behavioral interviews with measurable impact, refine answer structure, and develop the confidence and poise needed to handle real interview pressure.",
+      "Master behavioral interviews by delivering measurable, impact-driven answers. Learn proven response structures and develop the poise to handle challenging interview situations confidently.",
   },
   {
     id: 3,
     title: "Think, Solve, Impress: Live Technical Simulation & Analysis",
     meta: "Module 3 • Around 1 hour to complete",
     summary:
-      "Showcase structured thinking, prioritization, and solution-driven reasoning in live simulations.",
+      "Showcase structured reasoning, prioritization, and solution-driven thinking.",
     details:
-      "Participate in technical and analytical simulations, receive detailed performance analysis, and get personalized improvement strategies to outperform peers.",
+      "Participate in live technical and analytical simulations, receive detailed performance analysis, and get personalized improvement plans to outperform peers in real interviews.",
   },
   {
     id: 4,
     title: "Land Interviews Faster: Resume, LinkedIn & Portfolio Mastery",
     meta: "Module 4 • Around 1 hour to complete",
     summary:
-      "Optimize your resume, LinkedIn profile, and portfolio for maximum recruiter impact.",
+      "Align your resume, LinkedIn profile, and portfolio for maximum recruiter impact.",
     details:
-      "Learn ATS-friendly formatting, keyword optimization, proof-backed achievements, and positioning strategies to increase interview callbacks.",
+      "Learn ATS-friendly formatting, keyword optimization, and proof-backed presentation strategies that significantly improve visibility and increase interview callbacks.",
   },
   {
     id: 5,
     title: "The Ultimate Mock Interview: Test, Score & Transform",
     meta: "Module 5 • Around 1 hour to complete",
     summary:
-      "Integrate everything you’ve learned through full-length mock interviews and scoring.",
+      "Integrate everything you’ve learned through full-length mock interviews.",
     details:
-      "Complete comprehensive mock interviews, receive a structured performance scorecard, and get a personalized roadmap to confidently navigate your career journey.",
+      "Complete comprehensive mock interviews, receive a structured performance scorecard, and get a personalized roadmap to confidently navigate and accelerate your career path.",
   },
 ];
+
 
 
 export default function ModulesAccordion() {

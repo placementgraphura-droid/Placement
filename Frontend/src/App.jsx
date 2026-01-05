@@ -17,6 +17,8 @@ import Course from './Pages/Course/course';
 import AdminDashboard from './AdminDash';
 import FAQPage from './Pages/FAQ/Faq';
 import ScrollToTopSelective from './Pages/ScrollToTop';
+import Interview from './Pages/Interviews/Interview';
+import PrivacyPolicy from './Pages/Privacy/Privacy';
 
 function App() {
   return (
@@ -26,7 +28,10 @@ function App() {
 
         <Route path="/" element={<WelcomePage/>} />
         <Route path='/courses' element={<Course />}/>
+        <Route path='/Interviews' element={<Interview />}/>
         <Route path='/FAQ' element={<FAQPage />}/>
+        <Route path='/privacy-policy' element={<PrivacyPolicy />}/>
+
 
          <Route path="/intern-login" element={<LoginPage/>} />
          <Route path="/register-intern" element={<RegisterPage/>} />

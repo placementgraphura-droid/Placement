@@ -10,7 +10,9 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Courses", path: "/courses" },
+    { name: "Interviews", path: "/interviews" },
     { name: "FAQ", path: "/FAQ" },
+    { name: "Privacy Policy", path: "/privacy-policy" },
   ];
 
   return (
@@ -86,7 +88,7 @@ const Navbar = () => {
                 to="/intern-login"
                 className="block px-4 py-3 hover:bg-blue-50 border-b border-blue-50"
               >
-                <div className="font-medium text-gray-800">Portal Login</div>
+                <div className="font-medium text-gray-800">Candidate Login</div>
                 <div className="text-xs text-gray-500">
                   For placement candidates
                 </div>

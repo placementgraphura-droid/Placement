@@ -8,6 +8,7 @@ const courses = [
     rating: "4.7",
     desc: "Essential skills to craft compelling resumes that stand out.",
     reviewed: "17+ students",
+    links: "/courses",
   },
   {
     image: "/IN.png",
@@ -15,6 +16,7 @@ const courses = [
     rating: "4.8",
     desc: "Understand the role, present yourself confidently, strong communication.",
     reviewed: "12+ students",
+    links: "/interviews",
   },
   {
     image: "/Interview1.png",
@@ -22,6 +24,7 @@ const courses = [
     rating: "4.6",
     desc: "Comprehensive course covering CV building and interview preparation.",
     reviewed: "15+ students",
+    links: "/courses",
   },
  
   // {
@@ -49,7 +52,7 @@ function Coursess() {
         <div className="flex items-center gap-3 mb-8">
   <span className="h-8 w-[3px] bg-[#1C7EAC] rounded-full" />
   <h2 className="text-2xl md:text-3xl font-semibold text-slate-900">
-    Cources for You
+    Courses for You
   </h2>
 </div>
 
@@ -57,10 +60,13 @@ function Coursess() {
         {/* Cards row */}
 <div className="flex justify-around flex-wrap gap-6 ">
           {courses.map((course, idx) => (
+            
             <div
               key={idx}
               className="flex-1 min-w-[260px] max-w-sm rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_18px_40px_rgba(15,23,42,0.25)] hover:shadow-[0_24px_55px_rgba(15,23,42,0.35)] transition-shadow duration-300 p-5"
             >
+              <a href={course.links}>
+
               {/* Top placeholder image area */}
               <div className="rounded-2xl bg-slate-200/70 mb-5" >
               <img src={course.image} alt={course.title} className="bg-cover h-full rounded-2xl mb-5" />
@@ -87,6 +93,7 @@ function Coursess() {
               </button>
               </a>
 
+              </a>
               {/* Reviewed text */}
               <p className="mt-3 text-[11px] text-slate-600">
                 Reviewed by {course.reviewed}

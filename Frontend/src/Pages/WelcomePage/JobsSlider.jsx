@@ -99,7 +99,7 @@ const JobsSlider = () => {
         </h2>
       </div>
 
-      <div className="relative px-15 pb-15 z-20">
+      <div className="relative px-12 pb-15 z-20">
         <Swiper
           modules={[Navigation]}
           navigation={{

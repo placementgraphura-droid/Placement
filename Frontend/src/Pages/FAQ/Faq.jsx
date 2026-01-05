@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Search, FileText, MessageCircle, Briefcase, Award, Users, ShieldCheck, HelpCircle } from 'lucide-react';
 import Navbar from '../WelcomePage/Navbar';
+import Footer from '../WelcomePage/Footer';
+
 
 const FAQPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -150,7 +152,7 @@ const FAQPage = () => {
 
 
 
-
+    <div>
     <div className="min-h-screen bg-gradient-to-b from-[#D3E4ED] to-white p-4 md:p-8">
             <Navbar />
       <div className="max-w-6xl mt-20 mx-auto">
@@ -232,6 +234,9 @@ const FAQPage = () => {
         </footer>
       </div>
     </div>
+      <Footer />
+      </div>
+    
   );
 };
 

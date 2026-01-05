@@ -4,8 +4,12 @@ import {
   FaInstagram,
   FaFacebook,
   FaTwitter,
-  FaYoutube,
+  FaPaypal,
+  FaAmazonPay,
+  FaGooglePay,
 } from "react-icons/fa";
+
+import { SiPaytm } from "react-icons/si";
 
 const Footer = () => {
   return (
@@ -37,7 +41,7 @@ const Footer = () => {
 
             <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-sm flex items-center gap-3">
               ✉️ Email us anytime  
-              <span className="font-semibold ml-auto">official@graphura.in</span>
+              <span className="font-semibold ml-auto">placement@graphura.in</span>
             </div>
           </div>
           
@@ -49,7 +53,9 @@ const Footer = () => {
             <ul className="space-y-2">
               <li><a href="/" className="text-gray-300 hover:text-white">Home</a></li>
               <li><a href="/courses" className="text-gray-300 hover:text-white">Courses</a></li>
+              <li><a href="/Interviews" className="text-gray-300 hover:text-white">Interviews</a></li>
               <li><a href="/FAQ" className="text-gray-300 hover:text-white">FAQ</a></li>
+              <li><a href="/privacy-policy" className="text-gray-300 hover:text-white">Privacy Policy</a></li>
               <li><a href="/intern-login" className="text-gray-300 hover:text-white">Candidate Login</a></li>
             </ul>
           </div>
@@ -58,6 +64,15 @@ const Footer = () => {
      
         <div>
           <h3 className="text-lg font-semibold mb-4">Newsletter</h3>
+
+          {/* {payment Links} */}
+
+          <div className="mt-4 mb-4 flex gap-4 text-3xl text-white">
+            <FaPaypal />
+            <FaAmazonPay /> 
+            <FaGooglePay />
+            <SiPaytm />
+          </div>
 
           <p className="text-gray-200 mb-4">
             Early take-off offers valuable learning prospects in high-end growth

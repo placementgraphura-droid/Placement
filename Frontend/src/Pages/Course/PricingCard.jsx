@@ -40,10 +40,6 @@ const PricingCard = () => {
             40% off
           </span>
         </div>
-        <p className="mt-2 text-[14px] md:text-[15px] text-black/80">
-          9 Hr left at this rate
-        </p>
-
         {/* Button */}
         <a href="/intern-login"><button className="mt-6 px-20 py-3 rounded-md bg-sky-900 text-white text-sm md:text-base font-semibold shadow-md hover:bg-sky-800 transition">
           Buy Now
@@ -56,14 +52,7 @@ const PricingCard = () => {
 
         {/* Features – centered 2 columns */}
         <div className="mt-8 flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-40 text-left text-[15px] md:text-[16px] text-black">
-            <ul className="space-y-3">
-              <li>✓ Certificate of Completion</li>
-              <li>✓ 5 Sessions</li>
-              <li>✓ ATS-Friendly Templates</li>
-              <li>✓ Live CV Workshops</li>
-              <li>✓ Personalized Feedback</li>
-            </ul>
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-y-4 gap-x-40 text-left text-[15px] md:text-[16px] text-black">
             <ul className="space-y-3">
               <li>✓ Certificate of Completion</li>
               <li>✓ 5 Sessions</li>

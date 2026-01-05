@@ -242,7 +242,7 @@ export const loginMentor = async (req, res) => {
       return res.status(404).json({ message: "Mentor not found" });
     }
 
-    if (!mentor.isActive) {
+    if (!mentor.isactive) {
       return res.status(403).json({ message: "Account is inactive Please contact admin or support team." });
     }
 

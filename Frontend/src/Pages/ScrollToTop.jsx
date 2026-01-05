@@ -5,7 +5,7 @@ const ScrollToTopSelective = () => {
   const { pathname } = useLocation();
 
   // Routes where scroll should reset
-  const scrollRoutes = ["/", "/courses", "/FAQ"];
+  const scrollRoutes = ["/", "/courses", "/FAQ", "/interviews", "/privacy-policy"];
 
   useEffect(() => {
     if (scrollRoutes.includes(pathname)) {

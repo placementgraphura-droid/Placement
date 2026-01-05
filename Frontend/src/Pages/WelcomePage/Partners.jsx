@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const partners = [
   { img: "/logos/udemy.png", name: "Udemy" },
@@ -10,55 +10,51 @@ const partners = [
   { img: "/logos/realme.png", name: "Realme" },
 ];
 
-
 const Partners = () => {
   return (
-    
-      <section
+    <section
       className="
-        w-full py-16  
+        w-full py-16 overflow-hidden
         bg-gradient-to-r from-[#63B6DD] via-[#9AD6F2] to-[#1C7EAC]
-        
-        bg-opacity-30
       "
     >
-      <div className="lg:max-w-8xl mx-auto md:ml-8 ">
-
-      
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 ml-8 mb-12">
-          Proud to be the partners with such Companies
+      <div className="max-w-7xl mx-auto px-6">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-12">
+          Proud to be partnered with trusted companies
         </h2>
 
-       
-        <div className="
-            grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7
-            gap-10 justify-items-center ">
-        
-          {partners.map((p, i) => (
-            <div key={i} className="flex flex-col items-center">
-              <div className="
-                  md:w-[150px] md:h-[150px] w-[100px] h-[100px] rounded-2xl
-                  bg-white/50 backdrop-blur-md
-                  border border-white/40 shadow-lg
-                  flex justify-center items-center gap-10
-                ">
-                <img
-                  src={p.img}
-                  alt={p.name}
-                  className="md:w-24 md:h-24 w-18 h-18 object-contain"
-                />
+        {/* SCROLLER */}
+        <div className="relative">
+          <div className="flex gap-10 animate-scroll hover:[animation-play-state:paused]">
+            {[...partners, ...partners].map((p, i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 flex flex-col items-center"
+              >
+                <div
+                  className="
+                    w-[110px] h-[110px] md:w-[150px] md:h-[150px]
+                    rounded-2xl bg-white/60 backdrop-blur-md
+                    border border-white/40 shadow-lg
+                    flex items-center justify-center
+                  "
+                >
+                  <img
+                    src={p.img}
+                    alt={p.name}
+                    className="w-20 h-20 md:w-24 md:h-24 object-contain"
+                  />
+                </div>
+                <p className="mt-3 font-medium text-gray-800">
+                  {p.name}
+                </p>
               </div>
-
-             
-              <p className="text-gray-800 font-medium mt-3">{p.name}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-
       </div>
     </section>
-  
-  )
-}
+  );
+};
 
-export default Partners
+export default Partners;

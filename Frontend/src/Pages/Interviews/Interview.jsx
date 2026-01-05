@@ -1,0 +1,32 @@
+import { Link } from "react-router-dom";
+import Hero from "./Hero";
+import Navbar from "../WelcomePage/Navbar";
+import Footer from "../WelcomePage/Footer";
+import FeaturesBar from "../Course/FeaturesBar";
+import CompetitiveAnalysisCard from "../Course/CompetitiveAnalysisCard";
+import Pricing from "./Pricing";
+import Modules from "./Modules";
+
+
+function Interview() {
+
+  return (
+    <>
+     
+      <div className=" bg-gradient-to-br from-sky-50 via-blue-50 to-sky-100 overflow-auto">
+            <Navbar />
+            <Hero />
+            <FeaturesBar />
+            <CompetitiveAnalysisCard />
+            <Pricing />
+            <Modules />
+            <Footer />
+
+        </div>
+
+    
+    </>
+  );
+}
+
+export default Interview;

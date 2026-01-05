@@ -41,7 +41,7 @@ const FeaturesBar = () => {
 
         {/* Languages */}
         <div className="lg:text-2xl md:text-[15px] text-[8px]">
-          Eng/Hindi
+          Hinglish
         </div>
 
       </div>
