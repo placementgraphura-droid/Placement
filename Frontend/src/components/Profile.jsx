@@ -521,14 +521,6 @@ const Profile = () => {
                             placeholder="https://drive.google.com/..."
                           />
                         </div>
-                        <div className="text-center">
-                          <div className="text-sm text-gray-500">Or</div>
-                          <label className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors cursor-pointer mt-2">
-                            <Upload className="w-4 h-4" />
-                            <span>Upload Resume</span>
-                            <input type="file" className="hidden" accept=".pdf,.doc,.docx" />
-                          </label>
-                        </div>
                       </>
                     ) : (
                       <div className="text-center p-6 border-2 border-dashed border-gray-300 rounded-xl">
