@@ -1,242 +1,259 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Search, FileText, MessageCircle, Briefcase, Award, Users, ShieldCheck, HelpCircle } from 'lucide-react';
+import { 
+  ChevronDown, 
+  ChevronUp, 
+  Briefcase, 
+  FileText, 
+  MessageCircle, 
+  Award, 
+  Users, 
+  ShieldCheck, 
+  HelpCircle 
+} from 'lucide-react';
 import Navbar from '../WelcomePage/Navbar';
 import Footer from '../WelcomePage/Footer';
-
 
 const FAQPage = () => {
   const [activeIndex, setActiveIndex] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const faqData = [
+    // General FAQs
     {
       id: 1,
-      question: "What are the Graphura Placement Modules?",
-      answer: "The Graphura Placement Modules are structured career-preparation modules designed to make candidates job-ready through CV building, interview preparation, and access to verified placement opportunities.",
-      icon: <Briefcase className="w-5 h-5" />,
+      question: "What is Graphura India Private Limited?",
+      answer: "Graphura India Private Limited is a professional training and skill-development platform offering CV Building Courses and Interview Preparation Courses designed to enhance employability skills.",
+      icon: <HelpCircle className="w-5 h-5" />,
       category: "general"
     },
     {
       id: 2,
-      question: "Who can enroll in these placement modules?",
-      answer: "The modules are open to college students, fresh graduates, working professionals, and individuals looking to transition into new roles with proper placement support.",
+      question: "Who can enroll in Graphura courses?",
+      answer: "Students, interns, job seekers, and working professionals aiming to improve interview skills, resume quality, and professional communication can enroll.",
       icon: <Users className="w-5 h-5" />,
-      category: "eligibility"
+      category: "general"
     },
     {
       id: 3,
-      question: "What does the CV preparation module include?",
-      answer: "The CV preparation module covers professional resume structuring, ATS-friendly formatting, role-specific content optimization, and personalized improvement suggestions.",
-      icon: <FileText className="w-5 h-5" />,
-      category: "modules"
+      question: "Are the sessions live or recorded?",
+      answer: "Each course includes a mix of Live interactive sessions, Pre-recorded learning modules, and Assignments with practical exercises.",
+      icon: <MessageCircle className="w-5 h-5" />,
+      category: "course"
     },
     {
       id: 4,
-      question: "What is included in the interview preparation module?",
-      answer: "This module focuses on technical interview guidance, HR round preparation, communication skills, mock interview practice, and real interview strategies used by companies.",
-      icon: <MessageCircle className="w-5 h-5" />,
-      category: "modules"
+      question: "How will I receive course updates and access?",
+      answer: "Once enrolled, you will receive a confirmation email, login access, session schedule, and WhatsApp/email notifications.",
+      icon: <Award className="w-5 h-5" />,
+      category: "course"
     },
+
+    // Course Related FAQs
     {
       id: 5,
-      question: "Can I enroll in multiple placement modules?",
-      answer: "Yes, candidates can choose individual modules or enroll in multiple modules to get complete placement readiness support.",
-      icon: <Users className="w-5 h-5" />,
-      category: "enrollment"
+      question: "What is included in the CV Building Course (₹499)?",
+      answer: "The CV Building Course includes 5 sessions total (2 live), ATS-friendly resume creation, cover letter training, professional formatting, and one-on-one resume review.",
+      icon: <FileText className="w-5 h-5" />,
+      category: "course"
     },
     {
       id: 6,
-      question: "When do placement opportunities become available?",
-      answer: "Placement opportunities are shared after completing the required preparation modules to ensure candidates are confident and interview-ready.",
-      icon: <Award className="w-5 h-5" />,
-      category: "placement"
+      question: "What is included in the Interview Preparation Course (₹999)?",
+      answer: "This course offers 10 sessions total (5 live), HR round practice, technical round guidance, mock interviews, personality development, and communication skills training.",
+      icon: <Briefcase className="w-5 h-5" />,
+      category: "course"
     },
     {
       id: 7,
-      question: "Are there any placement opportunities available without using credits?",
-      answer: "Yes, a limited number of placement opportunities are available without using credits, and these are exclusively accessible to Graphura interns.",
-      icon: <ShieldCheck className="w-5 h-5" />,
-      category: "placement"
+      question: "What do I get in the Combo Course (₹1299)?",
+      answer: "You receive both courses at a discounted price: 5 CV Building sessions and 10 Interview Preparation sessions, total 15 sessions with 7 live sessions and bonus templates.",
+      icon: <Award className="w-5 h-5" />,
+      category: "course"
     },
+
+    // Payment FAQs
     {
       id: 8,
-      question: "What are placement credits and how do they work?",
-      answer: "Placement credits allow candidates to apply to a defined number of companies. Each application consumes one credit.",
-      icon: <HelpCircle className="w-5 h-5" />,
-      category: "credits"
+      question: "What payment methods do you support?",
+      answer: "We accept UPI, Credit/Debit Cards, Net Banking, and digital wallets.",
+      icon: <ShieldCheck className="w-5 h-5" />,
+      category: "payment"
     },
     {
       id: 9,
-      question: "What types of companies are included in the placement modules?",
-      answer: "Companies are categorized into non-blue, blue, and super blue companies based on role complexity, experience expectations, and career growth opportunities.",
-      icon: <Briefcase className="w-5 h-5" />,
-      category: "companies"
+      question: "Is my payment information secure?",
+      answer: "Yes. Payments are processed using PCI-DSS compliant gateways. Graphura does not store card or bank details.",
+      icon: <ShieldCheck className="w-5 h-5" />,
+      category: "payment"
     },
     {
       id: 10,
-      question: "Can candidates choose which companies to apply to?",
-      answer: "Yes, candidates can select companies within their eligible category based on available placement credits.",
-      icon: <Briefcase className="w-5 h-5" />,
-      category: "companies"
+      question: "Will I get an invoice?",
+      answer: "Yes. An invoice is emailed automatically after successful payment.",
+      icon: <FileText className="w-5 h-5" />,
+      category: "payment"
     },
     {
       id: 11,
-      question: "Do these placement modules guarantee a job?",
-      answer: "The modules do not guarantee placement, but they significantly improve employability by providing strong preparation and access to genuine opportunities.",
+      question: "What if my payment fails but money is deducted?",
+      answer: "It usually auto-reverses within 2–5 business days. If not, contact our support team with transaction details.",
       icon: <HelpCircle className="w-5 h-5" />,
-      category: "general"
+      category: "payment"
     },
+
+    // Refund FAQs
     {
       id: 12,
-      question: "Are the placement modules suitable for beginners?",
-      answer: "Yes, the modules are designed to support beginners as well as candidates with prior experience.",
-      icon: <Users className="w-5 h-5" />,
-      category: "eligibility"
+      question: "Can I get a refund after purchase?",
+      answer: "Refunds follow our Refund Policy. Courses already accessed or partially completed are not eligible.",
+      icon: <ShieldCheck className="w-5 h-5" />,
+      category: "refund"
     },
     {
       id: 13,
-      question: "How are Graphura Placement Modules different from other platforms?",
-      answer: "Graphura focuses on structured preparation modules, credit-based applications, verified companies, and continuous candidate support.",
-      icon: <ShieldCheck className="w-5 h-5" />,
-      category: "general"
+      question: "Can I transfer my course to someone else?",
+      answer: "No. Courses are non-transferable.",
+      icon: <Users className="w-5 h-5" />,
+      category: "refund"
     },
     {
       id: 14,
-      question: "Will I receive guidance during the placement process?",
-      answer: "Yes, candidates receive ongoing guidance, updates on opportunities, and support throughout the application and interview journey.",
+      question: "What if I miss a live session?",
+      answer: "You will receive recording (if available), notes/materials, and option to attend the next batch subject to availability.",
+      icon: <MessageCircle className="w-5 h-5" />,
+      category: "refund"
+    },
+
+    // Account FAQs
+    {
+      id: 15,
+      question: "I can’t log in. What should I do?",
+      answer: "You can reset your password, contact support, clear cookies/cache, or try another browser.",
+      icon: <HelpCircle className="w-5 h-5" />,
+      category: "account"
+    },
+    {
+      id: 16,
+      question: "I am not receiving emails. Why?",
+      answer: "Please check Spam folder, Promotions tab, and whether you entered the correct email ID.",
+      icon: <MessageCircle className="w-5 h-5" />,
+      category: "account"
+    },
+    {
+      id: 17,
+      question: "How can I change my profile details?",
+      answer: "Go to My Account → Edit Profile and update your information.",
+      icon: <Users className="w-5 h-5" />,
+      category: "account"
+    },
+
+    // Privacy FAQs
+    {
+      id: 18,
+      question: "How does Graphura handle my data?",
+      answer: "Your data is protected under our Privacy Policy and is not sold to third parties.",
+      icon: <ShieldCheck className="w-5 h-5" />,
+      category: "privacy"
+    },
+    {
+      id: 19,
+      question: "Do you use cookies?",
+      answer: "Yes, cookies are used for improving user experience, analytics, and saving login sessions. You can manage cookies through browser settings.",
+      icon: <ShieldCheck className="w-5 h-5" />,
+      category: "privacy"
+    },
+
+    // Support FAQs
+    {
+      id: 20,
+      question: "How do I contact Graphura support?",
+      answer: "You can reach us via Email: support@graphura.in, contact form on Help Page, during office hours 10 AM – 7 PM (Mon–Sat).",
       icon: <MessageCircle className="w-5 h-5" />,
       category: "support"
     },
     {
-      id: 15,
-      question: "Do Graphura interns receive special benefits?",
-      answer: "Yes, Graphura interns receive exclusive benefits, including access to selected placement opportunities without using placement credits.",
+      id: 21,
+      question: "Do you offer guidance after the course ends?",
+      answer: "Yes. Students receive doubt resolution, resume improvement support, and career guidance related to interviews and professional growth.",
       icon: <Award className="w-5 h-5" />,
-      category: "interns"
+      category: "support"
     },
     {
-      id: 16,
-      question: "Are the Graphura Placement Modules free or paid?",
-      answer: "The Graphura Placement Modules are paid learning modules that include structured preparation, professional guidance, and access to placement opportunities. Enrollment requires purchasing the selected module.",
-      icon: <HelpCircle className="w-5 h-5" />,
-      category: "general"
+      id: 22,
+      question: "Can I request personalized mentorship?",
+      answer: "Yes, personalized mentorship is available on request for an additional fee.",
+      icon: <Users className="w-5 h-5" />,
+      category: "support"
     }
   ];
-
-  const [selectedCategory] = useState('all');
 
   const toggleAccordion = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
-  const filteredFaqs = faqData.filter(faq => {
-    const matchesSearch = faq.question.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         faq.answer.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const categoryColors = {
-    general: "bg-[#D3E4ED] text-[#09435F]",
-    modules: "bg-[#3188B1] text-white",
-    placement: "bg-[#09435F] text-white",
-    credits: "bg-[#D3E4ED] text-[#09435F]",
-    companies: "bg-[#3188B1] text-white",
-    eligibility: "bg-[#09435F] text-white",
-    enrollment: "bg-[#D3E4ED] text-[#09435F]",
-    support: "bg-[#3188B1] text-white",
-    interns: "bg-[#09435F] text-white"
-  };
+  const filteredFaqs = faqData.filter(faq =>
+    faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-
-
-
     <div>
-    <div className="min-h-screen bg-gradient-to-b from-[#D3E4ED] to-white p-4 md:p-8">
-            <Navbar />
-      <div className="max-w-6xl mt-20 mx-auto">
-        {/* Header */}
-        <header className="mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#09435F] mb-4">
-            Graphura Placement Modules FAQ
-          </h1>
-          <p className="text-lg md:text-xl text-[#09435F] max-w-3xl mx-auto">
-            Find answers to commonly asked questions about our structured career-preparation modules
-          </p>
-        </header>
-        {/* FAQ Accordion */}
-        <div className="space-y-4">
-          {filteredFaqs.length > 0 ? (
-            filteredFaqs.map((faq, index) => (
-              <div
-                key={faq.id}
-                className={`rounded-xl overflow-hidden transition-all duration-300 ${activeIndex === index ? 'shadow-lg' : 'shadow-md'}`}
-                style={{
-                  backgroundColor: activeIndex === index ? '#FFFFFF' : '#D3E4ED',
-                  border: activeIndex === index ? '2px solid #3188B1' : '2px solid transparent'
-                }}
-              >
+      <div className="min-h-screen bg-gradient-to-b from-[#D3E4ED] to-white p-4 md:p-8">
+        <Navbar />
+
+        <div className="max-w-6xl mt-20 mx-auto">
+          <header className="mb-12 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-[#09435F] mb-4">
+              Graphura Platform FAQ
+            </h1>
+            <p className="text-lg text-[#09435F]">
+              Find answers to all your queries about Graphura courses and placement support
+            </p>
+          </header>
+
+          {/* <div className="mb-8">
+            <input
+              type="text"
+              placeholder="Search FAQs..."
+              className="w-full p-4 border border-[#3188B1] rounded-lg"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div> */}
+
+          <div className="space-y-4">
+            {filteredFaqs.map((faq, index) => (
+              <div key={faq.id} className="rounded-xl shadow-md overflow-hidden">
                 <button
                   className="w-full p-6 text-left flex justify-between items-center"
                   onClick={() => toggleAccordion(index)}
                 >
-                  <div className="flex items-start space-x-4">
-                    <div className={`p-2 rounded-lg ${categoryColors[faq.category] || 'bg-[#3188B1] text-white'}`}>
-                      {faq.icon}
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-[#09435F]">{faq.question}</h3>
-                      <div className="mt-2">
-                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${categoryColors[faq.category] || 'bg-[#3188B1] text-white'}`}>
-                          {faq.category.charAt(0).toUpperCase() + faq.category.slice(1)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    {activeIndex === index ? (
-                      <ChevronUp className="w-6 h-6 text-[#3188B1]" />
-                    ) : (
-                      <ChevronDown className="w-6 h-6 text-[#3188B1]" />
-                    )}
-                  </div>
+                  <h3 className="text-xl font-semibold text-[#09435F]">
+                    {faq.question}
+                  </h3>
+
+                  {activeIndex === index ? <ChevronUp /> : <ChevronDown />}
                 </button>
-                <div
-                  className={`overflow-hidden transition-all duration-300 ${
-                    activeIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                  }`}
-                >
-                  <div className="px-6 pb-6 ml-14 border-t border-[#3188B1] pt-4">
-                    <p className="text-[#09435F] leading-relaxed">{faq.answer}</p>
+
+                {activeIndex === index && (
+                  <div className="p-6 border-t border-[#3188B1]">
+                    <p className="text-[#09435F]">{faq.answer}</p>
                   </div>
-                </div>
+                )}
               </div>
-            ))
-          ) : (
-            <div className="text-center py-12 bg-white rounded-xl">
-              <HelpCircle className="w-16 h-16 text-[#3188B1] mx-auto mb-4" />
-              <h3 className="text-2xl font-semibold text-[#09435F] mb-2">No FAQs Found</h3>
-              <p className="text-[#09435F]">Try adjusting your search or category filter</p>
-            </div>
-          )}
+            ))}
+          </div>
+
+          <footer className="mt-12 text-center">
+            <a href="mailto:support@graphura.in" className="text-[#3188B1] font-bold">
+              Contact Support
+            </a>
+          </footer>
         </div>
-
-
-        {/* Footer */}
-        <footer className="mt-12 pt-8 border-t border-[#3188B1] text-center">
-          <p className="text-[#09435F]">
-            Still have questions? <a href="mailto:support@graphura.com" className="text-[#3188B1] font-semibold hover:underline">Contact our support team</a>
-          </p>
-          <p className="text-sm text-[#09435F] mt-4">
-            © {new Date().getFullYear()} Graphura Placement Modules. All rights reserved.
-          </p>
-        </footer>
       </div>
-    </div>
+
       <Footer />
-      </div>
-    
+    </div>
   );
 };
 

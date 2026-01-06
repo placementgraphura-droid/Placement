@@ -15,20 +15,17 @@ function WelcomePage() {
     <>
      
       <div className=" bg-gradient-to-br from-sky-50 via-blue-50 to-sky-100 overflow-auto">
-        
               <Hero2 />
               <Navbar />
               {/* <Hero /> */}
               <Opening />
               <Coursess/>
-              <JobsSlider />
-              <JobSuccessSlider />
+              {/* <JobsSlider /> */}
+              {/* <JobSuccessSlider /> */}
               <Testimonials />
               <Partners />
               <Footer />
         </div>
-
-    
     </>
   );
 }

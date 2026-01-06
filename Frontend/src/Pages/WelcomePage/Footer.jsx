@@ -74,18 +74,15 @@ const Footer = () => {
         {/* ========== Payments & Social ========== */}
         <div>
           <h4 className="text-lg font-semibold mb-4">Payments Accepted</h4>
-
           <div className="flex gap-4 text-3xl mb-6">
             <FaPaypal />
             <FaAmazonPay />
             <FaGooglePay />
             <SiPaytm />
           </div>
-
           <p className="text-gray-200 mb-4">
             Secure and trusted payment gateways.
           </p>
-
           <div className="flex gap-4 text-xl mt-4">
             <a href="https://www.linkedin.com/company/graphura-india-private-limited/" target="_blank"><FaLinkedin /></a>
             <a href="https://www.instagram.com/graphura.in/" target="_blank"><FaInstagram /></a>
