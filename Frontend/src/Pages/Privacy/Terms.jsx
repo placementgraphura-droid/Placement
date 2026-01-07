@@ -460,8 +460,8 @@ const TermsAndConditions = () => {
                 </p>
                 <div className="bg-slate-50 p-5 rounded-lg mt-3">
                   <p className="font-semibold text-slate-900">Sorting Graphura India Private Limited</p>
-                  <p className="text-slate-700">near RSF, Pataudi, Gurgaon,</p>
-                  <p className="text-slate-700">Haryana 122503, India.</p>
+                  <p className="text-slate-700">Graphura</p>
+                  <p className="text-slate-700">10/305, Near Anurag bhawan, Sector 1, Mansarovar, Jaipur, Rajasthan 302020, India</p>
                 </div>
               </div>
             </div>
@@ -476,7 +476,7 @@ const TermsAndConditions = () => {
                   </a>
                 </p>
                 <p className="mt-4 text-xs text-slate-500">
-                  © 2026 Graphura India Private Limited. All rights reserved.
+                  © 2026 Graphura All rights reserved.
                 </p>
                 <p className="mt-2 text-xs text-slate-500">
                   Terms and Conditions – Version 1.0

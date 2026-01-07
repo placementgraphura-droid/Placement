@@ -464,7 +464,7 @@ const UserGuidelines = () => {
                   </a>
                 </p>
                 <p className="mt-4 text-xs text-slate-500">
-                  © 2026 Graphura India Private Limited. All rights reserved.
+                  © 2026 Graphura All rights reserved.
                 </p>
               </div>
             </div>
