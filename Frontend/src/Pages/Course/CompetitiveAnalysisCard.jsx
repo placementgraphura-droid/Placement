@@ -110,7 +110,7 @@ const CompetitiveAnalysisCard = () => {
               <td className="py-4 px-4 text-black border-r border-black">
                 ₹999–₹15,000
               </td>
-              <td className="py-4 pl-4 text-black">₹499 with certificate</td>
+              <td className="py-4 pl-4 text-black">₹799 with certificate</td>
             </tr>
           </tbody>
         </table>

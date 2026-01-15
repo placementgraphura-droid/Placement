@@ -51,14 +51,14 @@ const FAQPage = () => {
     // Course Related FAQs
     {
       id: 5,
-      question: "What is included in the CV Building Course (₹499)?",
+      question: "What is included in the CV Building Course (₹799)?",
       answer: "The CV Building Course includes 5 sessions total (2 live), ATS-friendly resume creation, cover letter training, professional formatting, and one-on-one resume review.",
       icon: <FileText className="w-5 h-5" />,
       category: "course"
     },
     {
       id: 6,
-      question: "What is included in the Interview Preparation Course (₹999)?",
+      question: "What is included in the Interview Preparation Course (₹1299)?",
       answer: "This course offers 10 sessions total (5 live), HR round practice, technical round guidance, mock interviews, personality development, and communication skills training.",
       icon: <Briefcase className="w-5 h-5" />,
       category: "course"

@@ -93,10 +93,8 @@ const Hero = () => {
               className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10"
             >
               {[
-                "AI Mock Interviews",
                 "Real-time Feedback",
                 "Company-specific Questions",
-                "Expert 1-on-1 Coaching",
                 "System Design Prep",
                 "Salary Negotiation Tips"
               ].map((feature, index) => (
@@ -122,7 +120,7 @@ const Hero = () => {
               >
                 <a href="/intern-login" className="relative z-10 flex items-center justify-center gap-2">
                   <span className="relative z-10 flex items-center justify-center gap-2">
-                    Start Free Mock Interview
+                    Enroll Now
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </a>

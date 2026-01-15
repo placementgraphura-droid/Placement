@@ -20,8 +20,8 @@ function WelcomePage() {
               {/* <Hero /> */}
               <Opening />
               <Coursess/>
-              {/* <JobsSlider /> */}
-              {/* <JobSuccessSlider /> */}
+              <JobsSlider />
+              <JobSuccessSlider />
               <Testimonials />
               <Partners />
               <Footer />

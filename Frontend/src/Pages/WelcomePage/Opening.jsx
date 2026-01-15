@@ -4,13 +4,20 @@ const logos = [
   "/logos/myntra.svg",
   "/logos/realme.png",
   "/logos/lenskart.png",
+   "/policy.png",
+  "/udemy.png",
   "/logos/bajaj.png",
   "/logos/geeks.png",
   "/logos/myntra.svg",
+  "/logo20.png",
   "/logos/realme.png",
   "/logos/lenskart.png",
   "/logos/bajaj.png",
   "/logos/geeks.png",
+  "/logo20.png",
+  "/policy.png",
+  "/udemy.png",
+  
 ];
 
 const Opening = () => {

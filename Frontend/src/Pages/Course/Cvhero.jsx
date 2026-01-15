@@ -120,7 +120,7 @@ const Hero = () => {
               >
                 <a href="/intern-login">
                 <span className="relative z-10 flex items-center justify-center gap-2">
-                  Start Free Trial
+                  Enroll Now
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </span>
                 </a>

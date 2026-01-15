@@ -153,7 +153,7 @@ const Dashboard = () => {
           <div className="px-6 py-4">
             <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0">
               <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4 text-sm text-[#0E5C7E]">
-                <span>© {new Date().getFullYear()} Graphura India Private Limited. All rights reserved.</span>
+                <span>© {new Date().getFullYear()} Graphura. All rights reserved.</span>
               </div>  
             </div>
           </div>

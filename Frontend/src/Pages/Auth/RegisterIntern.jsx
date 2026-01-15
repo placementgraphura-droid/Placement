@@ -763,7 +763,7 @@ const RegisterPage = () => {
                                 </select>
 
                                 <span className="text-xs text-green-300 block mt-1">
-                                    # Select your domain as per Graphura India Private Limited Internship Programme.
+                                    # Select your domain as per Graphura Internship Programme.
                                 </span>
                             </div>
 
