@@ -94,7 +94,7 @@ const Footer = () => {
 
       {/* ========== Bottom Bar ========== */}
       <div className="text-center text-gray-300 text-sm mt-12 border-t border-white/10 pt-6">
-        © {new Date().getFullYear()} Graphura . All Rights Reserved.
+        © {new Date().getFullYear()} Graphura India Private Limited. All Rights Reserved.
       </div>
       
     </footer>

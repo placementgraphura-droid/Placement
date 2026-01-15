@@ -4,50 +4,51 @@ import React, { useState } from "react";
 const MODULES = [
   {
     id: 1,
-    title: "Unlock Role Secrets: Prepare Like a Top Candidate Every Time",
+    title: "The Architecture of a World-Class CV That Impresses in 6 Seconds",
     meta: "Module 1 • Around 1 hour to complete",
     summary:
-      "Tailor your interview approach based on company type—from startups to MNCs.",
+      "Understand how recruiters scan CVs and what makes a resume instantly impressive.",
     details:
-      "Learn how different organizations evaluate candidates, what they prioritize, and how to adapt your answers strategically to match their expectations.",
+      "Master the proven structure behind world-class CVs. Learn recruiter psychology, visual hierarchy, formatting, alignment, and layout techniques to create a clean, professional, and impossible-to-ignore CV.",
   },
   {
     id: 2,
-    title: "Mock Interview Mastery: Turn Practice Into Performance",
+    title: "Academic Storytelling: Crafting a Powerful Education Section",
     meta: "Module 2 • Around 1 hour to complete",
     summary:
-      "Experience realistic HR interviews and build confidence through structured practice.",
+      "Turn your education section into a credibility booster.",
     details:
-      "Practice behavioral interviews with measurable impact, refine answer structure, and develop the confidence and poise needed to handle real interview pressure.",
+      "Learn how to present your degree, GPA, coursework, certifications, and academic achievements in a structured and impactful way—even if you feel you have limited academic experience.",
   },
   {
     id: 3,
-    title: "Think, Solve, Impress: Live Technical Simulation & Analysis",
+    title: "Crafting High-Impact Experience Bullets",
     meta: "Module 3 • Around 1 hour to complete",
     summary:
-      "Showcase structured thinking, prioritization, and solution-driven reasoning in live simulations.",
+      "Write experience bullets that show impact, not just responsibilities.",
     details:
-      "Participate in technical and analytical simulations, receive detailed performance analysis, and get personalized improvement strategies to outperform peers.",
+      "Learn how to craft result-driven bullet points, highlight leadership and skills, and align your experience with job descriptions to create a sharp, balanced, and memorable CV.",
   },
   {
     id: 4,
-    title: "Land Interviews Faster: Resume, LinkedIn & Portfolio Mastery",
+    title: "CV Mastery Live: From Draft to Recruiter-Ready Resume",
     meta: "Module 4 • Around 1 hour to complete",
     summary:
-      "Optimize your resume, LinkedIn profile, and portfolio for maximum recruiter impact.",
+      "Refine and elevate your CV to recruiter standards.",
     details:
-      "Learn ATS-friendly formatting, keyword optimization, proof-backed achievements, and positioning strategies to increase interview callbacks.",
+      "Get your CV polished live—covering formatting, bullet strength, clarity, keyword alignment, and visual hierarchy—so it reads and looks like a top recruiter’s shortlist resume.",
   },
   {
     id: 5,
-    title: "The Ultimate Mock Interview: Test, Score & Transform",
+    title: "Your Signature CV: Polished, Professional & Placement-Ready",
     meta: "Module 5 • Around 1 hour to complete",
     summary:
-      "Integrate everything you’ve learned through full-length mock interviews and scoring.",
+      "Walk away with your final, submission-ready CV.",
     details:
-      "Complete comprehensive mock interviews, receive a structured performance scorecard, and get a personalized roadmap to confidently navigate your career journey.",
+      "Receive your fully edited, formatted, and finalized CV—perfected to represent your personal brand and ready to submit for internships, placements, and job applications.",
   },
 ];
+
 
 
 export default function ModulesAccordion() {

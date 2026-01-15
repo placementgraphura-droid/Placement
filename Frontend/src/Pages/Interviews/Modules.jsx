@@ -4,50 +4,96 @@ import React, { useState } from "react";
 const MODULES = [
   {
     id: 1,
-    title: "Unlock Role Secrets: Prepare Like a Top Candidate Every Time",
+    title: "Crack the Interview Code: How Companies Really Select Candidates",
     meta: "Module 1 • Around 1 hour to complete",
     summary:
-      "Understand how different companies—from startups to MNCs—expect candidates to perform.",
+      "Understand how hiring decisions are actually made behind the scenes.",
     details:
-      "Learn how organizations evaluate candidates, what they prioritize, and how to strategically tailor your responses to align with company expectations and stand out as a top choice.",
+      "Shift from a job-seeker mindset to a value-delivery professional. Learn how resumes are screened, interviews are scored, and offers are finalized—so you approach every recruitment process with clarity, confidence, and a competitive edge.",
   },
   {
     id: 2,
-    title: "Mock Interview Mastery: Turn Practice Into Performance",
+    title: "Nail the HR Call: First 60 Seconds to Win",
     meta: "Module 2 • Around 1 hour to complete",
     summary:
-      "Experience HR interviews like never before and build confidence through structured practice.",
+      "Master the first HR interaction that decides your interview journey.",
     details:
-      "Master behavioral interviews by delivering measurable, impact-driven answers. Learn proven response structures and develop the poise to handle challenging interview situations confidently.",
+      "Learn powerful frameworks like SIV and EIM to structure answers effectively. Understand what recruiters listen for in the first call and how to present your achievements and skills strategically to stand out immediately.",
   },
   {
     id: 3,
-    title: "Think, Solve, Impress: Live Technical Simulation & Analysis",
+    title: "Crack Behavioral Interviews: STAR, CARL & SOAR Made Easy",
     meta: "Module 3 • Around 1 hour to complete",
     summary:
-      "Showcase structured reasoning, prioritization, and solution-driven thinking.",
+      "Answer behavioral questions with clarity, confidence, and impact.",
     details:
-      "Participate in live technical and analytical simulations, receive detailed performance analysis, and get personalized improvement plans to outperform peers in real interviews.",
+      "Most candidates fail behavioral rounds due to vague answers. Learn STAR, CARL, and SOAR frameworks to showcase leadership, decision-making, problem-solving, and teamwork in a way that clearly demonstrates your value.",
   },
   {
     id: 4,
-    title: "Land Interviews Faster: Resume, LinkedIn & Portfolio Mastery",
+    title: "From JD to Answer: Technical & Analytical Interview Mastery",
     meta: "Module 4 • Around 1 hour to complete",
     summary:
-      "Align your resume, LinkedIn profile, and portfolio for maximum recruiter impact.",
+      "Convert job descriptions into winning interview answers.",
     details:
-      "Learn ATS-friendly formatting, keyword optimization, and proof-backed presentation strategies that significantly improve visibility and increase interview callbacks.",
+      "Decode job descriptions, identify core skills, and present your technical knowledge confidently. Learn how to explain projects, tools, and problem-solving approaches in domain-specific interviews.",
   },
   {
     id: 5,
-    title: "The Ultimate Mock Interview: Test, Score & Transform",
+    title: "Interview Strategy & Salary Secrets: Maximize Your Offer",
     meta: "Module 5 • Around 1 hour to complete",
     summary:
-      "Integrate everything you’ve learned through full-length mock interviews.",
+      "Negotiate confidently and secure offers that reflect your true worth.",
     details:
-      "Complete comprehensive mock interviews, receive a structured performance scorecard, and get a personalized roadmap to confidently navigate and accelerate your career path.",
+      "Learn how to negotiate without sounding desperate. Master proven strategies like BATNA and Anchoring to demonstrate value, handle salary discussions professionally, and maximize your compensation.",
+  },
+  {
+    id: 6,
+    title: "Unlock Role Secrets: Prepare Like a Top Candidate Every Time",
+    meta: "Module 6 • Around 1 hour to complete",
+    summary:
+      "Adapt your interview strategy for startups, MNCs, and everything in between.",
+    details:
+      "Understand how different companies evaluate candidates and what they prioritize. Learn how to tailor your responses strategically to match expectations and consistently stand out as a top choice.",
+  },
+  {
+    id: 7,
+    title: "Mock Interview Mastery: Turn Practice Into Performance",
+    meta: "Module 7 • Around 1 hour to complete",
+    summary:
+      "Build confidence through realistic mock HR interviews.",
+    details:
+      "Experience interview simulations that mirror real hiring scenarios. Learn to deliver measurable, impact-driven answers and develop the poise to handle pressure and unexpected questions confidently.",
+  },
+  {
+    id: 8,
+    title: "Think, Solve, Impress: Live Technical Simulation & Analysis",
+    meta: "Module 8 • Around 1 hour to complete",
+    summary:
+      "Stand out with structured thinking and solution-oriented reasoning.",
+    details:
+      "Participate in live technical and analytical simulations. Receive detailed performance analysis, expert feedback, and personalized improvement plans to outperform peers in real interviews.",
+  },
+  {
+    id: 9,
+    title: "Land Interviews Faster: Resume, LinkedIn & Portfolio Mastery",
+    meta: "Module 9 • Around 1 hour to complete",
+    summary:
+      "Optimize your professional profiles for recruiter visibility.",
+    details:
+      "Learn ATS-friendly resume formatting, keyword optimization, and proof-backed presentation strategies for LinkedIn and portfolios to significantly increase interview callbacks.",
+  },
+  {
+    id: 10,
+    title: "The Ultimate Mock Interview: Test, Score & Transform",
+    meta: "Module 10 • Around 1 hour to complete",
+    summary:
+      "Put everything together in full-length interview simulations.",
+    details:
+      "Complete comprehensive mock interviews, receive a structured performance scorecard, and get a personalized roadmap to confidently navigate interviews and accelerate your career growth.",
   },
 ];
+
 
 
 
@@ -62,7 +108,7 @@ export default function ModulesAccordion() {
   }}
     >
       <h3 className="text-lg md:text-xl font-bold text-black mb-3">
-        There are 5 modules :
+        There are 10 modules :
       </h3>
 
       <div className="space-y-3 text-black bg-transparent shadow-[0_24px_55px_rgba(15,23,42,0.35)] p-10">
