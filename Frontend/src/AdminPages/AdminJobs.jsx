@@ -1157,12 +1157,6 @@ const AdminJobPosts = () => {
                     <div className="flex flex-col items-center">
                       <Briefcase size={64} className="text-gray-400 mb-4" />
                       <h3 className="text-xl font-semibold text-gray-700 mb-2">No Jobs Found</h3>
-                      <p className="text-gray-500 max-w-md">
-                        {searchTerm || selectedFilters.status !== "all" || selectedFilters.type !== "all"
-                          ? "No jobs match your current filters. Try adjusting your search criteria."
-                          : "No job posts have been created yet on the platform."
-                        }
-                      </p>
                     </div>
                   </td>
                 </tr>

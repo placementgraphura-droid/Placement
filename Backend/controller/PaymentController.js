@@ -1,6 +1,7 @@
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import Intern from "../model/RegisterDB/internSchema.js";
+import Interndata from "../model/interndata.js"
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -13,7 +14,7 @@ export const purchasePlan = async (req, res) => {
 
     const {
       purchaseCategory,
-      amount, 
+      amount,
       packageType,
       creditsGiven,
       maxPackageLPA,
@@ -30,8 +31,20 @@ export const purchasePlan = async (req, res) => {
       });
     }
 
-       if (purchaseCategory === "JOB_PACKAGE" && packageType === "Silver") {
+    if (purchaseCategory === "JOB_PACKAGE" && packageType === "Silver") {
       const intern = await Intern.findById(internId).select("purchases");
+
+      const emailExists = await Interndata.findOne({
+        Email: intern.email
+      });
+
+      if (!emailExists) {
+        return res.status(403).json({
+          success: false,
+          message:
+            "You are not eligible for the Silver package"
+        });
+      }
 
       const alreadyPurchasedSilver = intern.purchases.some(
         (p) =>

@@ -1264,8 +1264,7 @@ const fetchPlan = async () => {
                 <div className="flex items-center text-red-600">
                   <AlertCircle size={18} className="mr-2" />
                   <span>
-                    No active job package •
-                    <a href="/pricing" className="underline font-medium ml-1">Purchase a package to apply</a>
+                    No active job package 
                   </span>
                 </div>
               )}
