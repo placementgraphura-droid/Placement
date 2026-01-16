@@ -7,7 +7,7 @@ const courses = [
     title: "CV Building",
     rating: "4.7",
     desc: "Essential skills to craft compelling resumes that stand out.",
-    reviewed: "17+ students",
+    reviewed: "145+ students",
     links: "/courses",
   },
   {
@@ -15,7 +15,7 @@ const courses = [
     title: "Interview Preparation",
     rating: "4.8",
     desc: "Understand the role, present yourself confidently, strong communication.",
-    reviewed: "12+ students",
+    reviewed: "235+ students",
     links: "/interviews",
   },
   {
@@ -23,7 +23,7 @@ const courses = [
     title: "Combo Package",
     rating: "4.6",
     desc: "Comprehensive course covering CV building and interview preparation.",
-    reviewed: "15+ students",
+    reviewed: "190+ students",
     links: "/courses",
   },
  

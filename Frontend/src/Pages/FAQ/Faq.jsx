@@ -21,7 +21,7 @@ const FAQPage = () => {
     // General FAQs
     {
       id: 1,
-      question: "What is Graphura India Private Limited?",
+      question: "What is Graphura ?",
       answer: "Graphura India Private Limited is a professional training and skill-development platform offering CV Building Courses and Interview Preparation Courses designed to enhance employability skills.",
       icon: <HelpCircle className="w-5 h-5" />,
       category: "general"

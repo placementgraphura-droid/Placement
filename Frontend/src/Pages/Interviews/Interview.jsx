@@ -6,6 +6,7 @@ import FeaturesBar from "../Course/FeaturesBar";
 import InterviewAnalitics from "./InterviewAnalitics"
 import Pricing from "./Pricing";
 import Modules from "./Modules";
+import Testimonials from "../WelcomePage/Testimonial";
 
 
 
@@ -21,6 +22,7 @@ function Interview() {
             <InterviewAnalitics />
             <Pricing />
             <Modules />
+            <Testimonials />
             <Footer />
 
         </div>
