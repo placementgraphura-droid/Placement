@@ -176,40 +176,12 @@ const Hero = () => {
                 className="relative z-10"
               >
                 <img
-                  src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=1000&q=80&ixlib=rb-4.0.3"
+                  src="https://storage.googleapis.com/ureify-strapi-assets/resume_building_for_freshers_9bbad96764/resume_building_for_freshers_9bbad96764.webp"
                   alt="Professional CV Design"
                   className="w-full max-w-2xl mx-auto rounded-2xl shadow-2xl border-8 border-white/20"
                 />
               </motion.div>
 
-              {/* Floating elements */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1 }}
-                className="absolute -top-4 -left-4 bg-white p-4 rounded-xl shadow-2xl"
-                style={{ backgroundColor: '#FFFFFF' }}
-              >
-                <div className="text-sm font-bold" style={{ color: '#0069A8' }}>ATS Score</div>
-                <div className="text-2xl font-bold" style={{ color: '#09435F' }}>98%</div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2 }}
-                className="absolute -bottom-4 -right-4 p-4 rounded-xl shadow-2xl"
-                style={{ background: 'linear-gradient(to right, #09435F, #0069A8)' }}
-              >
-                <div className="text-sm font-bold text-white">Top Companies</div>
-                <div className="flex space-x-1 mt-1">
-                  {["Google", "Amazon", "Meta"].map((company, index) => (
-                    <div key={index} className="text-xs bg-white/20 px-2 py-1 rounded text-white">
-                      {company}
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
 
               {/* Glow effect */}
               <div 

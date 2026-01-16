@@ -3,9 +3,10 @@ import Hero from "./Hero";
 import Navbar from "../WelcomePage/Navbar";
 import Footer from "../WelcomePage/Footer";
 import FeaturesBar from "../Course/FeaturesBar";
-import CompetitiveAnalysisCard from "../Course/CompetitiveAnalysisCard";
+import InterviewAnalitics from "./InterviewAnalitics"
 import Pricing from "./Pricing";
 import Modules from "./Modules";
+
 
 
 function Interview() {
@@ -17,7 +18,7 @@ function Interview() {
             <Navbar />
             <Hero />
             <FeaturesBar />
-            <CompetitiveAnalysisCard />
+            <InterviewAnalitics />
             <Pricing />
             <Modules />
             <Footer />

@@ -54,7 +54,7 @@ const PricingCard = () => {
         <div className="mt-8 flex justify-center">
           <div className="grid grid-cols-1 md:grid-cols-1 gap-y-4 gap-x-40 text-left text-[15px] md:text-[16px] text-black">
             <ul className="space-y-3">
-              <li>✓ 5 Sessions</li>
+              <li>✓ 5 Module</li>
               <li>✓ ATS-Friendly Templates</li>
               <li>✓ Live CV Workshops</li>
               <li>✓ Personalized Feedback</li>

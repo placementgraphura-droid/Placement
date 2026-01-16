@@ -4,7 +4,7 @@ const logos = [
   "/logos/myntra.svg",
   "/logos/realme.png",
   "/logos/lenskart.png",
-   "/policy.png",
+  "/policy.png",
   "/udemy.png",
   "/logos/bajaj.png",
   "/logos/geeks.png",
