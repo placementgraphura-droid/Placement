@@ -122,7 +122,6 @@ const Payments = () => {
         "5 Modules",
         "Personalize Feedback",
         'LinkedIn Profile Review',
-        '2 Live CV Review Sessions',
       ],
       popular: false,
       tag: 'BEGINNER FRIENDLY'
@@ -167,7 +166,6 @@ const Payments = () => {
         'Everything in Interview Prep',
         'Personal Career Roadmap',
         'Q&A Sessions',
-        'Networking Events Access',
         'Job Referral Program',
         'Priority Placement Support'
       ],
