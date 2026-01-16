@@ -122,7 +122,6 @@ const Payments = () => {
         'LinkedIn Profile Review',
         '2 Live CV Review Sessions',
         '3 Recorded Tutorials',
-        'Certificate of Completion'
       ],
       popular: false,
       tag: 'BEGINNER FRIENDLY'
@@ -166,7 +165,6 @@ const Payments = () => {
         'Everything in CV Building',
         'Everything in Interview Prep',
         'Personal Career Roadmap',
-        'Monthly Q&A Sessions',
         'Networking Events Access',
         'Job Referral Program',
         'Priority Placement Support'
@@ -618,7 +616,6 @@ const Payments = () => {
                   <div className="mb-4">
                     <div className="flex items-baseline justify-center mb-1">
                       <span className="text-3xl font-bold text-[#0A2E40]">{formatCurrency(plan.price)}</span>
-                      <span className="text-[#0E5C7E] ml-2">/{plan.duration}</span>
                     </div>
                     
                     {/* Original Price with Strikethrough */}
@@ -644,9 +641,6 @@ const Payments = () => {
                   ) : (
                     <div className="text-[#0E5C7E] font-semibold">
                       {plan.totalSessions} Total Sessions
-                      <div className="text-sm text-[#0E5C7E]/80 mt-1">
-                        {plan.liveSessions} Live + {plan.recordedSessions} Recorded
-                      </div>
                     </div>
                   )}
                 </div>
