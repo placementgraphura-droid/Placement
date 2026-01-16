@@ -256,23 +256,6 @@ const Hero = () => {
                 </div>
               </motion.div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2 }}
-                className="absolute -bottom-4 -right-4 p-4 rounded-xl shadow-2xl"
-                style={{ background: 'linear-gradient(to right, #09435F, #0069A8)' }}
-              >
-                <div className="text-sm font-bold text-white">Prep Topics</div>
-                <div className="flex flex-wrap gap-1 mt-2">
-                  {["DSA", "System Design", "Behavioral", "Leadership"].map((topic, index) => (
-                    <div key={index} className="text-xs bg-white/20 px-2 py-1 rounded text-white">
-                      {topic}
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-
               {/* Glow effect */}
               <div 
                 className="absolute inset-0 blur-3xl rounded-full -z-10"
