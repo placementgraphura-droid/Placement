@@ -561,38 +561,6 @@ const DashboardHome = () => {
           })}
         </div>
 
-        {/* Package Information Banner */}
-        <div className="mb-8 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] rounded-2xl shadow-lg overflow-hidden">
-          <div className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                {purchaseType === 'COURSE' ? (
-                  <GraduationCap className="w-8 h-8 text-white" />
-                ) : (
-                  <Package className="w-8 h-8 text-white" />
-                )}
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-white">
-                  Your {getPurchaseTypeLabel(purchaseType)} is Active
-                </h3>
-                <p className="text-[#EAF6FC] mt-1">
-                  {purchaseType === 'COURSE'
-                    ? 'Access expert courses and mentorship to boost your career'
-                    : 'Apply to premium jobs and get detailed feedback from hiring teams'}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => navigate(purchaseType === 'COURSE' ? '/courses' : '/jobs')}
-              className="group flex items-center gap-2 bg-white text-[#0E5C7E] hover:bg-[#EAF6FC] px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow hover:shadow-lg"
-            >
-              {purchaseType === 'COURSE' ? 'Explore Courses' : 'Browse Jobs'}
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-        </div>
-
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
           {/* Recent Applications */}
