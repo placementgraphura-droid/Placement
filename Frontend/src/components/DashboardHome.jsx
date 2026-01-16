@@ -715,13 +715,6 @@ const DashboardHome = () => {
                   <p className="text-[#0E5C7E]/80 mb-6 max-w-md mx-auto">
                     Start applying to internships to track your progress and get feedback
                   </p>
-                  <button
-                    onClick={() => navigate('/jobs')}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white rounded-xl font-semibold hover:from-[#0A2E40] hover:to-[#0E5C7E] transition-all duration-300 transform hover:scale-105 shadow"
-                  >
-                    <Briefcase size={18} />
-                    Browse Jobs
-                  </button>
                 </div>
               )}
             </div>
@@ -825,24 +818,6 @@ const DashboardHome = () => {
                       ? 'Complete course assignments to receive mentor feedback'
                       : 'Apply to jobs to receive feedback from hiring teams'}
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <button
-                      onClick={() => navigate('/feedback')}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white rounded-xl font-semibold hover:from-[#0A2E40] hover:to-[#0E5C7E] transition-all duration-300 shadow"
-                    >
-                      <MessageSquare size={18} />
-                      View Feedback Center
-                    </button>
-                    {purchaseType === 'JOB_PACKAGE' && (
-                      <button
-                        onClick={() => navigate('/jobs')}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white rounded-xl font-semibold hover:from-[#0A2E40] hover:to-[#0E5C7E] transition-all duration-300 shadow"
-                      >
-                        <Briefcase size={18} />
-                        Apply to Jobs
-                      </button>
-                    )}
-                  </div>
                 </div>
               )}
             </div>

@@ -119,9 +119,10 @@ const Payments = () => {
       features: [
         'Professional CV Template',
         'ATS Optimization Guide',
+        "5 Modules",
+        "Personalize Feedback",
         'LinkedIn Profile Review',
         '2 Live CV Review Sessions',
-        '3 Recorded Tutorials',
       ],
       popular: false,
       tag: 'BEGINNER FRIENDLY'
@@ -165,6 +166,7 @@ const Payments = () => {
         'Everything in CV Building',
         'Everything in Interview Prep',
         'Personal Career Roadmap',
+        'Q&A Sessions',
         'Networking Events Access',
         'Job Referral Program',
         'Priority Placement Support'
