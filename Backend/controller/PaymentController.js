@@ -31,22 +31,41 @@ export const purchasePlan = async (req, res) => {
       });
     }
 
+    /* =====================================================
+       🔐 SILVER PACKAGE VALIDATION
+    ====================================================== */
     if (purchaseCategory === "JOB_PACKAGE" && packageType === "Silver") {
-      const intern = await Intern.findById(internId).select("purchases");
 
-      const emailExists = await Interndata.findOne({
-        Email: intern.email
+      // ✅ get intern email + purchases
+      const intern = await Intern.findById(internId).select("email purchases");
+
+      if (!intern) {
+        return res.status(404).json({
+          success: false,
+          message: "Intern not found"
+        });
+      }
+
+      const internEmail = intern.email?.trim().toLowerCase();
+      console.log("Intern Email:", internEmail);
+
+      // ❌ block if email not found in Excel-uploaded data
+      const emailExists = await Interndata.exists({
+        Email: internEmail
       });
+
+      console.log("Email exists in interndata:", emailExists);
 
       if (!emailExists) {
         return res.status(403).json({
           success: false,
           message:
-            "You are not eligible for the Silver package"
+            "You are not eligible for the Silver package. Email not found in approved list."
         });
       }
 
-      const alreadyPurchasedSilver = intern.purchases.some(
+      // ❌ block if Silver already purchased
+      const alreadyPurchasedSilver = intern.purchases?.some(
         (p) =>
           p.purchaseCategory === "JOB_PACKAGE" &&
           p.jobPackageDetails?.packageType === "Silver" &&
@@ -61,10 +80,11 @@ export const purchasePlan = async (req, res) => {
       }
     }
 
-
-    // Amount must be in paise
+    /* =====================================================
+       💳 CREATE RAZORPAY ORDER
+    ====================================================== */
     const options = {
-      amount: amount,
+      amount, // paise
       currency: "INR",
       receipt: `rcpt_${internId.slice(-5)}_${Date.now()}`,
       notes: {
@@ -98,7 +118,7 @@ export const purchasePlan = async (req, res) => {
 
   } catch (error) {
     console.error("Create Order Error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "Failed to create Razorpay order"
     });
