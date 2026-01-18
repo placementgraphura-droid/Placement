@@ -32,7 +32,7 @@ const Footer = () => {
 
             <div className="bg-white/10 border border-white/20 rounded-xl px-4 py-3 flex justify-between">
               <span>✉️ Email</span>
-              <span className="font-semibold">placement@graphura.in</span>
+              <span className="font-semibold">placement@graphura.online</span>
             </div>
           </div>
         </div>

@@ -18,7 +18,6 @@ function Course() {
       <PricingCard />
       <ModulesAccordion/>
       <Testimonials/>
-      
       <Footer />
 
     </div>

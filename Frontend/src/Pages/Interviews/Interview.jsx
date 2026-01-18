@@ -2,11 +2,11 @@ import { Link } from "react-router-dom";
 import Hero from "./Hero";
 import Navbar from "../WelcomePage/Navbar";
 import Footer from "../WelcomePage/Footer";
-import FeaturesBar from "../Course/FeaturesBar";
 import InterviewAnalitics from "./InterviewAnalitics"
 import Pricing from "./Pricing";
 import Modules from "./Modules";
-import Testimonials from "../WelcomePage/Testimonial";
+import Testimonials from "../Course/Testimonials";
+import FeaturesBar from "./FeaturesBar";
 
 
 
@@ -24,7 +24,6 @@ function Interview() {
             <Modules />
             <Testimonials />
             <Footer />
-
         </div>
 
     
