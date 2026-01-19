@@ -7,62 +7,63 @@ import "swiper/css/pagination";
 
 const testimonials = [
   {
-    title: "Got my dream Job at Myntra",
-    text: "I applied through Graphura and got the job! I was not confident, but with Graphura’s training, I improved a lot...",
+    title: "Successfully Started My Career at Myntra",
+    text: "Graphura guided me throughout my preparation. From resume improvements to mock interviews, helped me gain confidence and finally secure a role at Myntra.",
     img: "/9.webp",
     name: "Mohan Singh",
-    role: "Placed at Myntra",
+    role: "Software Associate, Myntra",
   },
   {
-    title: "Got my dream Job at Amazon",
-    text: "Graphura helped me through interview preparation and resume building. It boosted my confidence a lot...",
+    title: "Cracked Amazon Interview with Confidence",
+    text: "The structured interview preparation and practical guidance from Graphura made a huge difference. I felt well-prepared and calm during my Amazon interview process.",
     img: "/12.webp",
     name: "Riya Verma",
-    role: "Placed at Amazon",
+    role: "Operations Analyst, Amazon",
   },
   {
-    title: "Got my dream Job at TCS",
-    text: "Best platform for interview prep. The techniques are industry-specific and very efficient...",
+    title: "Placed at TCS After Focused Training",
+    text: "Graphura’s learning modules and practice sessions helped me understand real interview expectations. Their mentorship played a key role in my selection at TCS.",
     img: "/16.webp",
     name: "Karan Patel",
-    role: "Placed at TCS",
+    role: "Graduate Trainee, TCS",
   },
   {
-    title: "Got my dream Job at Wipro",
-    text: "I am thankful to Graphura for helping me build confidence & cracking interviews...",
+    title: "Cleared Wipro Interviews Successfully",
+    text: "I struggled with interviews earlier, but Graphura helped me improve communication skills and technical clarity. I’m grateful for their support in getting placed at Wipro.",
     img: "/5.webp",
     name: "Simran Kaur",
-    role: "Placed at Wipro",
+    role: "Project Engineer, Wipro",
   },
   {
-    title: "Got my dream Job at Myntra",
-    text: "I applied through Graphura and got the job! I was not confident, but with Graphura’s training, I improved a lot...",
+    title: "From Doubt to Placement at Myntra",
+    text: "I wasn’t sure about my skills initially, but Graphura’s consistent guidance and real-world interview tips helped me turn things around and get placed at Myntra.",
     img: "/4.webp",
     name: "Yogesh Singh",
-    role: "Placed at Myntra",
+    role: "Business Operations Executive, Myntra",
   },
   {
-    title: "Got my dream Job at Amazon",
-    text: "Graphura helped me through interview preparation and resume building. It boosted my confidence a lot...",
+    title: "Amazon Offer Through Proper Guidance",
+    text: "Graphura’s resume review and interview simulations prepared me perfectly. The experience boosted my confidence and helped me receive an offer from Amazon.",
     img: "/3.webp",
     name: "Shruti Kumari",
-    role: "Placed at Amazon",
+    role: "Customer Experience Specialist, Amazon",
   },
   {
-    title: "Got my dream Job at TCS",
-    text: "Best platform for interview prep. The techniques are industry-specific and very efficient...",
+    title: "Achieved My Goal of Joining TCS",
+    text: "The training approach at Graphura is practical and easy to follow. Their interview-focused preparation helped me clear all rounds and join TCS successfully.",
     img: "/2.webp",
     name: "Karan Patel",
-    role: "Placed at TCS",
+    role: "System Engineer, TCS",
   },
   {
-    title: "Got my dream Job at Wipro",
-    text: "I am thankful to Graphura for helping me build confidence & cracking interviews...",
+    title: "Wipro Made Possible with Graphura",
+    text: "Graphura helped me polish my skills, improve confidence, and understand interview patterns. This support played a major role in my placement at Wipro.",
     img: "/1.webp",
-    name: "Mahesh Kumar",
-    role: "Placed at Wipro",
+    name: "Priya Kumari",
+    role: "Associate Consultant, Wipro",
   },
 ];
+
 
 export default function Testimonials() {
   return (
@@ -93,7 +94,7 @@ export default function Testimonials() {
             <div className="bg-white/60 backdrop-blur-md border border-white/40 shadow-lg rounded-2xl p-5 min-h-[200px] flex flex-col justify-between">
 
               
-              <h3 className="font-semibold text-gray-900 text-lg leading-tight mb-2">
+              <h3 className="font-semibold text-gray-900 text-sm leading-tight mb-2">
                 {t.title}
               </h3>
 

@@ -45,21 +45,21 @@ const FAQPage = () => {
     {
       id: 5,
       question: "What is included in the CV Building Course (₹799)?",
-      answer: "The CV Building Course includes 5 sessions total (2 live), ATS-friendly resume creation, cover letter training, professional formatting, and one-on-one resume review.",
+      answer: "The CV Building Course includes 5 sessions, ATS-friendly resume creation, cover letter training, professional formatting, and one-on-one resume review.",
       icon: <FileText className="w-5 h-5" />,
       category: "course"
     },
     {
       id: 6,
       question: "What is included in the Interview Preparation Course (₹1299)?",
-      answer: "This course offers 10 sessions total (5 live), HR round practice, technical round guidance, mock interviews, personality development, and communication skills training.",
+      answer: "This course offers 10 sessions, HR round practice, technical round guidance, mock interviews, personality development, and communication skills training.",
       icon: <Briefcase className="w-5 h-5" />,
       category: "course"
     },
     {
       id: 7,
       question: "What do I get in the Combo Course (₹1299)?",
-      answer: "You receive both courses at a discounted price: 5 CV Building sessions and 10 Interview Preparation sessions, total 15 sessions with 7 live sessions and bonus templates.",
+      answer: "You receive both courses at a discounted price: 5 CV Building sessions and 10 Interview Preparation sessions, total 15 sessions and bonus templates.",
       icon: <Award className="w-5 h-5" />,
       category: "course"
     },
@@ -111,7 +111,7 @@ const FAQPage = () => {
     },
     {
       id: 14,
-      question: "What if I miss a live session?",
+      question: "What if I miss a session?",
       answer: "You will receive recording (if available), notes/materials, and option to attend the next batch subject to availability.",
       icon: <MessageCircle className="w-5 h-5" />,
       category: "refund"
