@@ -10,7 +10,7 @@ const testimonials = [
     title: "Got my dream Job at Myntra",
     text: "I applied through Graphura and got the job! I was not confident, but with Graphura’s training, I improved a lot...",
     img: "/9.webp",
-    name: "Yogesh Singh",
+    name: "Mohan Singh",
     role: "Placed at Myntra",
   },
   {
@@ -45,7 +45,7 @@ const testimonials = [
     title: "Got my dream Job at Amazon",
     text: "Graphura helped me through interview preparation and resume building. It boosted my confidence a lot...",
     img: "/3.webp",
-    name: "Riya Verma",
+    name: "Shruti Kumari",
     role: "Placed at Amazon",
   },
   {
@@ -59,7 +59,7 @@ const testimonials = [
     title: "Got my dream Job at Wipro",
     text: "I am thankful to Graphura for helping me build confidence & cracking interviews...",
     img: "/1.webp",
-    name: "Simran Kaur",
+    name: "Mahesh Kumar",
     role: "Placed at Wipro",
   },
 ];

@@ -5,8 +5,8 @@ import Footer from "../WelcomePage/Footer";
 import InterviewAnalitics from "./InterviewAnalitics"
 import Pricing from "./Pricing";
 import Modules from "./Modules";
-import Testimonials from "../Course/Testimonials";
 import FeaturesBar from "./FeaturesBar";
+import Testimonials from "../WelcomePage/Testimonial";
 
 
 

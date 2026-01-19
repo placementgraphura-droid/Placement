@@ -34,13 +34,6 @@ const FAQPage = () => {
       category: "general"
     },
     {
-      id: 3,
-      question: "Are the sessions live or recorded?",
-      answer: "Each course includes a mix of Live interactive sessions, Pre-recorded learning modules, and Assignments with practical exercises.",
-      icon: <MessageCircle className="w-5 h-5" />,
-      category: "course"
-    },
-    {
       id: 4,
       question: "How will I receive course updates and access?",
       answer: "Once enrolled, you will receive a confirmation email, login access, session schedule, and WhatsApp/email notifications.",
