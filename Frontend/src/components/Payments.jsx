@@ -302,7 +302,7 @@ const Payments = () => {
         key: data.key,
         amount: data.amount,
         currency: "INR",
-        name: "Career Portal",
+        name: "Graphura",
         description: description,
         order_id: data.orderId,
         handler: async function (response) {
