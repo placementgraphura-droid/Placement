@@ -713,13 +713,13 @@ const AdminVideoLectures = () => {
                       />
                       <Upload className="w-10 h-10 text-gray-400 mb-3" />
                       {newVideo.videoFile ? newVideo.videoFile.name : 'Click to upload video file'}
-                      <p className="text-xs text-gray-500 mt-2">MP4, MOV, AVI, etc. (Max 500MB)</p>
+                      <p className="text-xs text-gray-500 mt-2">MP4, MOV, AVI, etc. (Max 100MB)</p>
                     </label>
                   </div>
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Thumbnail Image (Optional)
+                      Thumbnail Image
                     </label>
                     <label className={`flex flex-col items-center justify-center w-full p-8 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${uploading ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-400 hover:bg-blue-50'
                       } ${newVideo.thumbnailFile ? 'border-green-400 bg-green-50' : 'border-gray-300'}`}>
@@ -878,7 +878,7 @@ const AdminVideoLectures = () => {
                       />
                       <Upload className="w-10 h-10 text-gray-400 mb-3" />
                       {editingVideo.videoFile ? editingVideo.videoFile.name : 'Click to replace video file'}
-                      <p className="text-xs text-gray-500 mt-2">MP4, MOV, AVI, etc. (Max 500MB)</p>
+                      <p className="text-xs text-gray-500 mt-2">MP4, MOV, AVI, etc. (Max 100MB)</p>
                     </label>
                   </div>
 
