@@ -1,5 +1,8 @@
 import express from "express";
-import { registerIntern, internLogin, checkAuth, registerMentor, loginMentor, registerHiringTeam, loginHiring, registerAdmin, loginAdmin} from "../controller/AuthController.js";
+import { registerIntern, internLogin, checkAuth, registerMentor, loginMentor, registerHiringTeam, loginHiring, registerAdmin, loginAdmin, 
+    forgotPasswordAdmin, forgotPasswordHiring, forgotPasswordIntern, forgotPasswordMentor,
+    verifyOTPController, resendOTPController, resetPasswordController
+} from "../controller/AuthController.js";
 import { authMiddleware, allowRoles } from "../middlewares/authMiddleware.js";
 import upload from "../middlewares/upload.js"
 
@@ -8,6 +11,22 @@ const router = express.Router();
 
 router.post("/register/intern", upload.single("profileImage"),  registerIntern);
 router.post("/login/intern", internLogin);
+
+
+
+router.post('/forgot-password/intern', forgotPasswordIntern);
+router.post('/forgot-password/mentor', forgotPasswordMentor);
+router.post('/forgot-password/hiring', forgotPasswordHiring);
+router.post('/forgot-password/admin', forgotPasswordAdmin);
+
+// OTP Verification
+router.post('/verify-otp', verifyOTPController);
+router.post('/resend-otp', resendOTPController);
+
+// Reset Password
+router.post('/reset-password', resetPasswordController);
+
+
 
 
 router.post("/mentor/register", upload.single("profileImage"), registerMentor);

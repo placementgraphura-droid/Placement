@@ -16,46 +16,46 @@ const VideoLectures = () => {
   const [activeFilter, setActiveFilter] = useState('All');
 
   // Fetch user's plan information
-useEffect(() => {
-  const fetchPlan = async () => {
-    try {
-      const { data } = await axios.get('/api/payments/current-plan', {
-        withCredentials: true
-      });
+  useEffect(() => {
+    const fetchPlan = async () => {
+      try {
+        const { data } = await axios.get('/api/payments/current-plan', {
+          withCredentials: true
+        });
 
-      if (data.success && data.purchasedCourses?.length > 0) {
-        // ✅ Get LAST purchased course
-        const lastCourse =
-          data.purchasedCourses[data.purchasedCourses.length - 1];
+        if (data.success && data.purchasedCourses?.length > 0) {
+          // ✅ Get LAST purchased course
+          const lastCourse =
+            data.purchasedCourses[data.purchasedCourses.length - 1];
 
-        setPlanInfo(lastCourse);
+          setPlanInfo(lastCourse);
 
-        const courseType = lastCourse.courseType;
-        let allowed = [];
+          const courseType = lastCourse.courseType;
+          let allowed = [];
 
-        if (courseType === "CV_BUILDING") {
-          allowed = ["CV_BUILDING"];
-        } else if (courseType === "INTERVIEW_PREP") {
-          allowed = ["INTERVIEW_PREP"];
-        } else if (courseType === "COMBO") {
-          allowed = ["CV_BUILDING", "INTERVIEW_PREP"];
+          if (courseType === "CV_BUILDING") {
+            allowed = ["CV_BUILDING"];
+          } else if (courseType === "INTERVIEW_PREP") {
+            allowed = ["INTERVIEW_PREP"];
+          } else if (courseType === "COMBO") {
+            allowed = ["CV_BUILDING", "INTERVIEW_PREP"];
+          }
+
+          setAllowedCategories(allowed);
+          setHasAccess(true);
+        } else {
+          setHasAccess(false);
         }
-
-        setAllowedCategories(allowed);
-        setHasAccess(true);
-      } else {
+      } catch (err) {
+        console.error("Error fetching plan info:", err);
         setHasAccess(false);
+      } finally {
+        setLoadingPlan(false);
       }
-    } catch (err) {
-      console.error("Error fetching plan info:", err);
-      setHasAccess(false);
-    } finally {
-      setLoadingPlan(false);
-    }
-  };
+    };
 
-  fetchPlan();
-}, []);
+    fetchPlan();
+  }, []);
 
 
   // Fetch videos data from backend
@@ -64,10 +64,10 @@ useEffect(() => {
       try {
         setLoadingVideos(true);
         const { data } = await axios.get('/api/intern/video-lectures');
-        
+
         if (data.success) {
           // Filter videos based on allowed categories
-          const filteredVideos = data.videos.filter(video => 
+          const filteredVideos = data.videos.filter(video =>
             allowedCategories.includes(video.category)
           );
           setVideos(filteredVideos);
@@ -135,8 +135,8 @@ useEffect(() => {
     return colors[category] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
-  const filteredVideos = activeFilter === 'All' 
-    ? videos 
+  const filteredVideos = activeFilter === 'All'
+    ? videos
     : videos.filter(video => video.category === activeFilter);
 
   // ⏳ While checking plan
@@ -154,7 +154,7 @@ useEffect(() => {
   // ❌ No active plan → show upgrade screen
   if (!hasAccess) {
     const courseType = planInfo?.courseDetails?.courseType || 'No Plan';
-    
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
@@ -167,17 +167,17 @@ useEffect(() => {
               <h1 className="text-2xl font-bold text-white">Premium Video Courses</h1>
             </div>
           </div>
-          
+
           <div className="p-8">
             <div className="flex items-center justify-center gap-2 mb-6">
               <Sparkles className="w-5 h-5 text-yellow-500" />
               <span className="text-sm font-medium text-yellow-600">PREMIUM FEATURE</span>
             </div>
-            
+
             <h2 className="text-2xl font-bold text-gray-900 text-center mb-4">
               Unlock Premium Video Courses
             </h2>
-            
+
             <p className="text-gray-600 text-center mb-8">
               Access expert video lectures by purchasing our career development courses.
             </p>
@@ -225,7 +225,7 @@ useEffect(() => {
             <div className="h-10 bg-gray-200 rounded-lg w-64 mb-4 animate-pulse"></div>
             <div className="h-6 bg-gray-200 rounded w-96 mb-2 animate-pulse"></div>
           </div>
-          
+
           {/* Loading Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((n) => (
@@ -318,7 +318,7 @@ useEffect(() => {
                 <p className="text-gray-600 mt-1">Expert-led sessions for your course</p>
               </div>
             </div>
-            
+
             {/* Course Access Badge */}
             <div className="mb-8">
               <div className="flex items-center gap-2 mb-3">
@@ -338,7 +338,7 @@ useEffect(() => {
                 You can access videos from your purchased course(s) only.
               </p>
             </div>
-            
+
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <div className="bg-white rounded-xl border border-gray-200 p-5">
@@ -368,11 +368,10 @@ useEffect(() => {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setActiveFilter('All')}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    activeFilter === 'All'
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeFilter === 'All'
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   All Videos
                 </button>
@@ -380,11 +379,10 @@ useEffect(() => {
                   <button
                     key={category}
                     onClick={() => setActiveFilter(category)}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      activeFilter === category
+                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeFilter === category
                         ? getCategoryColor(category).replace('bg-100', 'bg-600').replace('text-800', 'text-white')
                         : getCategoryColor(category)
-                    }`}
+                      }`}
                   >
                     {getCategoryLabel(category)}
                   </button>
@@ -396,8 +394,8 @@ useEffect(() => {
           {/* Videos Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredVideos.map((video) => (
-              <div 
-                key={video._id} 
+              <div
+                key={video._id}
                 className="group bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300 overflow-hidden"
               >
                 {/* Thumbnail Container */}
@@ -409,21 +407,21 @@ useEffect(() => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
+
                     {/* Play Button Overlay */}
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform">
                         <Play className="w-8 h-8 text-blue-600 ml-1" />
                       </div>
                     </div>
-                    
+
                     {/* Category Badge */}
                     <div className="absolute top-4 left-4">
                       <span className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${getCategoryColor(video.category)} border`}>
                         {getCategoryLabel(video.category)}
                       </span>
                     </div>
-                    
+
                     {/* Duration */}
                     <div className="absolute bottom-4 right-4 bg-black/80 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
                       {video.duration}
@@ -436,7 +434,7 @@ useEffect(() => {
                   <h3 className="font-bold text-gray-900 text-lg mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
                     {video.title}
                   </h3>
-                  
+
                   <p className="text-gray-600 text-sm mb-5 line-clamp-2 leading-relaxed">
                     {video.description || 'No description available.'}
                   </p>
@@ -462,7 +460,7 @@ useEffect(() => {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">No Videos Found</h3>
               <p className="text-gray-600 max-w-md mx-auto mb-8">
-                {activeFilter === 'All' 
+                {activeFilter === 'All'
                   ? "No videos available for your purchased courses yet."
                   : `No ${getCategoryLabel(activeFilter)} videos available. Try another category.`}
               </p>
@@ -512,6 +510,9 @@ useEffect(() => {
                   autoPlay
                   className="w-full aspect-video"
                   poster={selectedVideo.thumbnailUrl}
+                  controlsList="nodownload"
+                  disablePictureInPicture
+                  onContextMenu={(e) => e.preventDefault()}
                 >
                   <source src={selectedVideo.videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.
