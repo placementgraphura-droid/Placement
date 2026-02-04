@@ -431,11 +431,11 @@ const VideoLectures = () => {
 
                 {/* Content */}
                 <div className="p-5">
-                  <h3 className="font-bold text-gray-900 text-lg mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
+                  <h3 className="font-bold text-gray-900 text-lg mb-3 group-hover:text-blue-600 transition-colors">
                     {video.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm mb-5 line-clamp-2 leading-relaxed">
+                  <p className="text-gray-600 text-sm mb-5 leading-relaxed">
                     {video.description || 'No description available.'}
                   </p>
 
@@ -480,7 +480,7 @@ const VideoLectures = () => {
       {/* Video Modal */}
       {showModal && selectedVideo && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+          <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
             {/* Modal Header */}
             <div className="flex justify-between items-center p-6 border-b border-gray-200">
               <div className="flex items-center gap-4">
@@ -503,7 +503,7 @@ const VideoLectures = () => {
             </div>
 
             {/* Video Player */}
-            <div className="p-6">
+            <div className="p-6 overflow-y-auto">
               <div className="bg-black rounded-lg overflow-hidden mb-6">
                 <video
                   controls
@@ -521,7 +521,7 @@ const VideoLectures = () => {
 
               {/* Video Details */}
               <div className="space-y-5">
-                <div>
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                   <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
                   <p className="text-gray-600 leading-relaxed">
                     {selectedVideo.description || 'No description available.'}
