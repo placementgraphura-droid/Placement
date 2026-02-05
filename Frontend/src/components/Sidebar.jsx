@@ -490,38 +490,43 @@ const Sidebar = ({ activePage, setActivePage, collapsed, setCollapsed, onMobileI
       </div>
 
       {/* LOGOUT CONFIRMATION MODAL */}
-      {showLogoutConfirm && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-          <div className="bg-gradient-to-br from-[#0A2E40] via-[#0E5C7E] to-[#0A2E40] p-6 rounded-2xl shadow-2xl border border-[#0E5C7E] max-w-xs w-full">
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-red-500/20 to-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/30">
-                <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow">
-                  <LogOut size={20} className="text-white" />
-                </div>
+    {showLogoutConfirm && (
+      <div className="fixed inset-0 z-[9999] w-screen h-screen flex items-center justify-center bg-black/60 backdrop-blur-sm">
+
+        <div className="relative bg-gradient-to-br from-[#0A2E40] via-[#0E5C7E] to-[#0A2E40] p-6 rounded-2xl shadow-2xl border border-[#0E5C7E] max-w-xs w-full mx-auto">
+
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-red-500/20 to-pink-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500/30">
+              <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center shadow">
+                <LogOut size={20} className="text-white" />
               </div>
-              <h3 className="text-white text-lg font-bold mb-2">Confirm Logout</h3>
-              <p className="text-[#EAF6FC]/80 text-xs">
-                Are you sure you want to logout?
-              </p>
             </div>
-            
-            <div className="flex gap-3">
-              <button 
-                onClick={() => setShowLogoutConfirm(false)} 
-                className="flex-1 px-4 py-2.5 bg-gradient-to-r from-[#0E5C7E] to-[#0A2E40] hover:from-[#4FB0DA] hover:to-[#0E5C7E] text-white rounded-lg font-medium transition-all duration-200 hover:shadow border border-[#0E5C7E] hover:border-[#4FB0DA] text-sm"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleLogout} 
-                className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 via-red-600 to-pink-600 hover:from-red-600 hover:via-red-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 hover:shadow shadow shadow-red-500/20 text-sm"
-              >
-                Logout
-              </button>
-            </div>
+
+            <h3 className="text-white text-lg font-bold mb-2">Confirm Logout</h3>
+            <p className="text-[#EAF6FC]/80 text-xs">
+              Are you sure you want to logout?
+            </p>
           </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowLogoutConfirm(false)}
+              className="flex-1 px-4 py-2.5 bg-gradient-to-r from-[#0E5C7E] to-[#0A2E40] hover:from-[#4FB0DA] hover:to-[#0E5C7E] text-white rounded-lg font-medium transition-all duration-200 border border-[#0E5C7E] hover:border-[#4FB0DA] text-sm"
+            >
+              Cancel
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 via-red-600 to-pink-600 hover:from-red-600 hover:via-red-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 shadow shadow-red-500/20 text-sm"
+            >
+              Logout
+            </button>
+          </div>
+
         </div>
-      )}
+      </div>
+    )}
     </div>
   );
 };
