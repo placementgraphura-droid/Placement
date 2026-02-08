@@ -10,6 +10,7 @@ import {
   Home,
   ChevronRight,
   Menu,
+  LayoutDashboardIcon,
   TrendingUp,
   TrendingDown,
   Calendar,
@@ -44,7 +45,7 @@ const HiringTeamDashboard = () => {
   const [allCandidates, setAllCandidates] = useState([]);
   const [recentJobs, setRecentJobs] = useState([]);
   const [recentCandidates, setRecentCandidates] = useState([]);
-  
+
   // ===============================
   // TOKEN & NAVIGATION
   // ===============================
@@ -123,7 +124,7 @@ const HiringTeamDashboard = () => {
           stage: "Resume Review",
           email: intern.email,
           appliedDate: intern.createdAt,
-          rating: intern.hiringTeamFeedback?.length > 0 
+          rating: intern.hiringTeamFeedback?.length > 0
             ? (intern.hiringTeamFeedback.reduce((sum, f) => sum + f.rating, 0) / intern.hiringTeamFeedback.length).toFixed(1)
             : "No rating"
         }));
@@ -164,9 +165,6 @@ const HiringTeamDashboard = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // ===============================
-  // UTILITY FUNCTIONS
-  // ===============================
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "open":
@@ -201,45 +199,43 @@ const HiringTeamDashboard = () => {
     }
   };
 
-  // ===============================
-  // DASHBOARD STATS (Using ALL data for counts)
-  // ===============================
   const mainStats = [
-    { 
-      label: "Total Jobs", 
-      value: allJobs.length, // Use ALL jobs count
-      icon: Briefcase, 
-      color: "#09435F",
-      bgColor: "bg-[#09435F]/10",
+    {
+      label: "Total Jobs",
+      value: allJobs.length,
+      icon: Briefcase,
+      color: "#6366F1", // indigo
+      bgColor: "bg-indigo-500/10",
+      hover: "hover:bg-indigo-50",
       onClick: () => setActivePage("jobposts")
     },
-    { 
-      label: "Total Candidates", 
-      value: allCandidates.length, // Use ALL candidates count
-      icon: Users, 
-      color: "#2E84AE",
-      bgColor: "bg-[#2E84AE]/10",
+    {
+      label: "Total Candidates",
+      value: allCandidates.length,
+      icon: Users,
+      color: "#8B5CF6", // violet
+      bgColor: "bg-violet-500/10",
+      hover: "hover:bg-violet-50",
       onClick: () => setActivePage("users")
     },
-    { 
-      label: "Open Positions", 
-      value: allJobs.filter(j => j.status === "Open").length, // Use ALL jobs for count
-      icon: Award, 
-      color: "#2E84AE",
-      bgColor: "bg-[#CDE7F4]/20"
+    {
+      label: "Open Positions",
+      value: allJobs.filter(j => j.status === "Open").length,
+      icon: Award,
+      color: "#84CC16",
+      bgColor: "bg-lime-500/10",
+      hover: "hover:bg-lime-50"
     },
-    { 
-      label: "Top Rated", 
-      value: allCandidates.filter(c => c.rating && c.rating > 4).length, // Use ALL candidates for count
-      icon: Star, 
-      color: "#09435F",
-      bgColor: "bg-[#09435F]/10"
+    {
+      label: "Top Rated",
+      value: allCandidates.filter(c => c.rating && c.rating > 4).length,
+      icon: Star,
+      color: "#F59E0B", // amber highlight
+      bgColor: "bg-amber-500/10",
+      hover: "hover:bg-amber-50"
     },
   ];
 
-  // ===============================
-  // PAGE RENDERING
-  // ===============================
   const renderPage = () => {
     if (loading && activePage === "dashboard") {
       return (
@@ -252,7 +248,7 @@ const HiringTeamDashboard = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="bg-white rounded-xl shadow-lg p-6 animate-pulse">
+              <div key={i} className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
                 <div className="h-8 bg-gray-200 rounded w-1/2 mb-4"></div>
                 <div className="h-6 bg-gray-200 rounded w-3/4"></div>
               </div>
@@ -274,24 +270,21 @@ const HiringTeamDashboard = () => {
     }
   };
 
-  // ===============================
-  // DASHBOARD COMPONENT
-  // ===============================
   const renderDashboard = () => {
     return (
       <div className="space-y-6">
         {/* Header with Time Range */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-[#09435F]">Dashboard Overview</h1>
+            <h1 className="text-3xl font-bold text-gray-800">Dashboard Overview</h1>
             <p className="text-gray-600">
               Welcome back, {user?.name || "Hiring Manager"}. Here's your hiring performance
             </p>
           </div>
           <div className="flex items-center space-x-4">
-            <button 
+            <button
               onClick={loadData}
-              className="flex items-center space-x-2 px-4 py-2 bg-[#2E84AE] text-white rounded-lg hover:bg-[#09435F] transition-colors"
+              className="flex items-center space-x-2 px-4 py-2 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 cursor-pointer transition-colors"
             >
               <RefreshCw size={18} />
               <span>Refresh</span>
@@ -304,18 +297,28 @@ const HiringTeamDashboard = () => {
           {mainStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div 
-                key={index} 
-                className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer"
+              <div
+                key={index}
                 onClick={stat.onClick}
+                className={` group bg-white rounded-2xl p-6 border border-gray-200/50 hover:shadow-sm hover:-translate-y-1 transition-all duration-300 cursor-pointer focus:outline-none ${stat.hover || ""} `}
               >
                 <div className="flex items-center justify-between">
-                  <div className={`p-3 rounded-lg ${stat.bgColor}`} style={{ color: stat.color }}>
+                  <div
+                    className={` p-3 rounded-xl ${stat.bgColor} transition-transform duration-300 group-hover:scale-110 `}
+                    style={{ color: stat.color }}
+                  >
                     <Icon size={24} />
                   </div>
                 </div>
-                <h3 className="text-3xl font-bold text-[#09435F] mt-4">{stat.value}</h3>
-                <p className="text-gray-600">{stat.label}</p>
+                <h3
+                  className="text-3xl font-bold mt-5"
+                  style={{ color: stat.color }}
+                >
+                  {stat.value}
+                </h3>
+                <p className="text-gray-500 mt-1 font-medium">
+                  {stat.label}
+                </p>
               </div>
             );
           })}
@@ -324,42 +327,56 @@ const HiringTeamDashboard = () => {
         {/* Recent Jobs & Candidates - Showing only 5 each */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Jobs - Showing 5 only */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-[#09435F] flex items-center">
-                  <Briefcase className="mr-2" />
+                <h2 className="text-lg font-semibold text-gray-900">
                   Recent Job Posts
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
                   Showing {recentJobs.length} of {allJobs.length} total jobs
                 </p>
               </div>
-              <button 
+
+              <button
                 onClick={() => setActivePage("jobposts")}
-                className="text-[#2E84AE] hover:text-[#09435F] text-sm font-medium flex items-center"
+                className="text-sm font-medium text-indigo-500 hover:text-indigo-600 flex items-center gap-1 transition-colors"
               >
                 View All <ChevronRight size={16} />
               </button>
             </div>
-            <div className="space-y-4">
+
+            <div className="space-y-3">
               {recentJobs.length > 0 ? (
                 recentJobs.map((job) => (
-                  <div key={job._id} className="flex items-center justify-between p-3 hover:bg-[#CDE7F4]/20 rounded-lg transition-colors">
+                  <div
+                    key={job._id}
+                    className="flex items-center justify-between p-3 rounded-xl transition-all hover:bg-gray-50"
+                  >
                     <div>
-                      <h4 className="font-medium text-[#09435F]">{job.title}</h4>
+                      <h4 className="font-medium text-gray-900">
+                        {job.title}
+                      </h4>
                       <div className="flex items-center text-sm text-gray-500 mt-1">
-                        <span className="px-2 py-1 bg-gray-100 rounded text-xs mr-2">{job.department || "General"}</span>
+                        <span className="px-2 py-1 bg-gray-100 rounded-md text-xs mr-2">
+                          {job.department || "General"}
+                        </span>
                         <span>{job.location || "Remote"}</span>
                         <span className="mx-2">•</span>
                         <span>{job.type || "Full-time"}</span>
                       </div>
                     </div>
+
                     <div className="flex items-center space-x-4">
                       <div className="text-right">
-                        <div className="font-bold text-[#2E84AE]">{job.applicants || 0}</div>
-                        <div className="text-xs text-gray-500">Applicants</div>
+                        <div className="font-semibold text-indigo-500">
+                          {job.applicants || 0}
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          Applicants
+                        </div>
                       </div>
+
                       <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(job.status)}`}>
                         {getStatusIcon(job.status)}
                         <span className="ml-1">{job.status || "Open"}</span>
@@ -368,12 +385,12 @@ const HiringTeamDashboard = () => {
                   </div>
                 ))
               ) : (
-                <div className="text-center py-8">
-                  <Briefcase className="mx-auto text-gray-400 mb-3" size={48} />
+                <div className="text-center py-10">
+                  <Briefcase className="mx-auto text-gray-300 mb-3" size={40} />
                   <p className="text-gray-500">No job posts yet</p>
-                  <button 
+                  <button
                     onClick={() => setActivePage("jobposts")}
-                    className="mt-3 text-[#2E84AE] hover:text-[#09435F] text-sm font-medium"
+                    className="mt-3 text-sm font-medium text-indigo-500 hover:text-indigo-600 transition-colors"
                   >
                     Create your first job post
                   </button>
@@ -383,62 +400,75 @@ const HiringTeamDashboard = () => {
           </div>
 
           {/* Recent Candidates - Showing 5 only */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-[#09435F] flex items-center">
-                  <Users className="mr-2" />
+                <h2 className="text-lg font-semibold text-gray-900">
                   Recent Interns
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
                   Showing {recentCandidates.length} of {allCandidates.length} total interns
                 </p>
               </div>
-              <button 
+
+              <button
                 onClick={() => setActivePage("users")}
-                className="text-[#2E84AE] hover:text-[#09435F] text-sm font-medium flex items-center"
+                className="text-sm font-medium text-indigo-500 hover:text-indigo-600 flex items-center gap-1 transition-colors"
               >
                 View All <ChevronRight size={16} />
               </button>
             </div>
-            <div className="space-y-4">
+
+            <div className="space-y-3">
               {recentCandidates.length > 0 ? (
                 recentCandidates.map((candidate) => (
-                  <div key={candidate._id} className="flex items-center p-3 hover:bg-[#CDE7F4]/20 rounded-lg transition-colors">
+                  <div
+                    key={candidate._id}
+                    className="flex items-center p-3 rounded-xl transition-all hover:bg-gray-50"
+                  >
                     <img
-                      src={candidate.avatar || `https://ui-avatars.com/api/?name=${candidate.name}&background=2E84AE&color=fff`}
+                      src={candidate.avatar || `https://ui-avatars.com/api/?name=${candidate.name}&background=6366F1&color=fff`}
                       alt={candidate.name}
-                      className="w-10 h-10 rounded-full mr-3"
+                      className="w-10 h-10 rounded-full mr-3 object-cover"
                     />
+
                     <div className="flex-1">
-                      <h4 className="font-medium text-[#09435F]">{candidate.name}</h4>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <GraduationCap size={14} className="mr-1" />
+                      <h4 className="font-medium text-gray-900">
+                        {candidate.name}
+                      </h4>
+
+                      <div className="flex items-center text-sm text-gray-500 mt-1">
+                        <GraduationCap size={14} className="mr-1 text-gray-400" />
                         <span>{candidate.college || "Unknown College"}</span>
                         <span className="mx-2">•</span>
                         <span>{candidate.position || "Intern"}</span>
                       </div>
+
                       {candidate.rating && candidate.rating !== "No rating" && (
                         <div className="flex items-center mt-1">
-                          <Star size={12} className="text-yellow-400 fill-yellow-400 mr-1" />
-                          <span className="text-xs text-gray-600">{candidate.rating}</span>
+                          <Star size={12} className="text-amber-400 fill-amber-400 mr-1" />
+                          <span className="text-xs text-gray-600">
+                            {candidate.rating}
+                          </span>
                         </div>
                       )}
                     </div>
+
                     <div className="text-right">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(candidate.status)}`}>
                         {getStatusIcon(candidate.status)}
                         <span className="ml-1">{candidate.status}</span>
                       </span>
-                      <div className="text-xs text-gray-500 mt-1">
+
+                      <div className="text-xs text-gray-400 mt-1">
                         {new Date(candidate.appliedDate).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-center py-8">
-                  <User className="mx-auto text-gray-400 mb-3" size={48} />
+                <div className="text-center py-10">
+                  <User className="mx-auto text-gray-300 mb-3" size={40} />
                   <p className="text-gray-500">No interns registered yet</p>
                 </div>
               )}
@@ -449,14 +479,11 @@ const HiringTeamDashboard = () => {
     );
   };
 
-  // ===============================
-  // SIDEBAR MENU
-  // ===============================
   const menuItems = [
-    { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, color: "text-blue-500" },
-    { key: "profile", label: "Profile", icon: User, color: "text-green-500" },
-    { key: "jobposts", label: "Job Posts", icon: Briefcase, color: "text-purple-500" },
-    { key: "users", label: "Candidates", icon: Users, color: "text-indigo-500" },
+    { key: "dashboard", label: "Dashboard", icon: LayoutDashboard, bg: "bg-indigo-500" }, // main brand
+    { key: "profile", label: "Profile", icon: User, bg: "bg-rose-500" }, // warm contrast
+    { key: "jobposts", label: "Job Posts", icon: Briefcase, bg: "bg-amber-500" }, // yellow/orange
+    { key: "users", label: "Candidates", icon: Users, bg: "bg-emerald-500" }, // fresh green
   ];
 
   const Sidebar = () => {
@@ -467,77 +494,106 @@ const HiringTeamDashboard = () => {
     };
 
     return (
-      <div className="w-64 bg-gray-900 text-white flex flex-col h-full">
-        {/* Header */}
-        <div className="p-4 bg-gradient-to-r from-blue-700 to-indigo-800">
-          <div className="flex items-center">
-            <img src="/Graphura.jpg" alt="Graphura Logo" className="w-10 h-10 mr-2 rounded-full" />
+      <div className="w-64 bg-white text-white flex flex-col h-full">
+        {/* HEADER + PROFILE COMBINED (Dribbble Style) */}
+        <div className="px-4 pt-6 pb-5">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-full overflow-hidden shadow-sm">
+              <img
+                src="/Graphura.jpg"
+                alt="Graphura Logo"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div>
-              <h1 className="font-bold text-lg">Graphura</h1>
-              <p className="text-xs text-blue-100">Hiring Dashboard</p>
+              <h1 className="text-gray-900 font-semibold text-lg leading-none">
+                Graphura
+              </h1>
+              <p className="text-xs text-gray-400 mt-1">
+                Hiring Dashboard
+              </p>
+            </div>
+          </div>
+          {/* Profile Card */}
+          <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-3 border border-gray-100">
+            <img
+              src={currentUser.profileImage}
+              alt="Profile"
+              className="w-12 h-12 rounded-full object-cover"
+            />
+
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-gray-900 truncate">
+                {currentUser.name}
+              </p>
+
+              <p className="text-xs text-gray-500 truncate">
+                {currentUser.role}
+              </p>
+
+              {currentUser.department && (
+                <p className="text-xs text-gray-400 truncate">
+                  {currentUser.department}
+                </p>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Profile Summary */}
-        <div className="p-4 border-b border-gray-800 text-center">
-          <img
-            src={currentUser.profileImage}
-            className="w-16 h-16 mx-auto rounded-full border-2 border-blue-500 shadow-lg"
-            alt="Profile"
-          />
-          <h2 className="font-bold mt-3 text-lg">{currentUser.name}</h2>
-          <p className="text-gray-300 text-sm">{currentUser.role}</p>
-          {currentUser.department && (
-            <p className="text-gray-400 text-xs mt-1">{currentUser.department}</p>
-          )}
-        </div>
-
         {/* Navigation */}
-        <nav className="flex-1 p-3">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.key}
-                className={`w-full flex items-center p-3 rounded-lg mb-1 transition-all ${
-                  activePage === item.key 
-                    ? "bg-blue-600 text-white shadow-lg" 
-                    : "hover:bg-gray-800 hover:text-white"
-                }`}
-                onClick={() => {
-                  setActivePage(item.key);
-                  if (isMobile) setMobileOpen(false);
-                }}
-              >
-                <Icon className={`mr-3 ${item.color}`} size={20} />
-                <span className="font-medium">{item.label}</span>
-                {activePage === item.key && (
-                  <ChevronRight className="ml-auto" size={16} />
-                )}
-              </button>
-            );
-          })}
+        <nav className="flex-1 flex flex-col justify-between p-3">
+          <div className="w-full">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => {
+                    setActivePage(item.key);
+                    if (isMobile) setMobileOpen(false);
+                  }}
+                  className={`group w-full my-3 flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${activePage === item.key ? "bg-gray-50 shadow-sm" : "hover:bg-gray-100"}`}
+                >
+                  <span className={`${item.bg} p-2 rounded-lg text-white flex items-center justify-center transition-transform duration-200 ${activePage === item.key ? "scale-105" : "group-hover:scale-105"}`}>
+                    <Icon size={16} />
+                  </span>
 
-          {/* Divider */}
-          <div className="my-4 border-t border-gray-800"></div>
+                  <span className={`font-medium transition-colors ${activePage === item.key ? "text-gray-900" : "text-gray-500 group-hover:text-gray-800"}`}>
+                    {item.label}
+                  </span>
 
-          {/* Action Buttons */}
-          <div className="mt-4 border-t border-gray-800 pt-4 space-y-2">
+                  {activePage === item.key && (
+                    <ChevronRight className="ml-auto text-gray-400" size={16} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-gray-200 space-y-2">
+            {/* Back to Home */}
             <button
-              className="w-full flex items-center p-3 rounded-lg hover:bg-blue-800 transition-colors bg-blue-900"
               onClick={handleBackToHome}
+              className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 hover:bg-gray-100"
             >
-              <Home className="mr-3 text-blue-300" size={20} />
-              <span className="text-blue-300">Back to Home</span>
+              <span className="bg-indigo-500 p-2 rounded-lg text-white flex items-center justify-center group-hover:scale-105 transition-transform">
+                <Home size={16} />
+              </span>
+              <span className="font-medium text-gray-600 group-hover:text-gray-900">
+                Back to Home
+              </span>
             </button>
-
+            {/* Logout */}
             <button
-              className="w-full flex items-center p-3 rounded-lg hover:bg-red-900 transition-colors text-red-300 hover:text-red-200"
               onClick={handleLogout}
+              className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 hover:bg-red-50"
             >
-              <LogOut className="mr-3" size={20} />
-              <span>Logout</span>
+              <span className="bg-red-500 p-2 rounded-lg text-white flex items-center justify-center group-hover:scale-105 transition-transform">
+                <LogOut size={16} />
+              </span>
+              <span className="font-medium text-gray-600 group-hover:text-red-600">
+                Logout
+              </span>
             </button>
           </div>
         </nav>
@@ -560,58 +616,14 @@ const HiringTeamDashboard = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:relative`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:relative`}
       >
         <Sidebar />
       </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Bar */}
-        <header className="bg-white border-b shadow-sm">
-          <div className="flex items-center justify-between px-4 py-3">
-            <div className="flex items-center">
-              <button 
-                onClick={() => setMobileOpen(true)} 
-                className="md:hidden p-2 hover:bg-gray-100 rounded-lg mr-2"
-              >
-                <Menu />
-              </button>
-              <h1 className="text-xl font-bold text-gray-800">
-                {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
-              </h1>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <LogOut size={16} />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
-
-              {/* User Profile */}
-              {user && (
-                <div className="flex items-center space-x-3">
-                  <div className="text-right hidden md:block">
-                    <p className="text-sm font-medium text-gray-800">{user.name}</p>
-                    <p className="text-xs text-gray-500">{user.role}</p>
-                  </div>
-                  <img
-                    src={user.profileImage || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
-                    alt="Profile"
-                    className="w-8 h-8 rounded-full border-2 border-blue-500"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
-
         <main className="flex-1 overflow-auto p-4 md:p-6 bg-gray-50">
           {renderPage()}
         </main>
