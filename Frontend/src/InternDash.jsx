@@ -122,7 +122,7 @@ const Dashboard = () => {
                       {activePage === 'classes' && 'Live Classes'}
                       {activePage === 'payments' && 'Payments & Billing'}
                     </h1>
-                    <p className="text-[#0E5C7E] text-sm mt-1">
+                    <p className="text-[#1B003F] text-sm mt-1">
                       {activePage === 'dashboard' && 'Welcome back! Here\'s your learning overview'}
                       {activePage === 'profile' && 'Manage your personal information and settings'}
                       {activePage === 'jobs' && 'Find your dream internship opportunities'}

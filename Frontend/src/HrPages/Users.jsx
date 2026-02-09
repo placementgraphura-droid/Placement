@@ -503,7 +503,7 @@ const InternsPage = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#09435F] to-[#2E84AE] bg-clip-text text-transparent">
+           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
             Talent Pool
           </h1>
           <p className="text-gray-600 mt-2">Discover and manage talented interns</p>
@@ -511,7 +511,7 @@ const InternsPage = () => {
         <div className="flex space-x-2">
           <button 
             onClick={fetchInterns}
-            className="flex items-center space-x-2 px-4 py-2.5 bg-gradient-to-r from-[#2E84AE] to-[#09435F] text-white rounded-xl hover:shadow-lg transition-all duration-300"
+            className="flex items-center space-x-2 px-4 py-2.5 bg-[#5B35CD] text-white rounded-xl hover:shadow-lg transition-all duration-300"
           >
             <RefreshCw size={18} />
             <span>Refresh</span>

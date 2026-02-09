@@ -388,16 +388,25 @@ const DashboardHome = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#EAF6FC] via-[#F0F9FF] to-[#EAF6FC] flex items-center justify-center p-4">
         <div className="max-w-2xl w-full bg-white rounded-2xl shadow-lg border border-[#7EC9E8]/30 overflow-hidden">
-          <div className="relative h-48 bg-gradient-to-r from-[#0E5C7E] via-[#4FB0DA] to-[#0E5C7E] flex items-center justify-center">
+
+          {/* 🔥 Updated Gradient Header */}
+          <div className="relative h-48 bg-gradient-to-r from-purple-600 via-blue-500 to-pink-500 flex items-center justify-center">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+
             <div className="relative z-10 text-center">
               <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-white/30">
                 <GraduationCap className="w-12 h-12 text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-white">Welcome to InternFlow</h1>
-              <p className="text-[#EAF6FC] text-lg mt-2">Your journey to career success starts here</p>
+
+              <h1 className="text-3xl font-bold text-white">
+                Welcome to InternFlow
+              </h1>
+              <p className="text-white/90 text-lg mt-2">
+                Your journey to career success starts here
+              </p>
             </div>
           </div>
+
 
           <div className="p-8 md:p-12">
             <div className="flex items-center justify-center gap-3 mb-8">
@@ -416,11 +425,13 @@ const DashboardHome = () => {
             {/* Package Options */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
               {/* Course Package */}
-              <div className="group bg-gradient-to-br from-[#EAF6FC] to-[#F0F9FF] border-2 border-[#7EC9E8] rounded-2xl p-6 hover:border-[#0E5C7E] hover:shadow-xl transition-all duration-300">
+              <div className="group bg-[#FFF4F8] border-2 border-[#F8BBD0] rounded-2xl p-6 hover:border-[#0E5C7E] hover:shadow-xl transition-all duration-300">
+
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="p-3 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] rounded-xl shadow">
+                  <div className="p-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl shadow">
                     <GraduationCap className="w-7 h-7 text-white" />
                   </div>
+
                   <div>
                     <h3 className="text-xl font-bold text-[#0A2E40]">Career Course</h3>
                     <p className="text-[#0E5C7E] text-sm font-medium">CV Building • Interview Prep</p>
@@ -447,11 +458,13 @@ const DashboardHome = () => {
               </div>
 
               {/* Job Package */}
-              <div className="group bg-gradient-to-br from-[#EAF6FC] to-[#F0F9FF] border-2 border-[#7EC9E8] rounded-2xl p-6 hover:border-[#0E5C7E] hover:shadow-xl transition-all duration-300">
+              <div className="group bg-[#FFF4F8] border-2 border-[#F8BBD0] rounded-2xl p-6 hover:border-[#0E5C7E] hover:shadow-xl transition-all duration-300">
+
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="p-3 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] rounded-xl shadow">
+                  <div className="p-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-xl shadow">
                     <Package className="w-7 h-7 text-white" />
                   </div>
+
                   <div>
                     <h3 className="text-xl font-bold text-[#0A2E40]">Job Package</h3>
                     <p className="text-[#0E5C7E] text-sm font-medium">Applications • Interviews • Feedback</p>

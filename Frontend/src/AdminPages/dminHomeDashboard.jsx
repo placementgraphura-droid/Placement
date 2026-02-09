@@ -287,43 +287,51 @@ const AdminDashboardHome = () => {
       <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
 
         {/* REVENUE AREA CHART */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Revenue Overview</h2>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Monthly revenue in USD</p>
-            </div>
+   <div className="bg-gradient-to-br
+   from-[#f1f5ff]
+   via-[#f3edff]
+   to-[#ede9fe]
+   rounded-2xl border border-white/50
+   backdrop-blur-xl shadow-lg p-6">
+
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+          <div>
+            <h2 className="text-xl font-semibold text-[#1f2937]">Revenue Overview</h2>
+            <p className="text-[#6b7280] text-sm">Monthly revenue in USD</p>
           </div>
+        </div>
+
 
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={revenueData}>
               <defs>
-                <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#7A5CFF" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="#7A5CFF" stopOpacity={0.1} />
-                </linearGradient>
+               <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                 <stop offset="5%" stopColor="#4FD1C5" stopOpacity={0.9} />
+                 <stop offset="95%" stopColor="#6366F1" stopOpacity={0.1} />
+               </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis
                 dataKey="month"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#6B7280' }}
+                tick={{ fill: '#64748b' }}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#6B7280' }}
+                tick={{ fill: '#64748b' }}
                 tickFormatter={(value) => `$${(value / 1000)}k`}
               />
               <Tooltip content={<CustomTooltip />} />
               <Area
                 type="monotone"
                 dataKey="amount"
-                stroke="#7A5CFF"
+                stroke="#0ea5a4"
                 strokeWidth={3}
                 fill="url(#revenueGradient)"
-                activeDot={{ r: 8, strokeWidth: 2, fill: '#7A5CFF' }}
+                activeDot={{ r: 8, strokeWidth: 2, fill: '#0ea5a4' }}
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -335,13 +343,16 @@ const AdminDashboardHome = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* PLANS DISTRIBUTION */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 lg:col-span-2">
+        <div className="bg-gradient-to-br from-[#f0f7f6] to-[#e6ecff]
+        rounded-2xl border border-white/40 backdrop-blur-md shadow-md p-6 lg:col-span-2">
+
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Plans Distribution</h2>
+            <h2 className="text-xl font-semibold text-[#1f2937]">Plans Distribution</h2>
               <p className="text-gray-600 dark:text-gray-400 text-sm">Subscription plans purchased</p>
             </div>
-            <PieChartIcon className="text-purple-500" size={24} />
+           <PieChartIcon className="text-teal-500" size={24} />
+
           </div>
 
           <div className="flex flex-col lg:flex-row items-center">
@@ -362,7 +373,8 @@ const AdminDashboardHome = () => {
                     {plans.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={['#7A5CFF', '#39D0FF', '#4ADE80'][index % 3]}
+                       fill={['#4FD1C5', '#818CF8', '#86EFAC'][index % 3]}
+
                       />
                     ))}
                   </Pie>
@@ -377,7 +389,8 @@ const AdminDashboardHome = () => {
                   <div className="flex items-center">
                     <div
                       className="w-3 h-3 rounded-full mr-3"
-                      style={{ backgroundColor: ['#7A5CFF', '#39D0FF', '#4ADE80'][index % 3] }}
+                      style={{ backgroundColor: ['#4FD1C5', '#818CF8', '#86EFAC'][index % 3] }}
+
                     />
                     <span className="font-medium text-gray-900 dark:text-white">{plan.plan}</span>
                   </div>
@@ -391,10 +404,12 @@ const AdminDashboardHome = () => {
         </div>
 
         {/* WEEKLY JOBS CHART */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+        <div className="bg-gradient-to-br from-[#eef6f3] to-[#e8ecff]
+        rounded-2xl border border-white/40 backdrop-blur-md shadow-md p-6">
+
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Weekly Jobs</h2>
+              <h2 className="text-xl font-semibold text-[#1f2937]">Weekly Jobs</h2>
               <p className="text-gray-600 dark:text-gray-400 text-sm">New job postings</p>
             </div>
             <Briefcase className="text-blue-500" size={24} />
@@ -404,20 +419,21 @@ const AdminDashboardHome = () => {
             <BarChart data={weeklyJobs}>
               <defs>
                 <linearGradient id="weeklyJobsGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#39D0FF" stopOpacity={0.9} />
-                  <stop offset="100%" stopColor="#7A5CFF" stopOpacity={0.7} />
+                  <stop offset="0%" stopColor="#4FD1C5" stopOpacity={0.9} />
+                  <stop offset="100%" stopColor="#6366F1" stopOpacity={0.7} />
                 </linearGradient>
+
               </defs>
               <XAxis
                 dataKey="week"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#6B7280' }}
+                tick={{ fill: '#64748b' }}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: '#6B7280' }}
+                tick={{ fill: '#64748b' }}
               />
               <Tooltip content={<CustomTooltip />} />
               <Bar
@@ -433,18 +449,20 @@ const AdminDashboardHome = () => {
             <div className="text-2xl font-bold text-gray-900 dark:text-white">
               {weeklyJobs.reduce((sum, week) => sum + week.count, 0)}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total jobs this month</div>
+            <div className="text-xl font-semibold text-[#1f2937]">Total jobs this month</div>
           </div>
         </div>
       </div>
 
       {/* ======================= USER TABLE ======================= */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+      <div className="bg-gradient-to-br from-[#f4f8f7] to-[#e8ecff]
+      rounded-2xl border border-white/40 backdrop-blur-md shadow-md overflow-hidden">
+
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Team Members</h2>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Mentors & Hiring Team</p>
+              <h2 className="text-xl font-semibold text-[#1f2937]">Team Members</h2>
+              <p className="text-gray-800 dark:text-gray-400 text-sm">Mentors & Hiring Team</p>
             </div>
           </div>
         </div>
@@ -452,21 +470,29 @@ const AdminDashboardHome = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50 dark:bg-gray-900 text-left">
-                <th className="py-4 px-6 font-semibold text-gray-700 dark:text-gray-300">Name</th>
-                <th className="py-4 px-6 font-semibold text-gray-700 dark:text-gray-300">Role</th>
-                <th className="py-4 px-6 font-semibold text-gray-700 dark:text-gray-300">Experience</th>
-                <th className="py-4 px-6 font-semibold text-gray-700 dark:text-gray-300">Phone</th>
-                <th className="py-4 px-6 font-semibold text-gray-700 dark:text-gray-300">Joined</th>
-                <th className="py-4 px-6 font-semibold text-gray-700 dark:text-gray-300">Status</th>
+              <tr className="bg-[#EEEFFF] backdrop-blur-sm text-left">
+
+                <th className="py-4 px-6 font-semibold text-[#334155]">Name</th>
+                <th className="py-4 px-6 font-semibold text-[#334155]">Role</th>
+                <th className="py-4 px-6 font-semibold text-[#334155]">Experience</th>
+                <th className="py-4 px-6 font-semibold text-[#334155]">Phone</th>
+                <th className="py-4 px-6 font-semibold text-[#334155]">Joined</th>
+                <th className="py-4 px-6 font-semibold text-[#334155]">Status</th>
+
               </tr>
             </thead>
             <tbody>
               {[...users.mentors, ...users.hrs].map((user, i) => (
                 <tr
                   key={i}
-                  className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-                >
+                  className={`border-b border-gray-100 dark:border-gray-700 transition-colors
+                      ${
+                        user.role.toLowerCase().includes("intern")
+                          ? "bg-gray-50 dark:bg-gray-900"
+                          : "hover:bg-gray-50 dark:hover:bg-gray-900"
+                      }
+                    `}
+                  >
                   <td className="py-4 px-6">
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold mr-3">
@@ -522,28 +548,25 @@ const AdminDashboardHome = () => {
 
 const bgColorClasses = {
   blue: {
-    card: "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20",
-    icon: "bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-lg",
-    ring: "ring-blue-100 dark:ring-blue-900/30",
-    text: "text-blue-600"
+      card: "bg-gradient-to-r from-cyan-500 to-blue-600 text-white",
+//         icon: "bg-white/20 text-white backdrop-blur-md",
+        text: "text-white/80"
   },
   purple: {
-    card: "bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
-    icon: "bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-lg",
-    ring: "ring-purple-100 dark:ring-purple-900/30",
-    text: "text-purple-600"
+    card: "bg-gradient-to-r from-purple-500 to-pink-500 text-white",
+//        icon: "bg-white/20 text-white backdrop-blur-md",
+       text: "text-white/80"
   },
   green: {
-    card: "bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20",
-    icon: "bg-gradient-to-br from-emerald-500 to-green-500 text-white shadow-lg",
-    ring: "ring-emerald-100 dark:ring-emerald-900/30",
-    text: "text-emerald-600"
+       card: "bg-gradient-to-r from-teal-500 to-emerald-500 text-white",
+//        icon: "bg-white/20 text-white backdrop-blur-md",
+       text: "text-white/80"
+
   },
   red: {
-    card: "bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20",
-    icon: "bg-gradient-to-br from-rose-500 to-pink-500 text-white shadow-lg",
-    ring: "ring-rose-100 dark:ring-rose-900/30",
-    text: "text-rose-600"
+     card: "bg-gradient-to-r from-orange-500 to-rose-500 text-white",
+//         icon: "bg-white/20 text-white backdrop-blur-md",
+        text: "text-white/80"
   },
 };
 
@@ -556,32 +579,35 @@ const StatCard = ({ title, value, icon, color }) => {
 
   return (
     <div
-      className={`p-6 rounded-2xl shadow-sm ring-1 ${theme.ring} ${theme.card} transition-all duration-300 hover:shadow-md hover:scale-[1.02]`}
-    >
-      <div className="flex items-center justify-between">
-        
-        {/* TEXT */}
-        <div className="flex-1">
-          <p className={`text-sm font-semibold ${theme.text} dark:${theme.text}/80 mb-1`}>
+         className={`relative overflow-hidden p-6 rounded-2xl
+         shadow-[0_10px_30px_rgba(107,114,128,0.35)]
+         hover:shadow-[0_16px_45px_rgba(107,114,128,0.45)]
+         transition-all duration-300 hover:scale-[1.03]
+         ${theme.card}`}
+       >
+      <div className="absolute right-4 top-4 opacity-20 text-[80px]">
+        {React.cloneElement(icon, { size: 80 })}
+      </div>
+
+      <div className="relative z-10 flex items-center justify-between">
+        <div>
+          <p className={`text-sm font-semibold ${theme.text}`}>
             {title}
           </p>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+          <h2 className="text-3xl md:text-4xl font-bold mt-2">
             {value}
           </h2>
-
         </div>
 
-        {/* ICON */}
-        <div
-          className={`flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center ${theme.icon} shadow-lg ml-4`}
-        >
-          {React.cloneElement(icon, { size: 28 })}
+        <div className="w-12 h-12 rounded-xl flex items-center justify-center">
+          {React.cloneElement(icon, { size: 24 })}
         </div>
       </div>
     </div>
   );
 };
+
 
 
 export default AdminDashboardHome;

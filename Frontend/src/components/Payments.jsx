@@ -524,29 +524,33 @@ const Payments = () => {
 
     return (
       <div>
-        {/* Category Toggle */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex rounded-lg border border-[#7EC9E8]/30 p-1 bg-[#EAF6FC]/30">
-            <button
-              onClick={() => setActiveCategory('job')}
-              className={`px-6 py-2.5 text-sm font-medium rounded-md transition-all ${activeCategory === 'job'
-                  ? 'bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white shadow'
-                  : 'text-[#0E5C7E] hover:text-[#0A2E40] hover:bg-[#EAF6FC]'
-                }`}
-            >
-              Job Packages
-            </button>
-            <button
-              onClick={() => setActiveCategory('learning')}
-              className={`px-6 py-2.5 text-sm font-medium rounded-md transition-all ${activeCategory === 'learning'
-                  ? 'bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white shadow'
-                  : 'text-[#0E5C7E] hover:text-[#0A2E40] hover:bg-[#EAF6FC]'
-                }`}
-            >
-              Learning Courses
-            </button>
-          </div>
-        </div>
+       {/* CATEGORY TOGGLE (PURPLE) */}
+              <div className="flex justify-center mb-10">
+                <div className="inline-flex rounded-xl border border-purple-300/40 p-1 bg-purple-50/40">
+                  <button
+                    onClick={() => setActiveCategory('job')}
+                    className={`px-6 py-2.5 text-sm font-semibold rounded-lg transition ${
+                      activeCategory === 'job'
+                        ? 'bg-gradient-to-r from-purple-600 to-violet-500 text-white shadow'
+                        : 'text-purple-700 hover:bg-purple-100'
+                    }`}
+                  >
+                    Job Packages
+                  </button>
+
+          <button
+                     onClick={() => setActiveCategory('learning')}
+                     className={`px-6 py-2.5 text-sm font-semibold rounded-lg transition ${
+                       activeCategory === 'learning'
+                         ? 'bg-gradient-to-r from-purple-600 to-violet-500 text-white shadow'
+                         : 'text-purple-700 hover:bg-purple-100'
+                     }`}
+                   >
+                     Learning Courses
+                   </button>
+                 </div>
+               </div>
+
 
         <div className="text-center mb-10">
           <h2 className="text-2xl font-bold text-[#0A2E40] mb-2">
@@ -559,7 +563,8 @@ const Payments = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+
           {plans.map((plan) => {
             const isCurrentPlan = activeCategory === 'job' 
               ? latestJobPackage?.jobPackageDetails?.packageType === plan.packageType
@@ -569,27 +574,36 @@ const Payments = () => {
               ? isCoursePurchased(plan.courseType)
               : false;
 
-            return (
-              <div
-                key={plan.id}
-                className={`relative rounded-2xl border-2 p-5 transition-all hover:shadow-lg ${isCurrentPlan
-                    ? 'border-green-500 bg-gradient-to-b from-green-50 to-white'
-                    : plan.popular
-                      ? 'border-[#FFD700] bg-gradient-to-b from-[#FFF9E6] to-white'
-                      : 'border-[#7EC9E8]/30 bg-white hover:border-[#4FB0DA]'
-                  }`}
-              >
-                {/* Tag Label */}
-                {plan.tag && (
-                  <div className="absolute -top-3 left-1/4 transform -translate-x-1/2">
-                    <span className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold shadow ${plan.popular 
-                      ? 'bg-gradient-to-r from-[#FFD700] to-[#FFED4E] text-[#0A2E40]' 
-                      : 'bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white'
-                    }`}>
-                      {plan.tag}
-                    </span>
-                  </div>
-                )}
+             return (
+                        <div
+                          key={plan.id}
+                          className={`relative rounded-3xl p-6 pt-10 transition-all duration-300 flex flex-col ${
+
+                            plan.popular
+                              ? 'bg-gradient-to-b from-purple-600 to-violet-600 text-white shadow-2xl scale-105'
+                              : 'bg-white border border-purple-100 shadow-md hover:shadow-xl'
+                          }`}
+                        >
+
+                {/* TAG */}
+                              {/* TOP LABEL */}
+                            {/* TOP LABEL */}
+                            {plan.tag && (
+                              <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                                <span
+                                  className={`px-5 py-1.5 rounded-full text-xs font-semibold shadow-lg whitespace-nowrap
+                                    ${
+                                      plan.popular
+                                        ? 'bg-white text-purple-600'
+                                        : 'bg-gradient-to-r from-purple-600 to-violet-500 text-white'
+                                    }`}
+                                >
+                                  {plan.tag}
+                                </span>
+                              </div>
+                            )}
+
+
 
                 {/* Current Plan Badge */}
                 {isCurrentPlan && (
@@ -610,30 +624,40 @@ const Payments = () => {
                 )}
 
                 <div className="text-center mb-6 pt-2">
-                  <h3 className="text-xl font-bold text-[#0A2E40] mb-3">{plan.name}</h3>
+                   <h3 className={`text-xl font-bold text-center mb-4 ${
+                                    plan.popular ? 'text-white' : 'text-gray-900'
+                                  }`}>
+                                    {plan.name}
+                                  </h3>
                   
                   {/* Pricing with Discount */}
-                  <div className="mb-4">
-                    <div className="flex items-baseline justify-center mb-1">
-                      <span className="text-3xl font-bold text-[#0A2E40]">{formatCurrency(plan.price)}</span>
-                    </div>
-                    
-                    {/* Original Price with Strikethrough */}
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="text-[#666] text-sm line-through">
-                        {formatCurrency(plan.originalPrice)}
-                      </span>
-                      <span className="inline-flex items-center px-2 py-0.5 bg-red-100 text-red-800 text-xs font-bold rounded-full border border-red-200">
-                        Save {plan.discountPercentage}%
-                      </span>
-                    </div>
-                  </div>
+                      <div className="text-center mb-5">
+                                   <div className={`text-4xl font-bold ${
+                                     plan.popular ? 'text-white' : 'text-gray-900'
+                                   }`}>
+                                     {formatCurrency(plan.price)}
+                                   </div>
+
+                                   <div className="flex justify-center items-center gap-2 mt-1">
+                                     <span className={`text-sm line-through ${
+                                       plan.popular ? 'text-white/70' : 'text-gray-400'
+                                     }`}>
+                                       {formatCurrency(plan.originalPrice)}
+                                     </span>
+
+                                     <span className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-semibold">
+                                       {plan.discountPercentage}% OFF
+                                     </span>
+                                   </div>
+                                 </div>
 
                   {activeCategory === 'job' ? (
-                    <div className="text-[#0E5C7E] font-semibold">
+                     <div className={`text-center font-semibold mb-6 ${
+                                      plan.popular ? 'text-white' : 'text-purple-700'
+                                    }`}>
                       {plan.creditsGiven} Job Credits
                       {plan.maxPackageLPA && (
-                        <div className="text-sm text-[#0E5C7E]/80 mt-1">
+                        <div className="text-sm opacity-80">
                           Up to {plan.maxPackageLPA} LPA
                         </div>
                       )}
@@ -645,11 +669,21 @@ const Payments = () => {
                   )}
                 </div>
 
-                <ul className="space-y-3 mb-6">
+                  <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="text-green-500 mr-3 mt-1 flex-shrink-0">✓</span>
-                      <span className="text-sm text-[#0A2E40]">{feature}</span>
+                    <li key={index} className="flex items-center gap-3">
+                       <span className={`w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold ${
+                                              plan.popular
+                                                ? 'bg-white text-purple-600'
+                                                : 'bg-purple-100 text-purple-600'
+                                            }`}>
+                                              ✓
+                                            </span>
+                       <span className={`text-sm ${
+                                             plan.popular ? 'text-white' : 'text-gray-700'
+                                           }`}>
+                                             {feature}
+                                           </span>
                     </li>
                   ))}
                 </ul>
@@ -657,28 +691,37 @@ const Payments = () => {
                 <button
                   onClick={() => handlePurchase(plan)}
                   disabled={loading}
-                  className={`w-full py-3 px-4 rounded-xl font-semibold transition-all shadow ${loading
-                      ? 'opacity-50 cursor-not-allowed'
+                  className={`mt-auto w-full py-3 px-4 rounded-xl font-semibold transition-all shadow-md
+
+                    ${loading
+                      ? 'opacity-50 cursor-not-allowed bg-gray-300 text-gray-600'
                       : isCurrentPlan
-                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700'
-                        : plan.popular
-                          ? 'bg-gradient-to-r from-[#FFD700] to-[#FFED4E] text-[#0A2E40] hover:from-[#FFED4E] hover:to-[#FFD700]'
-                          : activeCategory === 'job'
-                            ? 'bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white hover:from-[#0A2E40] hover:to-[#0E5C7E]'
-                            : 'bg-gradient-to-r from-[#4FB0DA] to-[#7EC9E8] text-white hover:from-[#0E5C7E] hover:to-[#4FB0DA]'
+                        ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
+                        : plan.packageType === 'Silver'
+                          ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-700 hover:to-cyan-600'
+                          : plan.packageType === 'NON_BLUE'
+                            ? 'bg-gradient-to-r from-yellow-400 to-yellow-300 text-[#0A2E40] hover:from-yellow-500 hover:to-yellow-400'
+                            : plan.packageType === 'BLUE'
+                              ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-700 hover:to-cyan-600'
+                              : plan.packageType === 'SUPER_BLUE'
+                                ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-700 hover:to-cyan-600'
+                                : 'bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white'
                     }`}
                 >
-                  {loading ? 'Processing...' :
-                   isCurrentPlan ? 'Current Package' :
-                   'Purchase Now'}
+                  {loading
+                    ? 'Processing...'
+                    : isCurrentPlan
+                      ? 'Current Package'
+                      : 'Purchase Now'}
                 </button>
+
               </div>
             );
           })}
         </div>
 
 {/* Important Instructions */}
-<div className="p-5 bg-gradient-to-r from-[#EAF6FC] to-[#F0F9FF] border border-[#7EC9E8]/30 rounded-xl">
+<div className="p-5 bg-[#EEEFFF] rounded-xl">
   <div className="flex items-start">
     <div className="flex-shrink-0">
       <span className="text-2xl"></span>
@@ -848,12 +891,12 @@ const Payments = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#EAF6FC] via-[#F0F9FF] to-[#EAF6FC] p-4 md:p-8">
+    <div className="min-h-screen bg-[#EEEFFF] p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-[#0A2E40]">Payments & Subscriptions</h1>
-          <p className="text-[#0E5C7E] mt-2">
+          <p className="text-grey-100 mt-2">
             Manage your job credits and learning courses. Latest purchase becomes active package.
           </p>
         </div>

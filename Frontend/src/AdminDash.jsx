@@ -31,6 +31,15 @@ import AdminDashboardHome from "./AdminPages/dminHomeDashboard"
 import Mentor from "./AdminPages/MentorPage";
 import HRPage from "./AdminPages/HR_Page";
 
+
+const formattedDate = new Intl.DateTimeFormat("en-GB", {
+  weekday: "long",
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+}).format(new Date());
+
+
 const AdminDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -99,70 +108,112 @@ const AdminDashboard = () => {
   // ============================
   // SIDEBAR COMPONENT
   // ============================
-  const Sidebar = () => {
-    return (
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col h-full shadow-sm">
-        {/* Sidebar Header */}
-        <div className="p-6 border-b border-gray-200">
-          <h1 className="font-bold text-2xl text-gray-900 tracking-tight">ADMIN</h1>
-          <p className="text-sm text-gray-500 mt-1">Management Console</p>
-        </div>
+const Sidebar = () => {
+  return (
+   <div className="w-64 bg-[#DFE1FF] border-r border-white/10
+   text-gray-300 flex flex-col h-full
+   rounded-tr-3xl rounded-br-3xl overflow-hidden">
 
-        {/* Menu Buttons */}
-        <nav className="flex-1 p-4">
+
+
+      {/* Sidebar Header */}
+      <div className="p-6">
+        <img
+          src="/GraphuraLogo.jpg"
+          alt="Graphura Logo"
+          className="h-10 w-auto object-contain"
+        />
+       <p className="text-xs text-gray-600 mt-1">
+
+          Admin Management
+        </p>
+      </div>
+
+      {/* Menu Buttons */}
+      <nav className="flex-1 px-3 flex flex-col">
+        {/* MENU ITEMS */}
+        <div>
           {menuItems.map((item) => {
             const Icon = item.icon;
             return (
               <button
                 key={item.key}
-                className={`w-full flex items-center p-3 rounded-lg mb-1 transition-all duration-200 ${
-                  activePage === item.key 
-                    ? "bg-gray-900 text-white shadow-sm" 
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2
+                transition-all duration-200 ${
+                  activePage === item.key
+                    ? "bg-[#5B35CD] text-white shadow-sm"
+                    : "hover:bg-[#5B35CD]/10 text-gray-600"
                 }`}
+
                 onClick={() => {
                   setActivePage(item.key);
                   if (isMobile) setMobileOpen(false);
                 }}
               >
-                <Icon 
-                  className={`mr-3 ${
-                    activePage === item.key 
-                      ? "text-white" 
-                      : "text-gray-500"
-                  }`} 
-                  size={20} 
-                />
-                <span className="font-medium">{item.label}</span>
+                <span
+                  className={`p-2 rounded-lg transition-all duration-200 ${
+                    activePage === item.key
+                      ? "text-white"
+                      : "text-gray-600 group-hover:text-[#5B35CD]"
+                  }`}
+                >
+                  <Icon size={18} />
+                </span>
+
+             <span
+               className={`font-medium transition-colors ${
+                 activePage === item.key
+                   ? "text-white"
+                   : "text-gray-600 group-hover:text-[#5B35CD]"
+               }`}
+             >
+               {item.label}
+             </span>
+
               </button>
             );
           })}
+        </div>
 
-          <div className="border-t border-gray-200 space-y-2">
-            <button
-              onClick={handleBackToHome}
-              className="w-full flex items-center p-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
-            >
-              <Home className="mr-3 text-gray-500" size={20} />
-              <span className="font-medium">Back to Home</span>
-            </button>
+        {/* BOTTOM AXIOM STYLE CARD */}
+        <div className="pt-4 mt-4">
+          <div className="rounded-2xl p-4 bg-white shadow-sm">
 
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center p-3 rounded-lg text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
-            >
-              <LogOut className="mr-3 text-gray-500" size={20} />
-              <span className="font-medium">Logout</span>
-            </button>
+
+
+            <div className="space-y-2">
+              <button
+                onClick={handleBackToHome}
+                className="w-full flex items-center justify-center gap-2 bg-white text-gray-700
+                rounded-xl py-2 text-sm font-medium hover:bg-gray-50 transition"
+              >
+                <Home size={16} />
+                Back to Home
+              </button>
+
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center gap-2 bg-[#6c63ff]
+                text-white rounded-xl py-2 text-sm font-medium hover:opacity-90 transition"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </div>
           </div>
-        </nav>
+        </div>
 
-      </div>
-    );
-  };
+      </nav>
+
+    </div>
+  );
+};
+
+
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-[#f3f4f9]">
+
       {/* Mobile Overlay */}
       {mobileOpen && (
         <div
@@ -180,39 +231,57 @@ const AdminDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-white">
-        {/* Top Bar */}
-        <header className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="flex items-center justify-between px-6 py-4">
-            {/* Mobile Menu Button */}
-            <button 
-              onClick={() => setMobileOpen(true)} 
-              className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <Menu className="text-gray-700" />
-            </button>
+      <div className="flex-1 flex flex-col overflow-hidden bg-[#f3f4f9] p-3">
 
-            {/* Page Title and Breadcrumb */}
-            <div className="flex items-center space-x-3">
-              <h1 className="text-xl font-bold text-gray-900">
-                {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
-              </h1>
-              <span className="text-gray-400">/</span>
-              <span className="text-sm text-gray-500">Admin Panel</span>
-            </div>
+       {/* Top Bar */}
+      <header>
 
-            {/* User/Status Badge */}
-            <div className="hidden md:flex items-center space-x-3">
-              <div className="text-sm text-gray-600">
-                Logged in as <span className="font-semibold text-gray-900">Admin</span>
-              </div>
-              <div className="w-2 h-2 rounded-full bg-green-500"></div>
-            </div>
-          </div>
-        </header>
+         <div className="flex items-center justify-between px-8 py-7">
+
+
+           {/* Left Section */}
+           <div className="flex items-center gap-4">
+             <button
+               onClick={() => setMobileOpen(true)}
+               className="md:hidden p-2 rounded-lg hover:bg-gray-200 transition"
+             >
+               <Menu size={20} />
+             </button>
+
+             <div>
+               <p className="text-sm text-gray-500 mb-1">
+                 Welcome back,{" "}
+                 <span className="font-medium text-gray-700">
+                   Admin 👋
+                 </span>
+               </p>
+
+               <h1 className="text-4xl font-extrabold text-gray-900 leading-tight">
+                 {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
+               </h1>
+
+               <p className="text-lg font-medium text-gray-600 mt-2">
+                 {formattedDate}
+               </p>
+             </div>
+           </div>
+
+
+           <div className="hidden md:flex items-center gap-3">
+             <span className="text-sm text-gray-600">
+               Logged in as <span className="font-semibold text-gray-900">Admin</span>
+             </span>
+             <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+           </div>
+
+         </div>
+       </header>
+
+
 
         {/* Content */}
-        <main className="flex-1 overflow-auto p-4 md:p-6 bg-gray-50">
+        <main className="flex-1 overflow-auto mt-3 rounded-2xl">
+
           <div className="max-w-full">
             {renderPage()}
           </div>

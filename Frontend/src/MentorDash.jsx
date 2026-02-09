@@ -24,6 +24,14 @@ import Classes from "./MentorPages/MentorClasses";
 import MentorUsers from "./MentorPages/MentorUser";
 import axios from "axios";
 
+const formattedDate = new Date().toLocaleDateString("en-IN", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+
 const MentorDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -253,82 +261,116 @@ const MentorDashboard = () => {
     };
 
     return (
-      <div className="w-64 bg-gray-800 text-white flex flex-col h-full">
-        <div className="p-4 bg-gradient-to-r from-blue-600 to-purple-600">
-          <div className="flex items-center">
-            <GraduationCap className="mr-2" />
+    <div
+      className="w-64 h-full flex flex-col
+      bg-[#DFE1FF]
+      text-gray-800 rounded-r-3xl shadow-xl overflow-hidden"
+    >
+
+        <div className="px-6 py-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
+              <GraduationCap className="text-black" size={22} />
+            </div>
             <div>
-              <h1 className="font-bold text-lg">MentorPro</h1>
-              <p className="text-xs text-blue-100">Education Platform</p>
+              <h1 className="font-semibold text-lg tracking-wide">MentorPro</h1>
+              <p className="text-xs text-gray-600">Education Platform</p>
             </div>
           </div>
         </div>
 
+
         {/* Profile Summary */}
-        <div className="p-4 border-b border-gray-700 text-center">
-          <img
-            src={
-              currentMentor.profileImage ||
-              `https://ui-avatars.com/api/?name=${currentMentor.name}&background=random`
-            }
-            className="w-16 h-16 mx-auto rounded-full border-2 border-blue-500 shadow"
-            alt="Profile"
-          />
-          <h2 className="font-bold mt-2">{currentMentor.name}</h2>
-          <p className="text-gray-300 text-xs">{currentMentor.experience} yrs experience</p>
+       <div className="px-6 py-4 text-center">
+         <img
+           src={
+             currentMentor.profileImage ||
+             `https://ui-avatars.com/api/?name=${currentMentor.name}&background=6366f1&color=fff`
+           }
+           className="w-16 h-16 mx-auto rounded-2xl border border-indigo-400 shadow-md"
+           alt="Profile"
+         />
 
-          <div className="flex justify-center mt-2 gap-1 flex-wrap">
-            {currentMentor.domain?.slice(0, 2).map((d, i) => (
-              <span key={i} className="bg-blue-600 text-xs px-2 py-1 rounded-full">
-                {d}
-              </span>
-            ))}
-          </div>
+         <h2 className="mt-3 font-medium text-black">{currentMentor.name}</h2>
+         <p className="text-xs text-gray-600">
+           {currentMentor.experience} yrs experience
+         </p>
 
-        </div>
+         <div className="flex justify-center mt-3 gap-2 flex-wrap">
+           {currentMentor.domain?.slice(0, 2).map((d, i) => (
+             <span
+               key={i}
+               className="text-xs px-3 py-1 rounded-full
+               bg-indigo-500/20 text-indigo-700"
+             >
+               {d}
+             </span>
+           ))}
+         </div>
+       </div>
+
 
         {/* Navigation */}
-        <nav className="flex-1 p-2">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.key}
-                className={`w-full flex items-center p-3 rounded-lg mb-1 ${
-                  activePage === item.key ? "bg-white bg-opacity-10" : "hover:bg-white/5"
-                }`}
-                onClick={() => {
-                  setActivePage(item.key);
-                  if (isMobile) setMobileOpen(false);
-                }}
-              >
-                <Icon className={`mr-3 ${item.color}`} size={20} />
-                {item.label}
-              </button>
-            );
-          })}
+       <nav className="flex-1 px-4 py-2 space-y-1">
+         {menuItems.map((item) => {
+           const Icon = item.icon;
+           const isActive = activePage === item.key;
+
+           return (
+             <button
+               key={item.key}
+               onClick={() => {
+                 setActivePage(item.key);
+                 if (isMobile) setMobileOpen(false);
+               }}
+               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                 ${
+                isActive
+                  ? "bg-[#8B88FF] text-white shadow-md"
+                  : "hover:bg-indigo-100 text-gray-700"
+
+                 }`}
+             >
+               <Icon
+                 size={20}
+                 className={isActive ? "text-white" : "text-indigo-600"}
+               />
+               <span className="text-sm font-medium">{item.label}</span>
+             </button>
+           );
+         })}
+
 
           {/* Action Buttons */}
-          <div className="mt-4 border-t border-gray-700 pt-4 space-y-2">
-            {/* Back to Home Button */}
+          <div className="mt-6 p-3 rounded-2xl bg-white/10 backdrop-blur-md space-y-3 shadow-inner">
+
+            {/* Back to Home */}
             <button
-              className="w-full flex items-center p-3 rounded-lg hover:bg-white/5 transition-colors"
               onClick={handleBackToHome}
+              className="w-full flex items-center justify-center gap-2
+              bg-white text-gray-800 font-medium
+              px-4 py-3 rounded-xl shadow
+              hover:bg-gray-100 transition"
             >
-              <Home className="mr-3 text-gray-400" size={20} />
-              <span className="text-gray-300">Back to Home</span>
+              <Home size={18} />
+              <span className="text-sm">Back to Home</span>
             </button>
 
-            {/* Logout Button */}
+            {/* Logout */}
             <button
-              className="w-full flex items-center p-3 rounded-lg hover:bg-red-500/10 transition-colors text-red-400 hover:text-red-300"
               onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-2
+              bg-gradient-to-r from-indigo-500 to-purple-600
+              text-white font-medium
+              px-4 py-3 rounded-xl shadow-lg
+              hover:opacity-90 transition"
             >
-              <LogOut className="mr-3" size={20} />
-              <span>Logout</span>
+              <LogOut size={18} />
+              <span className="text-sm">Logout</span>
             </button>
+
           </div>
-        </nav>
+</nav>
       </div>
     );
   };
@@ -358,50 +400,62 @@ const MentorDashboard = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
-        <header className="bg-white border-b">
-          <div className="flex items-center justify-between px-4 py-3">
-            <button 
-              onClick={() => setMobileOpen(true)} 
-              className="md:hidden p-2 hover:bg-gray-100 rounded"
-            >
-              <Menu />
-            </button>
-            <h1 className="text-xl font-bold">
-              {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
-            </h1>
-            
-            <div className="flex items-center space-x-4">
-              {/* Logout Button in Header */}
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-              >
-                <LogOut size={16} />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
+       <header className="bg-[#f8f9fd] border-none">
+         <div className="flex items-center justify-between px-6 py-4">
 
-              {/* Back to Home Button in Header */}
-              <button
-                onClick={handleBackToHome}
-                className="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <Home size={16} />
-                <span className="hidden sm:inline">Home</span>
-              </button>
+           {/* Left: Menu + Welcome + Title */}
+           <div className="flex items-start gap-4">
+             <button
+               onClick={() => setMobileOpen(true)}
+               className="md:hidden p-2 rounded-lg hover:bg-gray-200 transition mt-1"
+             >
+               <Menu size={20} />
+             </button>
 
-              {mentor && (
-                <div className="flex items-center space-x-2">
-                  <img
-                    src={mentor.profileImage || `https://ui-avatars.com/api/?name=${mentor.name}&background=random`}
-                    alt="Profile"
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <span className="text-sm font-medium hidden sm:inline">{mentor.name}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </header>
+             <div>
+{/*                <p className="text-sm text-gray-500 mb-1"> */}
+{/*                  Welcome back,{" "} */}
+{/*                  <span className="font-medium text-gray-700"> */}
+{/*                    Mentor👋 */}
+{/*                  </span> */}
+{/*                </p> */}
+
+               <h1 className="text-4xl font-extrabold text-gray-900 leading-tight">
+                 {menuItems?.find((m) => m.key === activePage)?.label || "Dashboard"}
+               </h1>
+
+               <p className="text-lg font-medium text-gray-600 mt-2">
+                 {formattedDate}
+               </p>
+             </div>
+           </div>
+
+           {/* Right: Actions */}
+           <div className="flex items-center gap-4">
+             {mentor && (
+               <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm">
+                 <img
+                   src={
+                     mentor.profileImage ||
+                     `https://ui-avatars.com/api/?name=${mentor.name}&background=6366f1&color=fff`
+                   }
+                   alt="Profile"
+                   className="w-8 h-8 rounded-full"
+                 />
+                 <div className="hidden sm:block">
+                   <p className="text-sm font-medium text-gray-800">
+                     {mentor.name}
+                   </p>
+                   <p className="text-xs text-gray-400">Admin</p>
+                 </div>
+               </div>
+             )}
+           </div>
+
+         </div>
+       </header>
+
+
 
         <main className="flex-1 overflow-auto p-4 md:p-6">
           {renderPage()}
@@ -465,7 +519,7 @@ const DashboardOverview = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Study Materials */}
-        <div className="bg-white p-6 rounded-xl shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold flex items-center">
               <BookOpen className="text-red-500 mr-2" /> Recent Study Materials
@@ -512,7 +566,7 @@ const DashboardOverview = ({
         </div>
 
         {/* Recent Users */}
-        <div className="bg-white p-6 rounded-xl shadow">
+        <div className="bg-white p-6 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold flex items-center">
               <Users className="text-indigo-500 mr-2" /> Recent Users

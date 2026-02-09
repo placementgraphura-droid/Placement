@@ -33,6 +33,13 @@ import Profile from "./HrPages/Profile";
 import JobPosts from "./HrPages/JobPosts";
 import UsersPage from "./HrPages/Users";
 
+const formattedDate = new Intl.DateTimeFormat("en-GB", {
+  weekday: "long",
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+}).format(new Date());
+
 const HiringTeamDashboard = () => {
   const [activePage, setActivePage] = useState("dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -276,10 +283,14 @@ const HiringTeamDashboard = () => {
         {/* Header with Time Range */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">Dashboard Overview</h1>
-            <p className="text-gray-600">
-              Welcome back, {user?.name || "Hiring Manager"}. Here's your hiring performance
-            </p>
+              <p className="text-lg text-gray-500 mb-1">
+                            Welcome back, {user?.name || "Hiring Manager"}👋
+                          </p>
+            <h1 className="text-4xl font-extrabold text-gray-900 leading-tight">Dashboard </h1>
+              <p className=" text-lg font-medium text-gray-600 mt-2">
+                             {formattedDate}
+                           </p>
+
           </div>
           <div className="flex items-center space-x-4">
             <button
@@ -300,7 +311,12 @@ const HiringTeamDashboard = () => {
               <div
                 key={index}
                 onClick={stat.onClick}
-                className={` group bg-white rounded-2xl p-6 border border-gray-200/50 hover:shadow-sm hover:-translate-y-1 transition-all duration-300 cursor-pointer focus:outline-none ${stat.hover || ""} `}
+                className={`group bg-white rounded-2xl p-6 border border-gray-200/50
+                shadow-[0_8px_20px_rgba(0,0,0,0.08)]
+                hover:shadow-[0_12px_30px_rgba(0,0,0,0.12)]
+                hover:-translate-y-1
+                transition-all duration-300 cursor-pointer focus:outline-none ${stat.hover || ""}`}
+
               >
                 <div className="flex items-center justify-between">
                   <div
@@ -327,7 +343,9 @@ const HiringTeamDashboard = () => {
         {/* Recent Jobs & Candidates - Showing only 5 each */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Jobs - Showing 5 only */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+         <div className="bg-white rounded-2xl border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] p-6">
+
+
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">
@@ -400,7 +418,9 @@ const HiringTeamDashboard = () => {
           </div>
 
           {/* Recent Candidates - Showing 5 only */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-[0_10px_25px_rgba(0,0,0,0.08)] p-6">
+
+
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">
@@ -494,7 +514,8 @@ const HiringTeamDashboard = () => {
     };
 
     return (
-      <div className="w-64 bg-white text-white flex flex-col h-full">
+      <div className="w-64 bg-[#DFE1FF] text-white flex flex-col h-full">
+
         {/* HEADER + PROFILE COMBINED (Dribbble Style) */}
         <div className="px-4 pt-6 pb-5">
           <div className="flex items-center gap-3 mb-6">
@@ -509,35 +530,13 @@ const HiringTeamDashboard = () => {
               <h1 className="text-gray-900 font-semibold text-lg leading-none">
                 Graphura
               </h1>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-600 mt-1">
                 Hiring Dashboard
               </p>
             </div>
           </div>
           {/* Profile Card */}
-          <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-3 border border-gray-100">
-            <img
-              src={currentUser.profileImage}
-              alt="Profile"
-              className="w-12 h-12 rounded-full object-cover"
-            />
 
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-gray-900 truncate">
-                {currentUser.name}
-              </p>
-
-              <p className="text-xs text-gray-500 truncate">
-                {currentUser.role}
-              </p>
-
-              {currentUser.department && (
-                <p className="text-xs text-gray-400 truncate">
-                  {currentUser.department}
-                </p>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Navigation */}
@@ -552,18 +551,37 @@ const HiringTeamDashboard = () => {
                     setActivePage(item.key);
                     if (isMobile) setMobileOpen(false);
                   }}
-                  className={`group w-full my-3 flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${activePage === item.key ? "bg-gray-50 shadow-sm" : "hover:bg-gray-100"}`}
+                    className={`group w-full my-3 flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                      activePage === item.key
+                        ? "bg-[#5B35CD] shadow-sm"
+                        : "hover:bg-[#5B35CD]/10"
+                    }`}
+
                 >
-                  <span className={`${item.bg} p-2 rounded-lg text-white flex items-center justify-center transition-transform duration-200 ${activePage === item.key ? "scale-105" : "group-hover:scale-105"}`}>
-                    <Icon size={16} />
-                  </span>
+                  <span
+                     className={`p-2 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                       activePage === item.key
+                         ? "text-white"
+                         : "text-gray-600 group-hover:text-[#5B35CD]"
+                     }`}
+                   >
+                     <Icon size={18} />
+                   </span>
 
-                  <span className={`font-medium transition-colors ${activePage === item.key ? "text-gray-900" : "text-gray-500 group-hover:text-gray-800"}`}>
-                    {item.label}
-                  </span>
 
+                   <span
+                     className={`font-medium transition-colors ${
+                       activePage === item.key
+                         ? "text-white"
+                         : "text-gray-600 group-hover:text-[#5B35CD]"
+                     }`}
+                   >
+                     {item.label}
+                   </span>
+
+                 {/* ARROW */}
                   {activePage === item.key && (
-                    <ChevronRight className="ml-auto text-gray-400" size={16} />
+                    <ChevronRight className="ml-auto text-white" size={16} />
                   )}
                 </button>
               );
@@ -571,30 +589,58 @@ const HiringTeamDashboard = () => {
           </div>
 
           <div className="mt-4 pt-4 border-t border-gray-200 space-y-2">
-            {/* Back to Home */}
-            <button
-              onClick={handleBackToHome}
-              className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 hover:bg-gray-100"
-            >
-              <span className="bg-indigo-500 p-2 rounded-lg text-white flex items-center justify-center group-hover:scale-105 transition-transform">
-                <Home size={16} />
-              </span>
-              <span className="font-medium text-gray-600 group-hover:text-gray-900">
-                Back to Home
-              </span>
-            </button>
-            {/* Logout */}
-            <button
-              onClick={handleLogout}
-              className="group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 hover:bg-red-50"
-            >
-              <span className="bg-red-500 p-2 rounded-lg text-white flex items-center justify-center group-hover:scale-105 transition-transform">
-                <LogOut size={16} />
-              </span>
-              <span className="font-medium text-gray-600 group-hover:text-red-600">
-                Logout
-              </span>
-            </button>
+              <div className="rounded-2xl p-4 flex items-center gap-3">
+                                      <img
+                                        src={currentUser.profileImage}
+                                        alt="Profile"
+                                        className="w-12 h-12 rounded-full object-cover"
+                                      />
+
+                                      <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-semibold text-gray-900 truncate">
+                                          {currentUser.name}
+                                        </p>
+
+                                        <p className="text-xs text-gray-500 truncate">
+                                          {currentUser.role}
+                                        </p>
+
+                                        {currentUser.department && (
+                                          <p className="text-xs text-gray-400 truncate">
+                                            {currentUser.department}
+                                          </p>
+                                        )}
+                                      </div>
+                                    </div>
+
+             {/* BOTTOM AXIOM STYLE CARD */}
+                    <div className="pt-4 mt-4">
+                      <div className="rounded-2xl p-4 bg-white shadow-sm">
+
+
+
+                        <div className="space-y-2">
+                          <button
+                            onClick={handleBackToHome}
+                            className="w-full flex items-center justify-center gap-2 bg-white text-gray-700
+                            rounded-xl py-2 text-sm font-medium hover:bg-gray-50 transition"
+                          >
+                            <Home size={16} />
+                            Back to Home
+                          </button>
+
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center justify-center gap-2 bg-[#6c63ff]
+                            text-white rounded-xl py-2 text-sm font-medium hover:opacity-90 transition"
+                          >
+                            <LogOut size={16} />
+                            Logout
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
           </div>
         </nav>
       </div>
