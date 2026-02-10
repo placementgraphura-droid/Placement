@@ -7,11 +7,11 @@ import FeaturesBar from "./FeaturesBar";
 import ModulesAccordion from "./ModulesAccordion";
 import PricingCard from "./PricingCard";
 // import SEO from "../../components/Seo";
-
+//
 // const schema = {
 //   "@context": "https://schema.org",
 //   "@graph": [
-
+//
 //     {
 //       "@type": "Course",
 //       "name": "Resume Building Courses Graphura",
@@ -23,7 +23,7 @@ import PricingCard from "./PricingCard";
 //         "url": "https://graphura.shop"
 //       }
 //     },
-
+//
 //     {
 //       "@type": "FAQPage",
 //       "mainEntity": [
@@ -56,7 +56,7 @@ import PricingCard from "./PricingCard";
 //         }
 //       ]
 //     },
-
+//
 //     {
 //       "@type": "Service",
 //       "name": "Graphura Placement Drives",
@@ -72,19 +72,19 @@ import PricingCard from "./PricingCard";
 //         "name": "India"
 //       }
 //     }
-
+//
 //   ]
 // };
 
 function Course() {
   return (
     <>
-      {/* <SEO
-        title="Resume Building Courses Graphura | Job Ready CV Training"
-        description="Create recruiter friendly resumes with Resume Building courses Graphura. Learn ATS optimized CV writing and stand out in interviews and placement drives."
-        keywords="Resume Building courses graphura, CV preparation training, professional resume building graphura india private limited courses"
-        schema={schema}
-      /> */}
+{/*       <SEO */}
+{/*         title="Resume Building Courses Graphura | Job Ready CV Training" */}
+{/*         description="Create recruiter friendly resumes with Resume Building courses Graphura. Learn ATS optimized CV writing and stand out in interviews and placement drives." */}
+{/*         keywords="Resume Building courses graphura, CV preparation training, professional resume building graphura india private limited courses" */}
+{/*         schema={schema} */}
+{/*       /> */}
 
       <div className="overflow-x-hidden overflow-y-auto">
         <Navbar />

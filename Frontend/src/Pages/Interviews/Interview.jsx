@@ -7,13 +7,14 @@ import Pricing from "./Pricing";
 import Modules from "./Modules";
 import FeaturesBar from "./FeaturesBar";
 import Testimonials from "../WelcomePage/Testimonial";
-import { Helmet } from "react-helmet-async";
-// import SEO from "../../components/Seo";
+import { Helmet } from "react-helmet";
 
+// import SEO from "../../components/Seo";
+//
 // const schema = {
 //   "@context": "https://schema.org",
 //   "@graph": [
-
+//
 //     {
 //       "@type": "Course",
 //       "name": "Interview Courses Graphura",
@@ -25,7 +26,7 @@ import { Helmet } from "react-helmet-async";
 //         "url": "https://graphura.shop"
 //       }
 //     },
-
+//
 //     {
 //       "@type": "FAQPage",
 //       "mainEntity": [
@@ -58,7 +59,7 @@ import { Helmet } from "react-helmet-async";
 //         }
 //       ]
 //     }
-
+//
 //   ]
 // };
 
@@ -66,12 +67,12 @@ function Interview() {
 
   return (
     <>
-      {/* <SEO
-        title="Interview Courses Graphura | Crack HR and Technical Interviews"
-        description="Crack interviews with confidence using interview courses Graphura. Practice HR and technical interviews improve communication and get placement ready."
-        keywords="interview courses graphura, interview preparation training, mock interviews graphura india private limited courses"
-        schema={schema}
-      /> */}
+{/*        <SEO */}
+{/*          title="Interview Courses Graphura | Crack HR and Technical Interviews" */}
+{/*          description="Crack interviews with confidence using interview courses Graphura. Practice HR and technical interviews improve communication and get placement ready." */}
+{/*          keywords="interview courses graphura, interview preparation training, mock interviews graphura india private limited courses" */}
+{/*          schema={schema} */}
+{/*     /> */}
 
       <div className=" bg-gradient-to-br from-sky-50 via-blue-50 to-sky-100 overflow-auto">
         <Navbar />

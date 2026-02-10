@@ -9,11 +9,11 @@ import Footer from "./Footer";
 import Hero2 from "./Hero2";
 import Coursess from "./Courses";
 // import SEO from "../../components/Seo";
-
+//
 // const schema = {
 //   "@context": "https://schema.org",
 //   "@graph": [
-
+//
 //     {
 //       "@type": "Organization",
 //       "name": "Graphura India Private Limited",
@@ -28,7 +28,7 @@ import Coursess from "./Courses";
 //         "availableLanguage": "English"
 //       }
 //     },
-
+//
 //     {
 //       "@type": "FAQPage",
 //       "mainEntity": [
@@ -61,7 +61,7 @@ import Coursess from "./Courses";
 //         }
 //       ]
 //     }
-
+//
 //   ]
 // };
 
@@ -69,12 +69,12 @@ function WelcomePage() {
 
   return (
     <>
-      {/* <SEO
-        title="Resume Building Courses Graphura | Interview Courses | Graphura India"
-        description="Boost your career with Resume Building courses Graphura and interview courses by Graphura India Private Limited. Join Graphura Placement Drives and get job ready faster."
-        keywords="Resume Building courses graphura interview courses graphura placement drives career success training"
-        schema={schema}
-      /> */}
+{/*       <SEO */}
+{/*         title="Resume Building Courses Graphura | Interview Courses | Graphura India" */}
+{/*         description="Boost your career with Resume Building courses Graphura and interview courses by Graphura India Private Limited. Join Graphura Placement Drives and get job ready faster." */}
+{/*         keywords="Resume Building courses graphura interview courses graphura placement drives career success training" */}
+{/*         schema={schema} */}
+{/*       /> */}
 
 
       <div className=" bg-gradient-to-br from-sky-50 via-blue-50 to-sky-100 overflow-auto">

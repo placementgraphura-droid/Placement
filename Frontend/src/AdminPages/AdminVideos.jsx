@@ -244,6 +244,13 @@ const AdminVideoLectures = () => {
       setVideos(prev => prev.map(video =>
         video.id === editingVideo.id ? updatedVideo : video
       ));
+  setFilteredVideos(prev => prev.map(video =>
+    video.id === editingVideo.id ? updatedVideo : video
+  ));
+
+  setCurrentVideo(prev =>
+    prev && prev.id === updatedVideo.id ? updatedVideo : prev
+  );
       setEditDialog(false);
       setEditingVideo(null);
       alert('Video updated successfully!');
@@ -957,7 +964,8 @@ const AdminVideoLectures = () => {
         {/* Preview Dialog */}
         {previewDialog && currentVideo && (
           <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-6xl max-h-[95vh] overflow-y-auto">
+
               <div className="px-8 py-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-800 to-gray-900 rounded-t-3xl">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -1007,9 +1015,22 @@ const AdminVideoLectures = () => {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{currentVideo.title}</h3>
-                    {currentVideo.description && (
-                      <p className="text-gray-600 mb-4">{currentVideo.description}</p>
-                    )}
+                   {/* Description */}
+                   {currentVideo?.description && (
+                     <div className="mt-8">
+                       <h4 className="text-lg font-semibold text-gray-900 mb-3">
+                         Description
+                       </h4>
+
+                       <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-6 shadow-sm max-h-[45vh] overflow-y-auto">
+                         <p className="text-gray-700 leading-relaxed whitespace-pre-line break-words text-[15px]">
+                           {currentVideo.description}
+                         </p>
+                       </div>
+                     </div>
+                   )}
+
+
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
