@@ -103,14 +103,6 @@ export const uploadProfileImage = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
 export const createJobPost = async (req, res) => {
   try {
     const job = await JobPost.create(req.body);

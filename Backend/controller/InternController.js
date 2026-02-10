@@ -134,9 +134,6 @@ export const updateInternProfile = async (req, res) => {
   }
 };
 
-
-
-
 export const getInternClasses = async (req, res) => {
   try {
     const classes = await Class.find().sort({ startTime: 1 });
@@ -164,8 +161,6 @@ export const getInternClasses = async (req, res) => {
   }
 }
 
-
-
 export const getStudyMaterials = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
@@ -190,8 +185,6 @@ export const getStudyMaterials = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch study materials" });
   }
 };
-
-
 
 export const searchStudyMaterials = async (req, res) => {
   try {
@@ -234,8 +227,6 @@ export const searchStudyMaterials = async (req, res) => {
   }
 };
 
-
-
 export const getVideoLectures = async (req, res) => {
   try {
     const videos = await VideoLecture.find().sort({ createdAt: -1 });
@@ -260,8 +251,6 @@ export const getVideoLectures = async (req, res) => {
     });
   }
 };
-
-
 
 export const getDashboardStats = async (req, res) => {
   try {
@@ -302,8 +291,6 @@ export const getDashboardStats = async (req, res) => {
     });
   }
 };
-
-
 
 export const getRecentJobPosts = async (req, res) => {
   try {

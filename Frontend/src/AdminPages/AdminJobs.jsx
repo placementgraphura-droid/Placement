@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import CreateNewJobPopup from "../components/CreateNewJobPopup";
 import {
   Plus,
   Search,
@@ -83,7 +84,8 @@ const AdminJobPosts = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const [showCreatePopup, setShowCreatePopup] = useState(false);
+
   // Admin-specific state
   const [showViewModal, setShowViewModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -95,7 +97,7 @@ const AdminJobPosts = () => {
     return localStorage.getItem("adminToken");
   };
 
-  const fetchJobs = async () => {   
+  const fetchJobs = async () => {
     setLoading(true);
     try {
       const token = getToken();
@@ -122,7 +124,7 @@ const AdminJobPosts = () => {
   // ===============================
   // API CALL FUNCTIONS (ADMIN)
   // ===============================
-  
+
   // View Job Details
   const handleViewJob = async (jobId) => {
     try {
@@ -246,7 +248,7 @@ const AdminJobPosts = () => {
   // ===============================
   // MODAL COMPONENTS (ADMIN)
   // ===============================
-  
+
   // View Job Modal (Admin) - Enhanced with more details
   const renderViewModal = () => {
     if (!showViewModal || !selectedJob) return null;
@@ -267,7 +269,7 @@ const AdminJobPosts = () => {
           day: 'numeric'
         });
       } catch (error) {
-        return "Invalid date",error;
+        return "Invalid date", error;
       }
     };
 
@@ -276,12 +278,12 @@ const AdminJobPosts = () => {
       if (!selectedJob.salary) return "Not specified";
       const { min, max, currency, isNegotiable } = selectedJob.salary;
       let salaryText = "";
-      
+
       if (min) salaryText += `${currency || '₹'}${min}`;
       if (max) salaryText += ` - ${currency || '₹'}${max}`;
       if (!min && !max) salaryText = "Not specified";
       if (isNegotiable) salaryText += " (Negotiable)";
-      
+
       return salaryText;
     };
 
@@ -303,11 +305,10 @@ const AdminJobPosts = () => {
             <div>
               <h2 className="text-2xl font-bold text-gray-800">{selectedJob.title}</h2>
               <div className="flex items-center space-x-4 mt-1">
-                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                  selectedJob.status === "Open" 
-                    ? "bg-green-100 text-green-800" 
-                    : "bg-red-100 text-red-800"
-                }`}>
+                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${selectedJob.status === "Open"
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+                  }`}>
                   {selectedJob.status === "Open" ? (
                     <CheckCircle size={14} className="mr-1" />
                   ) : (
@@ -363,11 +364,10 @@ const AdminJobPosts = () => {
                 <button
                   key={tab.id}
                   onClick={() => setViewMode(tab.id)}
-                  className={`flex items-center px-4 py-3 border-b-2 text-sm font-medium transition-colors ${
-                    viewMode === tab.id
-                      ? "border-blue-600 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                  }`}
+                  className={`flex items-center px-4 py-3 border-b-2 text-sm font-medium transition-colors ${viewMode === tab.id
+                    ? "border-blue-600 text-blue-600"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                    }`}
                 >
                   {tab.icon}
                   <span className="ml-2">{tab.label}</span>
@@ -396,7 +396,7 @@ const AdminJobPosts = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="bg-green-50 p-4 rounded-lg border border-green-100">
                     <div className="flex items-center">
                       <Clock className="text-green-600 mr-3" size={20} />
@@ -406,7 +406,7 @@ const AdminJobPosts = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
                     <div className="flex items-center">
                       <DollarSign className="text-purple-600 mr-3" size={20} />
@@ -416,7 +416,7 @@ const AdminJobPosts = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="bg-orange-50 p-4 rounded-lg border border-orange-100">
                     <div className="flex items-center">
                       <Users className="text-orange-600 mr-3" size={20} />
@@ -476,7 +476,7 @@ const AdminJobPosts = () => {
                             <span className="text-gray-700">Application Deadline</span>
                           </div>
                           <span className="font-medium text-gray-800">
-                            {selectedJob.applicationDeadline 
+                            {selectedJob.applicationDeadline
                               ? formatDate(selectedJob.applicationDeadline)
                               : "Not specified"}
                           </span>
@@ -562,11 +562,10 @@ const AdminJobPosts = () => {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Job Status:</span>
-                          <span className={`px-2 py-1 rounded text-xs font-medium ${
-                            selectedJob.status === "Open" 
-                              ? "bg-green-100 text-green-800" 
-                              : "bg-red-100 text-red-800"
-                          }`}>
+                          <span className={`px-2 py-1 rounded text-xs font-medium ${selectedJob.status === "Open"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                            }`}>
                             {selectedJob.status}
                           </span>
                         </div>
@@ -607,7 +606,7 @@ const AdminJobPosts = () => {
                                   {field.fieldType}
                                 </span>
                               </label>
-                              
+
                               {/* Render input based on field type */}
                               {field.fieldType === "text" && (
                                 <input
@@ -617,7 +616,7 @@ const AdminJobPosts = () => {
                                   disabled
                                 />
                               )}
-                              
+
                               {field.fieldType === "email" && (
                                 <input
                                   type="email"
@@ -659,7 +658,7 @@ const AdminJobPosts = () => {
                                   <Upload size={24} className="mx-auto text-gray-400 mb-2" />
                                   <p className="text-sm text-gray-600">{field.placeholder || `Upload ${field.label.toLowerCase()}`}</p>
                                   <p className="text-xs text-gray-500 mt-1">
-                                    Max size: {field.validation?.maxFileSizeMB || 2}MB • 
+                                    Max size: {field.validation?.maxFileSizeMB || 2}MB •
                                     Formats: {field.validation?.fileTypes?.join(", ") || "PDF, DOCX"}
                                   </p>
                                 </div>
@@ -775,7 +774,7 @@ const AdminJobPosts = () => {
                                 <Users size={48} className="text-gray-400 mb-4" />
                                 <h4 className="text-lg font-medium text-gray-700 mb-2">Applicant Data</h4>
                                 <p className="text-gray-500 max-w-md">
-                                  To view detailed applicant information and manage applications, 
+                                  To view detailed applicant information and manage applications,
                                   please use the Export button to download the complete applicant data.
                                 </p>
                                 <p className="text-sm text-gray-400 mt-3">
@@ -793,7 +792,7 @@ const AdminJobPosts = () => {
                     <Users size={64} className="mx-auto text-gray-400 mb-4" />
                     <h4 className="text-xl font-semibold text-gray-700 mb-2">No Applicants Yet</h4>
                     <p className="text-gray-500 max-w-md mx-auto">
-                      This job post has not received any applications yet. 
+                      This job post has not received any applications yet.
                       Applicants will appear here once they start applying.
                     </p>
                   </div>
@@ -854,7 +853,7 @@ const AdminJobPosts = () => {
                   Status: {selectedJob.status}
                 </p>
               </div>
-              
+
               <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <p className="text-sm text-yellow-800">
                   <strong>Warning:</strong> This will permanently delete:
@@ -908,27 +907,27 @@ const AdminJobPosts = () => {
   });
 
   const stats = [
-    { 
-      label: "Total Jobs", 
-      value: jobs.length, 
+    {
+      label: "Total Jobs",
+      value: jobs.length,
       color: "#09435F",
       icon: <Briefcase className="text-white" size={20} />
     },
-    { 
-      label: "Active Jobs", 
-      value: jobs.filter(j => j.status === "Open").length, 
+    {
+      label: "Active Jobs",
+      value: jobs.filter(j => j.status === "Open").length,
       color: "#2E84AE",
       icon: <CheckCircle className="text-white" size={20} />
     },
-    { 
-      label: "Total Applicants", 
-      value: jobs.reduce((sum, job) => sum + (job.applicantsCount || 0), 0), 
+    {
+      label: "Total Applicants",
+      value: jobs.reduce((sum, job) => sum + (job.applicantsCount || 0), 0),
       color: "#CDE7F4",
       icon: <Users className="text-blue-800" size={20} />
     },
-    { 
-      label: "Avg Applicants/Job", 
-      value: Math.round(jobs.reduce((sum, job) => sum + (job.applicantsCount || 0), 0) / Math.max(jobs.length, 1)), 
+    {
+      label: "Avg Applicants/Job",
+      value: Math.round(jobs.reduce((sum, job) => sum + (job.applicantsCount || 0), 0) / Math.max(jobs.length, 1)),
       color: "#09435F",
       icon: <TrendingUp className="text-white" size={20} />
     },
@@ -937,7 +936,7 @@ const AdminJobPosts = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white p-4 md:p-6">
       {/* Admin Header */}
-       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 p-8 md:p-12 mb-10 shadow-2xl">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 p-8 md:p-12 mb-10 shadow-2xl">
         <div className="relative z-10">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="flex-1">
@@ -954,6 +953,13 @@ const AdminJobPosts = () => {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <button
+                onClick={() => setShowCreatePopup(true)}
+                className="flex items-center gap-2 bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition"
+              >
+                <Plus size={18} />
+                Create New Job
+              </button>
               <div className="text-right">
                 <p className="text-gray-300">Admin Access</p>
                 <p className="text-sm text-gray-400">View & Export Only</p>
@@ -964,8 +970,8 @@ const AdminJobPosts = () => {
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-8">
             {stats.map((stat, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="bg-white/10 backdrop-blur-sm rounded-xl p-5 border border-white/20"
                 style={{ borderLeftColor: stat.color, borderLeftWidth: '4px' }}
               >
@@ -1071,11 +1077,10 @@ const AdminJobPosts = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col space-y-1">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                          job.status === "Open" 
-                            ? "bg-green-100 text-green-800" 
-                            : "bg-red-100 text-red-800"
-                        }`}>
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${job.status === "Open"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                          }`}>
                           {job.status === "Open" ? (
                             <CheckCircle size={14} className="mr-1" />
                           ) : (
@@ -1126,7 +1131,7 @@ const AdminJobPosts = () => {
                         >
                           <Eye size={18} />
                         </button>
-                        
+
                         {job.applicantsCount > 0 && (
                           <button
                             onClick={() => handleExportApplicants(job)}
@@ -1168,9 +1173,14 @@ const AdminJobPosts = () => {
 
       {/* View Modal */}
       {renderViewModal()}
-      
+
       {/* Delete Modal */}
       {renderDeleteModal()}
+      <CreateNewJobPopup
+        isOpen={showCreatePopup}
+        onClose={() => setShowCreatePopup(false)}
+        fetchJobs={fetchJobs}
+      />
     </div>
   );
 };

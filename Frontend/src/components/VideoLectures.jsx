@@ -4,6 +4,7 @@ import axios from 'axios';
 import { GraduationCap, Sparkles, CheckCircle, Play, Clock, Calendar, User, BookOpen, ArrowRight, Lock } from 'lucide-react';
 
 const VideoLectures = () => {
+  const QUERY_FORM_URL = "https://forms.gle/GEPsqUh1QUV7VJco6";
   const [videos, setVideos] = useState([]);
   const [planInfo, setPlanInfo] = useState(null);
   const [loadingPlan, setLoadingPlan] = useState(true);
@@ -97,6 +98,15 @@ const VideoLectures = () => {
   const closeModal = () => {
     setShowModal(false);
     setSelectedVideo(null);
+  };
+
+  const handleQueryClick = () => {
+    if (!selectedVideo) return;
+
+    // OPTIONAL: add video title as query param (for prefilled form)
+    const url = `${QUERY_FORM_URL}?videoTitle=${encodeURIComponent(selectedVideo.title)}`;
+
+    window.open(url, "_blank");
   };
 
   const formatDate = (dateString) => {
@@ -369,8 +379,8 @@ const VideoLectures = () => {
                 <button
                   onClick={() => setActiveFilter('All')}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeFilter === 'All'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                 >
                   All Videos
@@ -380,8 +390,8 @@ const VideoLectures = () => {
                     key={category}
                     onClick={() => setActiveFilter(category)}
                     className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeFilter === category
-                        ? getCategoryColor(category).replace('bg-100', 'bg-600').replace('text-800', 'text-white')
-                        : getCategoryColor(category)
+                      ? getCategoryColor(category).replace('bg-100', 'bg-600').replace('text-800', 'text-white')
+                      : getCategoryColor(category)
                       }`}
                   >
                     {getCategoryLabel(category)}
@@ -548,13 +558,24 @@ const VideoLectures = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex justify-end p-6 border-t border-gray-200">
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
+
+              {/* Query Button */}
+              <button
+                onClick={handleQueryClick}
+                className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                Ask Query
+              </button>
+
+              {/* Close Button */}
               <button
                 onClick={closeModal}
                 className="bg-gray-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-gray-700 transition-colors"
               >
                 Close
               </button>
+
             </div>
           </div>
         </div>

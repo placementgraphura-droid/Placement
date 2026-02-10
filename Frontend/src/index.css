@@ -4,8 +4,10 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
-    transform: translateX(-50%); /* Move left */
+    transform: translateX(-50%);
+    /* Move left */
   }
 }
 
@@ -13,11 +15,20 @@
   animation: marquee 12s linear infinite;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: none;
+}
 
 @keyframes scroll {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }

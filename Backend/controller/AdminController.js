@@ -10,17 +10,37 @@ import HiringTeam from "../model/RegisterDB/hiringSchema.js";
 import { Parser } from "json2csv";
 import archiver from "archiver";
 
+export const createJobPost = async (req, res) => {
+  try {
+
+    const job = await JobPost.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      message: "Job created successfully",
+      data: job,
+    });
+
+  } catch (error) {
+    console.error("Create Job Error:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to create job",
+    });
+  }
+};
 
 // Get all interns (Admin - read only)
 export const getAllInterns = async (req, res) => {
   try {
     // Get query parameters for filtering
-    const { 
-      domain, 
-      yearOfStudy, 
-      planCategory, 
+    const {
+      domain,
+      yearOfStudy,
+      planCategory,
       status,
-      search 
+      search
     } = req.query;
 
     // Build filter object
@@ -56,14 +76,14 @@ export const getAllInterns = async (req, res) => {
     // Format response data
     const formattedInterns = interns.map(intern => {
       const internObj = intern.toObject();
-      
+
       // Find the latest job package purchase
       const latestJobPackage = intern.purchases
         .filter(p => p.purchaseCategory === 'JOB_PACKAGE')
         .sort((a, b) => new Date(b.purchasedAt) - new Date(a.purchasedAt))[0];
 
       // Find active job credits
-      const activeJobCredits = latestJobPackage 
+      const activeJobCredits = latestJobPackage
         ? latestJobPackage.jobPackageDetails?.creditsRemaining || 0
         : 0;
 
@@ -71,7 +91,7 @@ export const getAllInterns = async (req, res) => {
       const hiringFeedbacks = intern.hiringTeamFeedback || [];
       const mentorFeedbacks = intern.mentorFeedback || [];
       const allFeedbacks = [...hiringFeedbacks, ...mentorFeedbacks];
-      
+
       const avgRating = allFeedbacks.length > 0
         ? allFeedbacks.reduce((sum, feedback) => sum + (feedback.rating || 0), 0) / allFeedbacks.length
         : 0;
@@ -99,7 +119,7 @@ export const getAllInterns = async (req, res) => {
       if (planCategory === 'NONE') {
         filteredInterns = formattedInterns.filter(intern => !intern.planCategory || intern.planCategory === 'NONE');
       } else {
-        filteredInterns = formattedInterns.filter(intern => 
+        filteredInterns = formattedInterns.filter(intern =>
           intern.planCategory && intern.planCategory === planCategory
         );
       }
@@ -137,7 +157,7 @@ export const updateInternStatus = async (req, res) => {
     // Find and update intern
     const intern = await Intern.findByIdAndUpdate(
       id,
-      { 
+      {
         isActive: status === 'active',
         updatedAt: new Date()
       },
@@ -281,7 +301,7 @@ export const deleteClass = async (req, res) => {
     console.error("Delete class error:", error);
     res.status(500).json({ message: "Failed to delete class" });
   }
-};  
+};
 
 export const getAllStudyMaterials = async (req, res) => {
   try {
@@ -294,7 +314,7 @@ export const getAllStudyMaterials = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch materials" });
   }
 };
- 
+
 
 export const uploadStudyMaterial = async (req, res) => {
   try {
@@ -1054,22 +1074,22 @@ export const getWeeklyJobs = async (req, res) => {
 export const getMonthlyPurchasedInternGrowth = async (req, res) => {
   try {
     const { year = new Date().getFullYear() } = req.query;
-    
+
     // Convert year to number and validate
     const targetYear = parseInt(year);
     if (isNaN(targetYear) || targetYear < 2000 || targetYear > 2100) {
-      return res.status(400).json({ 
-        message: "Invalid year parameter. Please provide a valid year (2000-2100)." 
+      return res.status(400).json({
+        message: "Invalid year parameter. Please provide a valid year (2000-2100)."
       });
     }
 
     const data = await Intern.aggregate([
       // Filter documents that have purchases array
       { $match: { purchases: { $exists: true, $ne: [] } } },
-      
+
       // Unwind purchases array
       { $unwind: "$purchases" },
-      
+
       // Match only successful payments
       {
         $match: {
@@ -1077,7 +1097,7 @@ export const getMonthlyPurchasedInternGrowth = async (req, res) => {
           "purchases.purchasedAt": { $exists: true, $ne: null }
         }
       },
-      
+
       // Convert purchasedAt to date safely
       {
         $addFields: {
@@ -1096,7 +1116,7 @@ export const getMonthlyPurchasedInternGrowth = async (req, res) => {
           }
         }
       },
-      
+
       // Filter out invalid dates and filter by year
       {
         $match: {
@@ -1104,7 +1124,7 @@ export const getMonthlyPurchasedInternGrowth = async (req, res) => {
           $expr: { $eq: [{ $year: "$purchaseDate" }, targetYear] }
         }
       },
-      
+
       // Group by month to get count of purchases (not unique interns)
       {
         $group: {
@@ -1115,7 +1135,7 @@ export const getMonthlyPurchasedInternGrowth = async (req, res) => {
           uniqueInterns: { $addToSet: "$_id" } // For unique intern count if needed
         }
       },
-      
+
       // Calculate both total purchases and unique interns
       {
         $project: {
@@ -1127,7 +1147,7 @@ export const getMonthlyPurchasedInternGrowth = async (req, res) => {
           _id: 0
         }
       },
-      
+
       // Sort by month
       { $sort: { month: 1 } }
     ]);
@@ -1158,8 +1178,8 @@ export const getMonthlyPurchasedInternGrowth = async (req, res) => {
       averageMonthlyPurchases: Math.round(
         completeData.reduce((sum, month) => sum + month.totalPurchases, 0) / 12
       ),
-      peakMonth: completeData.reduce((max, month) => 
-        month.totalPurchases > max.totalPurchases ? month : max, 
+      peakMonth: completeData.reduce((max, month) =>
+        month.totalPurchases > max.totalPurchases ? month : max,
         { month: "", totalPurchases: 0 }
       )
     };
@@ -1175,20 +1195,20 @@ export const getMonthlyPurchasedInternGrowth = async (req, res) => {
         currentMonth: months[new Date().getMonth()]
       }
     });
-    
+
   } catch (error) {
     console.error("Monthly Purchase Growth Error:", error);
-    
+
     // More specific error responses
     if (error.name === 'MongoServerError') {
-      return res.status(500).json({ 
+      return res.status(500).json({
         success: false,
         message: "Database error occurred",
-        error: error.code === 241 ? "Invalid date format in database" : error.message 
+        error: error.code === 241 ? "Invalid date format in database" : error.message
       });
     }
-    
-    res.status(500).json({ 
+
+    res.status(500).json({
       success: false,
       message: "Failed to fetch purchase growth data",
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
@@ -1256,7 +1276,7 @@ export const getPlansPurchasedStats = async (req, res) => {
       {
         $group: {
           _id: "$planName",
-          count: { $sum: 1}
+          count: { $sum: 1 }
         }
       }
     ]);

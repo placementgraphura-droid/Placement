@@ -33,7 +33,8 @@ import { getAllInterns, updateInternStatus, getAllClasses, createClass, updateCl
     getMonthlyPurchasedInternGrowth,
     getMonthlyRevenue,
     getPlansPurchasedStats,
-    getMentorsAndHRs
+    getMentorsAndHRs,
+    createJobPost
 
 
 } from "../controller/AdminController.js";
@@ -42,6 +43,7 @@ import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 
+router.post("/admin/create-job", authMiddleware, createJobPost);
 // Route to get all interns with filtering options
 router.get("/admin/interns", authMiddleware, getAllInterns);
 // Route to update intern active status

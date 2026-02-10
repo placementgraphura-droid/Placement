@@ -49,7 +49,7 @@ const AdminDashboardHome = () => {
     mentors: 5.7,
     hr: 15.3
   });
-  const [setPurchaseGrowth] = useState([]);
+  const [purchaseGrowth, setPurchaseGrowth] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
   const [weeklyJobs, setWeeklyJobs] = useState([]);
   const [plans, setPlans] = useState([]);
