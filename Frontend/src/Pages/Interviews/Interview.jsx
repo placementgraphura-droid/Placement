@@ -7,7 +7,7 @@ import Pricing from "./Pricing";
 import Modules from "./Modules";
 import FeaturesBar from "./FeaturesBar";
 import Testimonials from "../WelcomePage/Testimonial";
-import { Helmet } from "react-helmet";
+//import { Helmet } from "react-helmet";
 
 // import SEO from "../../components/Seo";
 //
