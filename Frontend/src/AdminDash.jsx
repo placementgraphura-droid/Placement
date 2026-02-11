@@ -119,11 +119,11 @@ const AdminDashboard = () => {
 
 
         {/* Sidebar Header */}
-        <div className="p-6">
+        <div className="p-4">
           <img
             src="/GraphuraLogo.jpg"
             alt="Graphura Logo"
-            className="h-10 w-auto object-contain"
+            className="h-8 w-auto object-contain"
           />
           <p className="text-xs text-gray-600 mt-1">
 
@@ -132,7 +132,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Menu Buttons */}
-        <nav className="flex-1 px-3 flex flex-col">
+        <nav className="flex-1 px-2 flex flex-col">
           {/* MENU ITEMS */}
           <div>
             {menuItems.map((item) => {
@@ -140,7 +140,7 @@ const AdminDashboard = () => {
               return (
                 <button
                   key={item.key}
-                  className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2
+                  className={`group w-full flex items-center gap-3 px-2.5 py-1.5 rounded-xl mb-2
                 transition-all duration-200 ${activePage === item.key
                       ? "bg-[#5B35CD] text-white shadow-sm"
                       : "hover:bg-[#5B35CD]/10 text-gray-600"
@@ -152,16 +152,16 @@ const AdminDashboard = () => {
                   }}
                 >
                   <span
-                    className={`p-2 rounded-lg transition-all duration-200 ${activePage === item.key
+                    className={`p-1.5 rounded-lg transition-all duration-200 ${activePage === item.key
                       ? "text-white"
                       : "text-gray-600 group-hover:text-[#5B35CD]"
                       }`}
                   >
-                    <Icon size={18} />
+                    <Icon size={16} />
                   </span>
 
                   <span
-                    className={`font-medium transition-colors ${activePage === item.key
+                    className={`text-sm font-medium transition-colors ${activePage === item.key
                       ? "text-white"
                       : "text-gray-600 group-hover:text-[#5B35CD]"
                       }`}
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
 
           {/* BOTTOM AXIOM STYLE CARD */}
           <div className="pt-4 mt-4">
-            <div className="rounded-2xl p-4 bg-white shadow-sm">
+            <div className="rounded-xl p-3 bg-white shadow-sm">
 
 
 
@@ -184,11 +184,23 @@ const AdminDashboard = () => {
                 <button
                   onClick={handleBackToHome}
                   className="w-full flex items-center justify-center gap-2 bg-white text-gray-700
-                rounded-xl py-2 text-sm font-medium hover:bg-gray-50 transition"
+                rounded-xl py-1.5 text-sm font-medium hover:bg-gray-50 transition"
                 >
                   <Home size={16} />
                   Back to Home
                 </button>
+
+                 {/* IMPORT INTERNS BUTTON */}
+                  <button
+                    onClick={() => setOpenImportPopup(true)}
+                    className="w-full flex items-center justify-center gap-2
+                    bg-gradient-to-r from-[#5B35CD] to-[#7C5CFF]
+                    text-white rounded-xl py-1.5 text-sm font-semibold
+                    hover:opacity-90 transition"
+                  >
+                    <Download size={16} />
+                    Import Interns
+                  </button>
 
                 <button
                   onClick={handleLogout}
@@ -235,7 +247,7 @@ const AdminDashboard = () => {
         {/* Top Bar */}
         <header>
 
-          <div className="flex items-center justify-between px-8 py-7">
+          <div className="flex items-center justify-between px-4 py-1">
 
 
             {/* Left Section */}
@@ -255,33 +267,33 @@ const AdminDashboard = () => {
                   </span>
                 </p>
 
-                <h1 className="text-4xl font-extrabold text-gray-900 leading-tight">
+                <h1 className="text-2xl font-bold text-gray-900 leading-tight">
                   {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
                 </h1>
 
-                <p className="text-lg font-medium text-gray-600 mt-2">
+                <p className="text-sm font-small text-gray-600 mt-2">
                   {formattedDate}
                 </p>
               </div>
             </div>
 
 
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-3">
 
-              {/* IMPORT BUTTON */}
-              <button
-                onClick={() => setOpenImportPopup(true)}
-                className="flex items-center gap-2 px-4 py-3
-  bg-gradient-to-r from-[#5B35CD] to-[#7C5CFF]
-  text-white rounded-2xl cursor-pointer
-  shadow-md hover:shadow-lg
-  hover:scale-[1.03]
-  transition-all duration-200
-  text-sm font-semibold"
-              >
-                <Download size={18} />
-                Import Interns
-              </button>
+{/*                */}{/* IMPORT BUTTON */}
+{/*               <button */}
+{/*                 onClick={() => setOpenImportPopup(true)} */}
+{/*                 className="flex items-center gap-2 px-3 py-2 */}
+{/*                                 bg-gradient-to-r from-[#5B35CD] to-[#7C5CFF] */}
+{/*                                 text-white rounded-2xl cursor-pointer */}
+{/*                                 shadow-md hover:shadow-lg */}
+{/*                                 hover:scale-[1.03] */}
+{/*                                 transition-all duration-200 */}
+{/*                                 text-sm font-semibold" */}
+{/*               > */}
+{/*                 <Download size={18} /> */}
+{/*                 Import Interns */}
+{/*               </button> */}
 
               <span className="text-sm text-gray-600">
                 Logged in as <span className="font-semibold text-gray-900">Admin</span>
