@@ -563,12 +563,12 @@ const InternsPage = () => {
               onChange={(e) => setSelectedFilters({ ...selectedFilters, domain: e.target.value })}
               className="px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2E84AE] focus:border-transparent shadow-sm"
             >
-              <option value="all">🌐 All Domains</option>
-              <option value="Web Development">🌐 Web Development</option>
-              <option value="Mobile Development">📱 Mobile Development</option>
-              <option value="Data Science">📊 Data Science</option>
-              <option value="Machine Learning">🤖 Machine Learning</option>
-              <option value="UI/UX Design">🎨 UI/UX Design</option>
+              <option value="all"> All Domains</option>
+              <option value="Web Development"> Web Development</option>
+              <option value="Mobile Development"> Mobile Development</option>
+              <option value="Data Science"> Data Science</option>
+              <option value="Machine Learning"> Machine Learning</option>
+              <option value="UI/UX Design"> UI/UX Design</option>
             </select>
 
             <select
@@ -576,7 +576,7 @@ const InternsPage = () => {
               onChange={(e) => setSelectedFilters({ ...selectedFilters, yearOfStudy: e.target.value })}
               className="px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2E84AE] focus:border-transparent shadow-sm"
             >
-              <option value="all">🎓 All Years</option>
+              <option value="all"> All Years</option>
               <option value="1">1st Year</option>
               <option value="2">2nd Year</option>
               <option value="3">3rd Year</option>
@@ -588,7 +588,7 @@ const InternsPage = () => {
               onChange={(e) => setSelectedFilters({ ...selectedFilters, planCategory: e.target.value })}
               className="px-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#2E84AE] focus:border-transparent shadow-sm"
             >
-              <option value="all">💎 All Plans</option>
+              <option value="all"> All Plans</option>
               <option value="NONE">Basic</option>
               <option value="PREMIUM">Premium Combo</option>
               <option value="COMBO">COMBO Course</option>

@@ -455,7 +455,7 @@ const AdminInternsPage = () => {
               className="group bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden"
             >
               {/* Status Indicator */}
-              <div className={`h-1 ${intern.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <div className={`h-1 ${intern.status === 'active' ? 'bg-purple-600' : 'bg-red-500'}`}></div>
               
               <div className="p-6">
                 {/* Intern Header */}
@@ -473,7 +473,7 @@ const AdminInternsPage = () => {
                     </div>
                     <div>
                       <div className="flex items-center space-x-2">
-                        <h3 className="font-bold text-xl text-[#09435F] group-hover:text-[#2E84AE] transition-colors">
+                        <h3 className="font-bold text-xl text-[#09435F] group-hover:text-[#021024] transition-colors">
                           {intern.name}
                         </h3>
                         {getStatusBadge(intern.status)}
@@ -576,7 +576,7 @@ const AdminInternsPage = () => {
                   <div className="flex space-x-2">
                     <button
                       onClick={() => openProfileModal(intern)}
-                      className="flex items-center space-x-2 px-4 py-2.5 bg-white border border-gray-200 text-[#2E84AE] rounded-xl hover:bg-gray-50 hover:shadow-lg transition-all duration-300"
+                      className="flex items-center space-x-2 px-4 py-2.5 bg-white border border-gray-200 text-[#371c4b] rounded-xl hover:bg-gray-50 hover:shadow-lg transition-all duration-300"
                     >
                       <Eye size={16} />
                       <span className="text-sm font-medium">View Profile</span>
@@ -616,7 +616,7 @@ const AdminInternsPage = () => {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="sticky top-0 z-10 bg-gradient-to-r from-[#09435F] via-[#2E84AE] to-[#CDE7F4]">
+            <div className="sticky top-0 z-10 bg-gradient-to-r from-[#201c57] via-[#411a8d] to-[#703b94]">
               <div className="flex justify-between items-center p-4">
                 <div className="flex items-center space-x-3">
                   <h2 className="text-xl font-bold text-white">Intern Profile</h2>
@@ -757,7 +757,7 @@ const AdminInternsPage = () => {
                           {selectedIntern.skills?.map((skill, index) => (
                             <span
                               key={index}
-                              className="px-4 py-2 bg-gradient-to-r from-[#CDE7F4] to-[#E3F2FD] text-[#09435F] rounded-xl font-medium"
+                              className="px-4 py-2 bg-gradient-to-r from-[#EEEFFF] to-[#E3F2FD] text-[#09435F] rounded-xl font-medium"
                             >
                               {skill.name}
                             </span>

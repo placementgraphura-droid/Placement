@@ -470,7 +470,7 @@ const AdminDashboardHome = () => {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-[#EEEFFF] backdrop-blur-sm text-left">
+              <tr className="bg-[#f5f5f5] backdrop-blur-sm text-left">
 
                 <th className="py-4 px-6 font-semibold text-[#334155]">Name</th>
                 <th className="py-4 px-6 font-semibold text-[#334155]">Role</th>
@@ -483,24 +483,26 @@ const AdminDashboardHome = () => {
             </thead>
             <tbody>
               {[...users.mentors, ...users.hrs].map((user, i) => (
-                <tr
-                  key={i}
-                  className={`border-b border-gray-100 dark:border-gray-700 transition-colors
-                      ${
-                        user.role.toLowerCase().includes("intern")
-                          ? "bg-gray-50 dark:bg-gray-900"
-                          : "hover:bg-gray-50 dark:hover:bg-gray-900"
-                      }
-                    `}
-                  >
+             <tr
+               key={i}
+               className={`border-b border-yellow-200 transition-colors
+                 ${
+                   user.role.toLowerCase().includes("intern")
+                     ? "bg-yellow-50 hover:bg-yellow-100"
+                     : "bg-yellow-50 hover:bg-yellow-100"
+                 }
+               `}
+             >
+
+
                   <td className="py-4 px-6">
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold mr-3">
                         {user.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-semibold text-gray-900 dark:text-white">{user.name}</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">{user.role}</div>
+                        <div className="font-semibold text-gray-900 dark:text-black">{user.name}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-800">{user.role}</div>
                       </div>
                     </div>
                   </td>
@@ -520,11 +522,11 @@ const AdminDashboardHome = () => {
                           style={{ width: `${Math.min(user.experience * 10, 100)}%` }}
                         />
                       </div>
-                      <span className="font-medium text-gray-900 dark:text-white">{user.experience} yrs</span>
+                      <span className="font-medium text-gray-900 dark:text-black">{user.experience} yrs</span>
                     </div>
                   </td>
-                  <td className="py-4 px-6 text-gray-700 dark:text-gray-300">{user.phone || "—"}</td>
-                  <td className="py-4 px-6 text-gray-700 dark:text-gray-300">
+                  <td className="py-4 px-6 text-gray-700 dark:text-black-300">{user.phone || "—"}</td>
+                  <td className="py-4 px-6 text-gray-700 dark:text-black-300">
                     {new Date(user.createdAt).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',

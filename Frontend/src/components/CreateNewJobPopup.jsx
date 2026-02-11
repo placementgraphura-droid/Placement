@@ -971,7 +971,7 @@ const CreateNewJobPopup = ({ isOpen, onClose, isEdit = false, jobData = null, fe
           {newJob.requiredSkills.map((skill, index) => (
             <span
               key={index}
-              className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
+              className="inline-flex items-center px-3 py-1 rounded-md text-sm bg-blue-100 text-blue-800"
             >
               {skill}
               <button
@@ -1450,7 +1450,8 @@ const CreateNewJobPopup = ({ isOpen, onClose, isEdit = false, jobData = null, fe
                 {newJob.requiredSkills.map((skill, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-md text-sm"
+
                   >
                     {skill}
                   </span>

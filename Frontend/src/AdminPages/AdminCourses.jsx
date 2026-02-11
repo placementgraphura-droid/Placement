@@ -623,10 +623,10 @@ const AdminClasses = () => {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="all">📚 All Categories</option>
-                <option value="CV_BUILDING">💼 CV Building</option>
-                <option value="INTERVIEW_PREP">🎤 Interview Prep</option>
-                <option value="COMBO">🏆 Combo Session</option>
+                <option value="all"> All Categories</option>
+                <option value="CV_BUILDING"> CV Building</option>
+                <option value="INTERVIEW_PREP"> Interview Prep</option>
+                <option value="COMBO"> Combo Session</option>
               </select>
             </div>
 
@@ -637,7 +637,7 @@ const AdminClasses = () => {
                 onChange={(e) => setSelectedMentor(e.target.value)}
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value="all">👨‍🏫 All Mentors</option>
+                <option value="all"> All Mentors</option>
                 {mentors.map(mentor => (
                   <option key={mentor._id} value={mentor._id}>
                     👤 {mentor.name}

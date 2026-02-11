@@ -796,7 +796,7 @@ const handleExportApplicants = async (job) => {
                 <label className="text-sm font-medium text-gray-500">Required Skills</label>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {selectedJob.requiredSkills.map((skill, index) => (
-                    <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                    <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-md text-sm">
                       {skill}
                     </span>
                   ))}
@@ -1986,7 +1986,7 @@ const handleExportApplicants = async (job) => {
       <div className="bg-white rounded-xl shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-800">
+            <thead className="bg-gray-500">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                   Job Title
