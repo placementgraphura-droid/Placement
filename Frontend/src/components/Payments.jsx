@@ -459,7 +459,7 @@ const Payments = () => {
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-[#0E5C7E]">No active job package</p>
+              <p className="text-[#000000]">No active job package</p>
               <p className="text-sm text-[#0E5C7E]/70 mt-1">Purchase a package to get started</p>
             </div>
           )}
@@ -663,7 +663,7 @@ const Payments = () => {
                       )}
                     </div>
                   ) : (
-                    <div className="text-[#0E5C7E] font-semibold">
+                    <div className="text-[#000000] font-semibold">
                       {plan.totalSessions} Total Sessions
                     </div>
                   )}
@@ -705,7 +705,9 @@ const Payments = () => {
                               ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-700 hover:to-cyan-600'
                               : plan.packageType === 'SUPER_BLUE'
                                 ? 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-700 hover:to-cyan-600'
-                                : 'bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white'
+                                : 'bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:from-blue-700 hover:to-cyan-600'
+
+
                     }`}
                 >
                   {loading
@@ -794,13 +796,13 @@ const Payments = () => {
   const renderHistoryTab = () => {
     return (
       <div>
-        <h2 className="text-2xl font-bold text-[#0A2E40] mb-6">Payment History</h2>
+        <h2 className="text-2xl font-bold text-[#000000] mb-6">Payment History</h2>
 
         <div className="bg-white rounded-xl border border-[#7EC9E8]/30 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gradient-to-r from-[#EAF6FC] to-[#F0F9FF]">
+                <tr className="bg-gradient-to-r from-[#EEEFFF] to-[#F0F9FF]">
                   <th className="text-left py-3 px-4 text-sm font-medium text-[#0A2E40]">Date</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-[#0A2E40]">Type</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-[#0A2E40]">Description</th>
@@ -876,11 +878,11 @@ const Payments = () => {
         {paymentHistory.length === 0 && (
           <div className="text-center py-12">
             <div className="text-6xl mb-4 text-[#7EC9E8]">💳</div>
-            <h3 className="text-xl font-semibold text-[#0A2E40] mb-2">No payment history</h3>
-            <p className="text-[#0E5C7E] mb-6">Your payment history will appear here after you make your first purchase.</p>
+            <h3 className="text-xl font-semibold text-[#000000] mb-2">No payment history</h3>
+            <p className="text-[#000000] mb-6">Your payment history will appear here after you make your first purchase.</p>
             <button
               onClick={() => setActiveTab('plans')}
-              className="px-6 py-2.5 bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] text-white rounded-xl hover:from-[#0A2E40] hover:to-[#0E5C7E] transition-all shadow"
+              className="px-6 py-2.5 bg-gradient-to-r from-[#4A148C] to-[#6d1371] text-white rounded-xl hover:from-[#130719] hover:to-[#250d30] transition-all shadow"
             >
               Browse Plans
             </button>
@@ -911,8 +913,8 @@ const Payments = () => {
               <button
                 onClick={() => setActiveTab('plans')}
                 className={`py-4 px-6 text-sm font-medium border-b-2 transition-all ${activeTab === 'plans'
-                    ? 'border-[#0E5C7E] text-[#0E5C7E] font-bold'
-                    : 'border-transparent text-[#0E5C7E]/70 hover:text-[#0A2E40]'
+                    ? 'border-[#000000] text-[#000000] font-bold'
+                    : 'border-transparent text-[#000000]/70 hover:text-[#0A2E40]'
                   }`}
               >
                 Browse Plans
@@ -920,8 +922,8 @@ const Payments = () => {
               <button
                 onClick={() => setActiveTab('history')}
                 className={`py-4 px-6 text-sm font-medium border-b-2 transition-all ${activeTab === 'history'
-                    ? 'border-[#0E5C7E] text-[#0E5C7E] font-bold'
-                    : 'border-transparent text-[#0E5C7E]/70 hover:text-[#0A2E40]'
+                    ? 'border-[#000000] text-[#000000] font-bold'
+                    : 'border-transparent text-[#000000]/70 hover:text-[#0A2E40]'
                   }`}
               >
                 Payment History

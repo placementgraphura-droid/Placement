@@ -109,7 +109,7 @@ const Dashboard = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#0E5C7E] to-[#4FB0DA] rounded-xl flex items-center justify-center shadow">
+                  <div className="w-10 h-10 bg-gradient-to-br from-[#411a8d] to-[#201c6d] rounded-xl flex items-center justify-center shadow">
                     <span className="text-white font-bold text-lg">I</span>
                   </div>
                   <div>
