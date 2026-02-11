@@ -23,6 +23,13 @@ const storage = new CloudinaryStorage({
       folder = "videos";
       resource_type = "video";
     }
+    else if (
+      mime === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+      mime === "application/vnd.ms-excel"
+    ) {
+      folder = "excel-files";
+      resource_type = "raw";
+    }
 
     const fileName = file.originalname
       .replace(/\s+/g, "-")
@@ -46,7 +53,9 @@ const fileFilter = (req, file, cb) => {
   if (
     mime.startsWith("image/") ||
     mime.startsWith("video/") ||
-    mime === "application/pdf"
+    mime === "application/pdf" || 
+    mime === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
+    mime === "application/vnd.ms-excel"
   ) {
     cb(null, true);
   } else {

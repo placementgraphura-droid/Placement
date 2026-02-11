@@ -34,7 +34,8 @@ import { getAllInterns, updateInternStatus, getAllClasses, createClass, updateCl
     getMonthlyRevenue,
     getPlansPurchasedStats,
     getMentorsAndHRs,
-    createJobPost
+    createJobPost,
+    importIntern
 
 
 } from "../controller/AdminController.js";
@@ -43,6 +44,7 @@ import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 
+router.post("/admin/import-interns", authMiddleware, upload.single("file"), importIntern);
 router.post("/admin/create-job", authMiddleware, createJobPost);
 // Route to get all interns with filtering options
 router.get("/admin/interns", authMiddleware, getAllInterns);

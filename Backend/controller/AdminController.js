@@ -9,6 +9,51 @@ import Mentor from "../model/RegisterDB/mentorSchema.js";
 import HiringTeam from "../model/RegisterDB/hiringSchema.js";
 import { Parser } from "json2csv";
 import archiver from "archiver";
+import xlsx from "xlsx";
+import axios from "axios";
+import Interndata from "../model/interndata.js";
+
+export const importIntern = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        message: "No file uploaded",
+      });
+    }
+
+    // Cloudinary file URL
+    const fileUrl = req.file.path;
+
+    // download file as arraybuffer
+    const response = await axios.get(fileUrl, {
+      responseType: "arraybuffer",
+    });
+
+    // read excel
+    const workbook = xlsx.read(response.data, {
+      type: "buffer",
+    });
+
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+
+    const data = xlsx.utils.sheet_to_json(worksheet);
+
+    // insert into MongoDB
+    const result = await Interndata.insertMany(data);
+
+    res.status(200).json({
+      message: "Interns imported successfully",
+      count: result.length,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Import failed",
+    });
+  }
+};
 
 export const createJobPost = async (req, res) => {
   try {
@@ -412,7 +457,8 @@ export const uploadVideoLecture = async (req, res) => {
       title,
       description,
       duration,
-      category
+      category,
+      queryUrl
     } = req.body;
 
     if (!title || !duration || !category) {
@@ -440,6 +486,7 @@ export const uploadVideoLecture = async (req, res) => {
       duration,
       category,
       videoUrl,
+      queryUrl,
       thumbnailUrl,
     });
 

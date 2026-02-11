@@ -16,9 +16,11 @@ import {
   PlayCircle,
   ShoppingBag,
   UserCog,
-  Building
+  Building,
+  Download
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ImportInternPopup from "./components/ImportInternPopup";
 
 // Import admin pages
 import AdminUsers from "./AdminPages/AdminUsers";
@@ -45,7 +47,7 @@ const AdminDashboard = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile] = useState(false);
   const navigate = useNavigate();
-
+  const [openImportPopup, setOpenImportPopup] = useState(false);
 
 
   // ============================
@@ -67,7 +69,7 @@ const AdminDashboard = () => {
   // PAGE RENDERING
   // ============================
   const renderPage = () => {
-    switch (activePage) {  
+    switch (activePage) {
       case "users":
         return <AdminUsers />;
       case "classes":
@@ -85,7 +87,7 @@ const AdminDashboard = () => {
       case "hr_team":
         return <HRPage />;
       default:
-        case "Dashboard":
+      case "Dashboard":
         return <AdminDashboardHome />;
     }
   };
@@ -108,106 +110,103 @@ const AdminDashboard = () => {
   // ============================
   // SIDEBAR COMPONENT
   // ============================
-const Sidebar = () => {
-  return (
-   <div className="w-64 bg-[#DFE1FF] border-r border-white/10
+  const Sidebar = () => {
+    return (
+      <div className="w-64 bg-[#DFE1FF] border-r border-white/10
    text-gray-300 flex flex-col h-full
    rounded-tr-3xl rounded-br-3xl overflow-hidden">
 
 
 
-      {/* Sidebar Header */}
-      <div className="p-6">
-        <img
-          src="/GraphuraLogo.jpg"
-          alt="Graphura Logo"
-          className="h-10 w-auto object-contain"
-        />
-       <p className="text-xs text-gray-600 mt-1">
+        {/* Sidebar Header */}
+        <div className="p-6">
+          <img
+            src="/GraphuraLogo.jpg"
+            alt="Graphura Logo"
+            className="h-10 w-auto object-contain"
+          />
+          <p className="text-xs text-gray-600 mt-1">
 
-          Admin Management
-        </p>
-      </div>
+            Admin Management
+          </p>
+        </div>
 
-      {/* Menu Buttons */}
-      <nav className="flex-1 px-3 flex flex-col">
-        {/* MENU ITEMS */}
-        <div>
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.key}
-                className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2
-                transition-all duration-200 ${
-                  activePage === item.key
-                    ? "bg-[#5B35CD] text-white shadow-sm"
-                    : "hover:bg-[#5B35CD]/10 text-gray-600"
-                }`}
+        {/* Menu Buttons */}
+        <nav className="flex-1 px-3 flex flex-col">
+          {/* MENU ITEMS */}
+          <div>
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.key}
+                  className={`group w-full flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2
+                transition-all duration-200 ${activePage === item.key
+                      ? "bg-[#5B35CD] text-white shadow-sm"
+                      : "hover:bg-[#5B35CD]/10 text-gray-600"
+                    }`}
 
-                onClick={() => {
-                  setActivePage(item.key);
-                  if (isMobile) setMobileOpen(false);
-                }}
-              >
-                <span
-                  className={`p-2 rounded-lg transition-all duration-200 ${
-                    activePage === item.key
+                  onClick={() => {
+                    setActivePage(item.key);
+                    if (isMobile) setMobileOpen(false);
+                  }}
+                >
+                  <span
+                    className={`p-2 rounded-lg transition-all duration-200 ${activePage === item.key
                       ? "text-white"
                       : "text-gray-600 group-hover:text-[#5B35CD]"
-                  }`}
-                >
-                  <Icon size={18} />
-                </span>
+                      }`}
+                  >
+                    <Icon size={18} />
+                  </span>
 
-             <span
-               className={`font-medium transition-colors ${
-                 activePage === item.key
-                   ? "text-white"
-                   : "text-gray-600 group-hover:text-[#5B35CD]"
-               }`}
-             >
-               {item.label}
-             </span>
+                  <span
+                    className={`font-medium transition-colors ${activePage === item.key
+                      ? "text-white"
+                      : "text-gray-600 group-hover:text-[#5B35CD]"
+                      }`}
+                  >
+                    {item.label}
+                  </span>
 
-              </button>
-            );
-          })}
-        </div>
+                </button>
+              );
+            })}
+          </div>
 
-        {/* BOTTOM AXIOM STYLE CARD */}
-        <div className="pt-4 mt-4">
-          <div className="rounded-2xl p-4 bg-white shadow-sm">
-
+          {/* BOTTOM AXIOM STYLE CARD */}
+          <div className="pt-4 mt-4">
+            <div className="rounded-2xl p-4 bg-white shadow-sm">
 
 
-            <div className="space-y-2">
-              <button
-                onClick={handleBackToHome}
-                className="w-full flex items-center justify-center gap-2 bg-white text-gray-700
+
+              <div className="space-y-2">
+                <button
+                  onClick={handleBackToHome}
+                  className="w-full flex items-center justify-center gap-2 bg-white text-gray-700
                 rounded-xl py-2 text-sm font-medium hover:bg-gray-50 transition"
-              >
-                <Home size={16} />
-                Back to Home
-              </button>
+                >
+                  <Home size={16} />
+                  Back to Home
+                </button>
 
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 bg-[#6c63ff]
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-2 bg-[#6c63ff]
                 text-white rounded-xl py-2 text-sm font-medium hover:opacity-90 transition"
-              >
-                <LogOut size={16} />
-                Logout
-              </button>
+                >
+                  <LogOut size={16} />
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-      </nav>
+        </nav>
 
-    </div>
-  );
-};
+      </div>
+    );
+  };
 
 
 
@@ -233,49 +232,67 @@ const Sidebar = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden bg-[#f3f4f9] p-3">
 
-       {/* Top Bar */}
-      <header>
+        {/* Top Bar */}
+        <header>
 
-         <div className="flex items-center justify-between px-8 py-7">
-
-
-           {/* Left Section */}
-           <div className="flex items-center gap-4">
-             <button
-               onClick={() => setMobileOpen(true)}
-               className="md:hidden p-2 rounded-lg hover:bg-gray-200 transition"
-             >
-               <Menu size={20} />
-             </button>
-
-             <div>
-               <p className="text-sm text-gray-500 mb-1">
-                 Welcome back,{" "}
-                 <span className="font-medium text-gray-700">
-                   Admin 👋
-                 </span>
-               </p>
-
-               <h1 className="text-4xl font-extrabold text-gray-900 leading-tight">
-                 {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
-               </h1>
-
-               <p className="text-lg font-medium text-gray-600 mt-2">
-                 {formattedDate}
-               </p>
-             </div>
-           </div>
+          <div className="flex items-center justify-between px-8 py-7">
 
 
-           <div className="hidden md:flex items-center gap-3">
-             <span className="text-sm text-gray-600">
-               Logged in as <span className="font-semibold text-gray-900">Admin</span>
-             </span>
-             <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-           </div>
+            {/* Left Section */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setMobileOpen(true)}
+                className="md:hidden p-2 rounded-lg hover:bg-gray-200 transition"
+              >
+                <Menu size={20} />
+              </button>
 
-         </div>
-       </header>
+              <div>
+                <p className="text-sm text-gray-500 mb-1">
+                  Welcome back,{" "}
+                  <span className="font-medium text-gray-700">
+                    Admin 👋
+                  </span>
+                </p>
+
+                <h1 className="text-4xl font-extrabold text-gray-900 leading-tight">
+                  {menuItems.find((m) => m.key === activePage)?.label || "Dashboard"}
+                </h1>
+
+                <p className="text-lg font-medium text-gray-600 mt-2">
+                  {formattedDate}
+                </p>
+              </div>
+            </div>
+
+
+            <div className="hidden md:flex items-center gap-4">
+
+              {/* IMPORT BUTTON */}
+              <button
+                onClick={() => setOpenImportPopup(true)}
+                className="flex items-center gap-2 px-4 py-3
+  bg-gradient-to-r from-[#5B35CD] to-[#7C5CFF]
+  text-white rounded-2xl cursor-pointer
+  shadow-md hover:shadow-lg
+  hover:scale-[1.03]
+  transition-all duration-200
+  text-sm font-semibold"
+              >
+                <Download size={18} />
+                Import Interns
+              </button>
+
+              <span className="text-sm text-gray-600">
+                Logged in as <span className="font-semibold text-gray-900">Admin</span>
+              </span>
+
+              <span className="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+
+            </div>
+
+          </div>
+        </header>
 
 
 
@@ -287,6 +304,10 @@ const Sidebar = () => {
           </div>
         </main>
       </div>
+      <ImportInternPopup
+        isOpen={openImportPopup}
+        onClose={() => setOpenImportPopup(false)}
+      />
     </div>
   );
 };

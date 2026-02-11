@@ -41,7 +41,8 @@ const AdminVideoLectures = () => {
     duration: '',
     category: '',
     videoFile: null,
-    thumbnailFile: null
+    thumbnailFile: null,
+    queryUrl: ""
   });
   const [editingVideo, setEditingVideo] = useState(null);
   const [stats, setStats] = useState({
@@ -93,7 +94,7 @@ const AdminVideoLectures = () => {
       const res = await axios.get("/api/admin/videos", {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
+
       const normalized = (res.data.videos || []).map(video => ({
         ...video,
         id: video._id,
@@ -103,7 +104,7 @@ const AdminVideoLectures = () => {
           day: 'numeric'
         })
       }));
-      
+
       setVideos(normalized);
       setFilteredVideos(normalized);
       updateStats(normalized);
@@ -119,7 +120,7 @@ const AdminVideoLectures = () => {
   // ===============================
   const updateStats = (videosList) => {
     const categoryCount = {};
-    
+
     videosList.forEach(video => {
       categoryCount[video.category] = (categoryCount[video.category] || 0) + 1;
     });
@@ -127,7 +128,7 @@ const AdminVideoLectures = () => {
     // Count recent uploads (last 7 days)
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
-    const recentUploads = videosList.filter(video => 
+    const recentUploads = videosList.filter(video =>
       new Date(video.createdAt) > weekAgo
     ).length;
 
@@ -163,7 +164,8 @@ const AdminVideoLectures = () => {
       formData.append('description', newVideo.description);
       formData.append('duration', newVideo.duration);
       formData.append('category', newVideo.category);
-      
+      formData.append('queryUrl', newVideo.queryUrl);
+
       if (newVideo.videoFile) formData.append('video', newVideo.videoFile);
       if (newVideo.thumbnailFile) formData.append('thumbnail', newVideo.thumbnailFile);
 
@@ -214,7 +216,8 @@ const AdminVideoLectures = () => {
       formData.append('description', editingVideo.description);
       formData.append('duration', editingVideo.duration);
       formData.append('category', editingVideo.category);
-      
+      formData.append('queryUrl', editingVideo.queryUrl);
+
       if (editingVideo.videoFile) formData.append('video', editingVideo.videoFile);
       if (editingVideo.thumbnailFile) formData.append('thumbnail', editingVideo.thumbnailFile);
 
@@ -244,13 +247,13 @@ const AdminVideoLectures = () => {
       setVideos(prev => prev.map(video =>
         video.id === editingVideo.id ? updatedVideo : video
       ));
-  setFilteredVideos(prev => prev.map(video =>
-    video.id === editingVideo.id ? updatedVideo : video
-  ));
+      setFilteredVideos(prev => prev.map(video =>
+        video.id === editingVideo.id ? updatedVideo : video
+      ));
 
-  setCurrentVideo(prev =>
-    prev && prev.id === updatedVideo.id ? updatedVideo : prev
-  );
+      setCurrentVideo(prev =>
+        prev && prev.id === updatedVideo.id ? updatedVideo : prev
+      );
       setEditDialog(false);
       setEditingVideo(null);
       alert('Video updated successfully!');
@@ -339,7 +342,8 @@ const AdminVideoLectures = () => {
       duration: '',
       category: '',
       videoFile: null,
-      thumbnailFile: null
+      thumbnailFile: null,
+      queryUrl: ""
     });
   };
 
@@ -511,7 +515,7 @@ const AdminVideoLectures = () => {
               {filteredVideos.map((video) => {
                 const categoryInfo = getCategoryInfo(video.category);
                 const CategoryIcon = categoryInfo.icon;
-                
+
                 return (
                   <div key={video.id} className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl border transition-all duration-500 hover:-translate-y-2 overflow-hidden border-gray-200">
                     {/* Thumbnail Section */}
@@ -527,7 +531,7 @@ const AdminVideoLectures = () => {
                           <FileVideo className="w-16 h-16 text-white opacity-80" />
                         </div>
                       )}
-                      
+
                       {/* Category Badge */}
                       <div className="absolute top-4 left-4">
                         <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${categoryInfo.bgColor} bg-opacity-90 ${categoryInfo.textColor} text-xs font-semibold shadow-lg`}>
@@ -535,16 +539,16 @@ const AdminVideoLectures = () => {
                           <span>{categoryInfo.label}</span>
                         </div>
                       </div>
-                      
+
                       {/* Duration Badge */}
                       <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1.5 rounded-lg text-xs font-medium flex items-center space-x-1">
                         <Clock className="h-3 w-3" />
                         <span>{video.duration}</span>
                       </div>
-                      
+
                       {/* Play Overlay */}
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                        <button 
+                        <button
                           onClick={() => openPreview(video)}
                           className="bg-white/90 hover:bg-white rounded-full p-4 transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-lg hover:shadow-xl"
                         >
@@ -552,27 +556,27 @@ const AdminVideoLectures = () => {
                         </button>
                       </div>
                     </div>
-                    
+
                     <div className="p-6">
                       {/* Title */}
                       <h3 className="text-xl font-bold text-gray-900 mb-3 leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
                         {video.title}
                       </h3>
-                      
+
                       {/* Description */}
                       {video.description && (
                         <p className="text-gray-600 text-sm mb-4 line-clamp-2 leading-relaxed">
                           {video.description}
                         </p>
                       )}
-                      
+
                       {/* Date */}
                       <div className="flex items-center justify-between text-sm text-gray-500">
                         <div className="flex items-center space-x-1">
                           <Calendar className="h-4 w-4" />
                           <span>{video.formattedDate}</span>
                         </div>
-                        <button 
+                        <button
                           onClick={() => openPreview(video)}
                           className="flex items-center space-x-1 text-blue-600 hover:text-blue-700 transition-colors"
                         >
@@ -581,7 +585,7 @@ const AdminVideoLectures = () => {
                         </button>
                       </div>
                     </div>
-                    
+
                     {/* Admin Actions */}
                     <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex gap-2">
                       <button
@@ -657,8 +661,8 @@ const AdminVideoLectures = () => {
                           type="button"
                           onClick={() => setNewVideo(prev => ({ ...prev, category: key }))}
                           className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${newVideo.category === key
-                              ? `${category.bgColor} ${category.borderColor} border-opacity-100 ring-2 ring-offset-2 ${category.textColor.replace('text-', 'ring-')}`
-                              : 'border-gray-200 hover:border-gray-300'
+                            ? `${category.bgColor} ${category.borderColor} border-opacity-100 ring-2 ring-offset-2 ${category.textColor.replace('text-', 'ring-')}`
+                            : 'border-gray-200 hover:border-gray-300'
                             }`}
                         >
                           <div className="flex items-center gap-3">
@@ -722,6 +726,22 @@ const AdminVideoLectures = () => {
                       {newVideo.videoFile ? newVideo.videoFile.name : 'Click to upload video file'}
                       <p className="text-xs text-gray-500 mt-2">MP4, MOV, AVI, etc. (Max 100MB)</p>
                     </label>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-3">
+                      Query Form URL (Google Form Link)
+                    </label>
+
+                    <input
+                      type="url"
+                      value={newVideo.queryUrl}
+                      onChange={(e) =>
+                        setNewVideo(prev => ({ ...prev, queryUrl: e.target.value }))
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl
+    focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="https://forms.google.com/..."
+                    />
                   </div>
 
                   <div>
@@ -822,8 +842,8 @@ const AdminVideoLectures = () => {
                           type="button"
                           onClick={() => setEditingVideo(prev => ({ ...prev, category: key }))}
                           className={`p-4 rounded-xl border-2 transition-all duration-300 text-left ${editingVideo.category === key
-                              ? `${category.bgColor} ${category.borderColor} border-opacity-100 ring-2 ring-offset-2 ${category.textColor.replace('text-', 'ring-')}`
-                              : 'border-gray-200 hover:border-gray-300'
+                            ? `${category.bgColor} ${category.borderColor} border-opacity-100 ring-2 ring-offset-2 ${category.textColor.replace('text-', 'ring-')}`
+                            : 'border-gray-200 hover:border-gray-300'
                             }`}
                         >
                           <div className="flex items-center gap-3">
@@ -866,6 +886,22 @@ const AdminVideoLectures = () => {
                     disabled={editing}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     placeholder="15:30"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Query Form URL
+                  </label>
+
+                  <input
+                    type="url"
+                    value={editingVideo.queryUrl || ""}
+                    onChange={(e) =>
+                      setEditingVideo(prev => ({ ...prev, queryUrl: e.target.value }))
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl
+    focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    placeholder="https://forms.google.com/..."
                   />
                 </div>
 
@@ -999,7 +1035,7 @@ const AdminVideoLectures = () => {
                   >
                     Your browser does not support the video tag.
                   </video>
-                  
+
                   {!playing && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                       <button
@@ -1015,20 +1051,20 @@ const AdminVideoLectures = () => {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-2xl font-bold text-gray-900 mb-2">{currentVideo.title}</h3>
-                   {/* Description */}
-                   {currentVideo?.description && (
-                     <div className="mt-8">
-                       <h4 className="text-lg font-semibold text-gray-900 mb-3">
-                         Description
-                       </h4>
+                    {/* Description */}
+                    {currentVideo?.description && (
+                      <div className="mt-8">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-3">
+                          Description
+                        </h4>
 
-                       <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-6 shadow-sm max-h-[45vh] overflow-y-auto">
-                         <p className="text-gray-700 leading-relaxed whitespace-pre-line break-words text-[15px]">
-                           {currentVideo.description}
-                         </p>
-                       </div>
-                     </div>
-                   )}
+                        <div className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-6 shadow-sm max-h-[45vh] overflow-y-auto">
+                          <p className="text-gray-700 leading-relaxed whitespace-pre-line break-words text-[15px]">
+                            {currentVideo.description}
+                          </p>
+                        </div>
+                      </div>
+                    )}
 
 
                   </div>

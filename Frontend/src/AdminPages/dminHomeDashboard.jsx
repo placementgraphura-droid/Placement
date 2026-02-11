@@ -20,6 +20,7 @@ import {
   RadialBar,
   ComposedChart
 } from "recharts";
+import ImportInternPopup from "../components/ImportInternPopup";
 import {
   Users,
   Briefcase,
@@ -43,6 +44,7 @@ const AdminDashboardHome = () => {
     mentors: 0,
     hr: 0,
   });
+  const [openImportPopup, setOpenImportPopup] = useState(false);
   const [growthRate] = useState({
     interns: 12.5,
     jobs: 8.2,

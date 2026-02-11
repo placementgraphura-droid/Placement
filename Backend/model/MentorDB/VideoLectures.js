@@ -22,7 +22,10 @@ const videoLectureSchema = new mongoose.Schema({
     required: true, // Video Cloudinary URL
   },
 
-
+  queryUrl: {
+    type: String,
+  },
+  
   duration: {
     type: String, // example: "15:32"
     default: "",

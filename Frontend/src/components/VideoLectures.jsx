@@ -4,7 +4,6 @@ import axios from 'axios';
 import { GraduationCap, Sparkles, CheckCircle, Play, Clock, Calendar, User, BookOpen, ArrowRight, Lock } from 'lucide-react';
 
 const VideoLectures = () => {
-  const QUERY_FORM_URL = "https://forms.gle/GEPsqUh1QUV7VJco6";
   const [videos, setVideos] = useState([]);
   const [planInfo, setPlanInfo] = useState(null);
   const [loadingPlan, setLoadingPlan] = useState(true);
@@ -101,13 +100,14 @@ const VideoLectures = () => {
   };
 
   const handleQueryClick = () => {
-    if (!selectedVideo) return;
+    if (!selectedVideo?.queryUrl) return;
 
-    // OPTIONAL: add video title as query param (for prefilled form)
-    const url = `${QUERY_FORM_URL}?videoTitle=${encodeURIComponent(selectedVideo.title)}`;
+    // optional: add video title param
+    const url = `${selectedVideo.queryUrl}?videoTitle=${encodeURIComponent(selectedVideo.title)}`;
 
     window.open(url, "_blank");
   };
+
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -561,12 +561,14 @@ const VideoLectures = () => {
             <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200">
 
               {/* Query Button */}
-              <button
-                onClick={handleQueryClick}
-                className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-              >
-                Ask Query
-              </button>
+              {selectedVideo?.queryUrl && (
+                <button
+                  onClick={handleQueryClick}
+                  className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Ask Query
+                </button>
+              )}
 
               {/* Close Button */}
               <button
