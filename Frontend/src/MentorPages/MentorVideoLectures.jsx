@@ -563,26 +563,30 @@ const MentorVideoLectures = () => {
           </div>
         )}
 
-        {/* Video Preview Dialog */}
-        {previewDialog && currentVideo && (
-          <div className="fixed inset-0 backdrop-blur-md bg-black/80 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden transform animate-scale-in">
-              <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-blue-50 to-purple-50">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">{currentVideo.title}</h2>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryInfo(currentVideo.category).color}`}>
-                      {getCategoryInfo(currentVideo.category).label}
-                    </span>
-                  </div>
-                </div>
-                <button
-                  onClick={closePreview}
-                  className="text-gray-400 hover:text-gray-600 transition duration-200 p-2 hover:bg-white rounded-lg"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
+         {/* Preview Dialog */}
+               {previewDialog && currentVideo && (
+                 <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                   <div className="bg-white rounded-3xl shadow-2xl w-full max-w-6xl max-h-[95vh] overflow-y-auto">
+
+                     <div className="px-8 py-6 border-b border-gray-200/50 bg-gradient-to-r from-gray-800 to-gray-900 rounded-t-3xl">
+                       <div className="flex items-center justify-between">
+                         <div className="flex items-center gap-3">
+                           <div className="p-2 bg-white/20 rounded-lg">
+                             <Play className="w-6 h-6 text-white" />
+                           </div>
+                           <div>
+                             <h2 className="text-2xl font-bold text-white">Preview Video</h2>
+                             <p className="text-gray-300 text-sm">{currentVideo.title}</p>
+                           </div>
+                         </div>
+                         <button
+                           onClick={closePreview}
+                           className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                         >
+                           <X className="w-6 h-6 text-white" />
+                         </button>
+                       </div>
+                     </div>
               
               <div className="p-6">
                 <div className="relative bg-black rounded-xl overflow-hidden group">
@@ -792,6 +796,7 @@ const MentorVideoLectures = () => {
                 >
                   Cancel
                 </button>
+
                 <button
                   onClick={handleUpdate}
                   disabled={!isFormValid(editingVideo) || editing}
@@ -800,9 +805,10 @@ const MentorVideoLectures = () => {
                   {editing && (
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                   )}
-                  <span>{editing ? 'Updating...' : 'Update Video'}</span>
+                  <span>{editing ? "Updating..." : "Update Video"}</span>
                 </button>
               </div>
+
             </div>
           </div>
         )}
