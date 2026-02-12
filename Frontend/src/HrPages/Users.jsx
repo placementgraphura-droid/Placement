@@ -245,7 +245,7 @@ const InternsPage = () => {
           planColor: "bg-gradient-to-r from-blue-500 to-teal-500 text-white",
           isCombo
         };
-      case "CV_BUILDING":
+      case "Resume_BUILDING":
       case "INTERVIEW_PREP":
         return {
           planCategory,
@@ -592,7 +592,7 @@ const InternsPage = () => {
               <option value="NONE">Basic</option>
               <option value="PREMIUM">Premium Combo</option>
               <option value="COMBO">COMBO Course</option>
-              <option value="CV_BUILDING">CV Building</option>
+              <option value="RESUME_BUILDING">Resume Building</option>
               <option value="INTERVIEW_PREP">Interview Prep</option>
               <option value="SILVER">Silver Package</option>
               <option value="BLUE">Blue Package</option>
@@ -618,7 +618,7 @@ const InternsPage = () => {
                 className="group bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden"
               >
                 {/* Gradient Header */}
-                <div className="h-2 bg-gradient-to-r from-[#09435F] via-[#2E84AE] to-[#CDE7F4]"></div>
+                <div className="h-2 bg-gradient-to-r from-[#4c00b0] via-[#7600bc] to-[#b100cd]"></div>
                 
                 <div className="p-6">
                   {/* Intern Header */}
@@ -626,7 +626,7 @@ const InternsPage = () => {
                     <div className="flex items-center space-x-4">
                       <div className="relative">
                         <img
-                          src={intern.profileImage || `https://ui-avatars.com/api/?name=${intern.name}&background=2E84AE&color=fff&bold=true`}
+                          src={intern.profileImage || `https://ui-avatars.com/api/?name=${intern.name}&background=4c00b0&color=fff&bold=true`}
                           alt={intern.name}
                           className="w-20 h-20 rounded-2xl border-4 border-white shadow-lg"
                         />
@@ -687,15 +687,15 @@ const InternsPage = () => {
                   {/* Quick Info */}
                   <div className="space-y-3 mb-4">
                     <div className="flex items-center text-gray-700">
-                      <Mail size={14} className="mr-3 text-[#2E84AE]" />
+                      <Mail size={14} className="mr-3 text-[#7600bc]" />
                       <span className="text-sm truncate">{intern.email}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
-                      <GraduationCap size={14} className="mr-3 text-[#2E84AE]" />
+                      <GraduationCap size={14} className="mr-3 text-[#7600bc]" />
                       <span className="text-sm">{intern.course} • Year {intern.yearOfStudy}</span>
                     </div>
                     <div className="flex items-center text-gray-700">
-                      <Briefcase size={14} className="mr-3 text-[#2E84AE]" />
+                      <Briefcase size={14} className="mr-3 text-[#7600bc]" />
                       <span className="text-sm">{intern.domain}</span>
                     </div>
                   </div>
@@ -755,16 +755,16 @@ const InternsPage = () => {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => openFeedbackModal(intern)}
-                        className="p-2.5 bg-gradient-to-r from-[#2E84AE] to-[#09435F] text-white rounded-xl hover:shadow-lg transition-all duration-300"
+                        className="p-2.5 bg-gradient-to-r from-[#34117E] to-[#491AB1] text-white rounded-xl hover:shadow-lg transition-all duration-300"
                         title="Give Feedback"
                       >
                         <ThumbsUp size={18} />
                       </button>
                       <button
                         onClick={() => openProfileModal(intern)}
-                        className="flex items-center space-x-2 px-4 py-2.5 bg-white border border-gray-200 text-[#2E84AE] rounded-xl hover:bg-gray-50 hover:shadow-lg transition-all duration-300"
+                        className="flex items-center space-x-2 px-4 py-2.5 bg-white border border-gray-200 text-[#000000] rounded-xl hover:bg-gray-50 hover:shadow-lg transition-all duration-300"
                       >
-                        <Eye size={16} />
+                        <Eye size={19} />
                         <span className="text-sm font-medium">View</span>
                       </button>
                     </div>

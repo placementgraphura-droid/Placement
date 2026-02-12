@@ -39,8 +39,8 @@ const MentorVideoLectures = () => {
 
   // Category definitions with colors and icons
   const categories = {
-    'CV_BUILDING': {
-      label: 'CV Building',
+    'RESUME_BUILDING': {
+      label: 'Resume Building',
       color: 'bg-blue-100 text-blue-800 border-blue-200',
       icon: FileText,
       description: 'Resume creation and enhancement tips'

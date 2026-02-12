@@ -352,8 +352,8 @@ const MentorClasses = () => {
   // ===============================
   const getCategoryDetails = (category) => {
     const categories = {
-      'CV_BUILDING': {
-        label: 'CV Building',
+      'RESUME_BUILDING': {
+        label: 'Resume Building',
         icon: Briefcase,
         color: 'bg-gradient-to-r from-blue-500 to-cyan-500',
         bgColor: 'bg-blue-50',
@@ -435,9 +435,9 @@ const MentorClasses = () => {
   // CATEGORY OPTIONS
   // ===============================
   const categoryOptions = [
-    { value: 'CV_BUILDING', label: 'CV Building Masterclass', description: 'Resume writing & portfolio guidance' },
+    { value: 'RESUME_BUILDING', label: 'Resume Building Masterclass', description: 'Resume writing & portfolio guidance' },
     { value: 'INTERVIEW_PREP', label: 'Interview Preparation', description: 'Mock interviews & Q&A sessions' },
-    { value: 'COMBO', label: 'Combo Session', description: 'CV building + Interview prep' }
+    { value: 'COMBO', label: 'Combo Session', description: 'Resume building + Interview prep' }
   ];
 
   const { live, upcoming, past } = categorizeClasses();

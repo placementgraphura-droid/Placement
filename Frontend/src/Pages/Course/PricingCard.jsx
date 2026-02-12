@@ -56,7 +56,7 @@ const PricingCard = () => {
             <ul className="space-y-3">
               <li>✓ 5 Modules</li>
               <li>✓ ATS-Friendly Templates</li>
-              <li>✓ Live CV Workshops</li>
+              <li>✓ Live Resume Workshops</li>
               <li>✓ Personalized Feedback</li>
             </ul>
           </div>

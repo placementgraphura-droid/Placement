@@ -365,8 +365,8 @@ const AdminClasses = () => {
   // ===============================
   const getCategoryDetails = (category) => {
     const categories = {
-      'CV_BUILDING': {
-        label: 'CV Building',
+      'Resume_BUILDING': {
+        label: 'Resume Building',
         icon: Briefcase,
         color: 'bg-gradient-to-r from-blue-500 to-cyan-500',
         bgColor: 'bg-blue-50',
@@ -409,9 +409,9 @@ const AdminClasses = () => {
   // CATEGORY OPTIONS
   // ===============================
   const categoryOptions = [
-    { value: 'CV_BUILDING', label: 'CV Building Masterclass', description: 'Resume writing & portfolio guidance' },
+    { value: 'Resume_BUILDING', label: 'Resume Building Masterclass', description: 'Resume writing & portfolio guidance' },
     { value: 'INTERVIEW_PREP', label: 'Interview Preparation', description: 'Mock interviews & Q&A sessions' },
-    { value: 'COMBO', label: 'Combo Session', description: 'CV building + Interview prep' }
+    { value: 'COMBO', label: 'Combo Session', description: 'Resume building + Interview prep' }
   ];
 
   // ===============================
@@ -494,7 +494,7 @@ const AdminClasses = () => {
     upcoming: classes.filter(c => getClassStatus(c) === 'upcoming').length,
     past: classes.filter(c => getClassStatus(c) === 'past').length,
     byCategory: {
-      CV_BUILDING: classes.filter(c => c.category === 'CV_BUILDING').length,
+      Resume_BUILDING: classes.filter(c => c.category === 'Resume_BUILDING').length,
       INTERVIEW_PREP: classes.filter(c => c.category === 'INTERVIEW_PREP').length,
       COMBO: classes.filter(c => c.category === 'COMBO').length
     }
@@ -624,7 +624,7 @@ const AdminClasses = () => {
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="all"> All Categories</option>
-                <option value="CV_BUILDING"> CV Building</option>
+                <option value="Resume_BUILDING"> Resume Building</option>
                 <option value="INTERVIEW_PREP"> Interview Prep</option>
                 <option value="COMBO"> Combo Session</option>
               </select>

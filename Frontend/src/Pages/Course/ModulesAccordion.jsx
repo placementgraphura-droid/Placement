@@ -4,12 +4,12 @@ import React, { useState } from "react";
 const MODULES = [
   {
     id: 1,
-    title: "The Architecture of a World-Class CV That Impresses in 6 Seconds",
+    title: "The Architecture of a World-Class Resume That Impresses in 6 Seconds",
     meta: "Module 1 • Around 1 hour to complete",
     summary:
-      "Understand how recruiters scan CVs and what makes a resume instantly impressive.",
+      "Understand how recruiters scan Resume and what makes a resume instantly impressive.",
     details:
-      "Master the proven structure behind world-class CVs. Learn recruiter psychology, visual hierarchy, formatting, alignment, and layout techniques to create a clean, professional, and impossible-to-ignore CV.",
+      "Master the proven structure behind world-class Resume. Learn recruiter psychology, visual hierarchy, formatting, alignment, and layout techniques to create a clean, professional, and impossible-to-ignore Resume.",
   },
   {
     id: 2,
@@ -27,25 +27,25 @@ const MODULES = [
     summary:
       "Write experience bullets that show impact, not just responsibilities.",
     details:
-      "Learn how to craft result-driven bullet points, highlight leadership and skills, and align your experience with job descriptions to create a sharp, balanced, and memorable CV.",
+      "Learn how to craft result-driven bullet points, highlight leadership and skills, and align your experience with job descriptions to create a sharp, balanced, and memorable Resume.",
   },
   {
     id: 4,
-    title: "CV Mastery Live: From Draft to Recruiter-Ready Resume",
+    title: "Resume Mastery Live: From Draft to Recruiter-Ready Resume",
     meta: "Module 4 • Around 1 hour to complete",
     summary:
-      "Refine and elevate your CV to recruiter standards.",
+      "Refine and elevate your Resume to recruiter standards.",
     details:
-      "Get your CV polished live—covering formatting, bullet strength, clarity, keyword alignment, and visual hierarchy—so it reads and looks like a top recruiter’s shortlist resume.",
+      "Get your Resume polished live—covering formatting, bullet strength, clarity, keyword alignment, and visual hierarchy—so it reads and looks like a top recruiter’s shortlist resume.",
   },
   {
     id: 5,
-    title: "Your Signature CV: Polished, Professional & Placement-Ready",
+    title: "Your Signature Resume: Polished, Professional & Placement-Ready",
     meta: "Module 5 • Around 1 hour to complete",
     summary:
-      "Walk away with your final, submission-ready CV.",
+      "Walk away with your final, submission-ready Resume.",
     details:
-      "Receive your fully edited, formatted, and finalized CV—perfected to represent your personal brand and ready to submit for internships, placements, and job applications.",
+      "Receive your fully edited, formatted, and finalized Resume—perfected to represent your personal brand and ready to submit for internships, placements, and job applications.",
   },
 ];
 

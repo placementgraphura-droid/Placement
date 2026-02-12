@@ -59,17 +59,25 @@ const Dashboard = () => {
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 rounded-lg bg-white shadow border border-[#7EC9E8] hover:shadow-lg transition-all duration-300"
+          className="p-2.5 rounded-xl bg-white/80 backdrop-blur-md
+          border border-white/40 shadow-md hover:shadow-lg
+          active:scale-95 transition-all duration-300"
+
         >
-          <div className={`w-6 h-0.5 bg-[#0A2E40] transition-all duration-300 ${
-            mobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''
-          }`}></div>
-          <div className={`w-6 h-0.5 bg-[#0A2E40] my-1.5 transition-all duration-300 ${
-            mobileMenuOpen ? 'opacity-0' : 'opacity-100'
-          }`}></div>
-          <div className={`w-6 h-0.5 bg-[#0A2E40] transition-all duration-300 ${
-            mobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''
-          }`}></div>
+          <div className="relative w-6 h-5">
+            <span className={`absolute left-0 top-0 w-full h-[2px] bg-[#0A2E40] rounded transition-all duration-300 ${
+              mobileMenuOpen ? 'rotate-45 top-2' : ''
+            }`} />
+
+            <span className={`absolute left-0 top-2 w-full h-[2px] bg-[#0A2E40] rounded transition-all duration-300 ${
+              mobileMenuOpen ? 'opacity-0' : 'opacity-100'
+            }`} />
+
+            <span className={`absolute left-0 bottom-0 w-full h-[2px] bg-[#0A2E40] rounded transition-all duration-300 ${
+              mobileMenuOpen ? '-rotate-45 bottom-2' : ''
+            }`} />
+          </div>
+
         </button>
       </div>
 

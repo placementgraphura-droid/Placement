@@ -3,14 +3,14 @@ import React from "react";
 const testimonials = [
   {
     title: "Landed My Dream Job at Myntra",
-    text: "After refining my CV through Graphura’s CV Masterclass, I was directly contacted by HR. I cleared the interview and secured my dream role within just 10 days. Truly grateful to the Graphura team!",
+    text: "After refining my Resume through Graphura’s Resume Masterclass, I was directly contacted by HR. I cleared the interview and secured my dream role within just 10 days. Truly grateful to the Graphura team!",
     name: "Karan Bhat",
     img: "/9.webp",
     role: "Graphic Designer",
   },
   {
     title: "From Learning to Getting Hired",
-    text: "Graphura helped me structure my profile and prepare with confidence. The mentorship and CV review made a huge impact, and I landed my role much faster than I expected.",
+    text: "Graphura helped me structure my profile and prepare with confidence. The mentorship and Resume review made a huge impact, and I landed my role much faster than I expected.",
     name: "Neeraj Singh",
     img: "/6.webp",
     role: "Marketing Executive",

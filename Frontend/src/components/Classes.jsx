@@ -54,7 +54,7 @@ const Classes = () => {
 
   // Category icons mapping
   const categoryIcons = {
-    'CV_BUILDING': { icon: Briefcase, color: 'bg-blue-500', label: 'CV Building' },
+    'Resume_BUILDING': { icon: Briefcase, color: 'bg-blue-500', label: 'Resume Building' },
     'INTERVIEW_PREP': { icon: Mic, color: 'bg-green-500', label: 'Interview Prep' },
     'COMBO': { icon: Award, color: 'bg-purple-500', label: 'Combo Session' },
     'default': { icon: GraduationCap, color: 'bg-gray-500', label: 'General' }
@@ -78,12 +78,12 @@ const Classes = () => {
 
           let allowed = [];
 
-          if (courseType === "CV_BUILDING") {
-            allowed = ["CV_BUILDING"];
+          if (courseType === "Resume_BUILDING") {
+            allowed = ["Resume_BUILDING"];
           } else if (courseType === "INTERVIEW_PREP") {
             allowed = ["INTERVIEW_PREP"];
           } else if (courseType === "COMBO") {
-            allowed = ["CV_BUILDING", "INTERVIEW_PREP", "COMBO"];
+            allowed = ["Resume_BUILDING", "INTERVIEW_PREP", "COMBO"];
           }
 
           setAllowedCategories(allowed);
@@ -315,7 +315,7 @@ const Classes = () => {
   // Get course type display name
   const getCourseTypeDisplay = (type) => {
     const types = {
-      'CV_BUILDING': 'CV Building',
+      'Resume_BUILDING': 'Resume Building',
       'INTERVIEW_PREP': 'Interview Preparation',
       'COMBO': 'Combo Package'
     };
@@ -370,7 +370,7 @@ const Classes = () => {
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">CV Building Masterclasses</span>
+                <span className="text-gray-700">Resume Building Masterclasses</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />

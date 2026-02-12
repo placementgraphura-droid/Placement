@@ -1,4 +1,5 @@
 // components/Sidebar.js
+// components/Sidebar.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { createPortal } from "react-dom";
@@ -240,7 +241,13 @@ const Sidebar = ({ activePage, setActivePage, collapsed, setCollapsed, onMobileI
     const action = getPurchaseAction(latestPurchase);
 
     return (
-      <div className="px-3 py-3 border-y border-[#0E5C7E]/50 bg-gradient-to-r from-[#0E5C7E]/30 to-[#4FB0DA]/20 backdrop-blur-sm">
+      <div className="mx-3 my-3 px-4 py-4
+        rounded-2xl
+        bg-white/40
+        backdrop-blur-xl
+        border border-white/30
+        shadow-lg">
+
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -248,13 +255,14 @@ const Sidebar = ({ activePage, setActivePage, collapsed, setCollapsed, onMobileI
               <Package size={14} className="text-white" />
             </div>
             <div>
-              <h3 className="text-white font-bold text-xs">Latest Purchase</h3>
-              <p className="text-[#EAF6FC]/80 text-[10px]">{timeAgo}</p>
+              <h3 className="text-gray-800 font-bold text-xs">Latest Purchase</h3>
+              <p className="text-gray-500 text-[10px]">{timeAgo}</p>
             </div>
           </div>
           <div className="flex items-center gap-1">
             {isRecent && (
-              <span className="text-[10px] px-1.5 py-0.5 bg-green-500/20 text-green-300 rounded-full border border-green-500/30 animate-pulse">
+              <span className="text-[10px] px-1.5 py-0.5 bg-green-100 text-green-600
+ rounded-full border border-green-500/30 animate-pulse">
                 NEW
               </span>
             )}

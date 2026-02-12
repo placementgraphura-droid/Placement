@@ -61,7 +61,7 @@ const Hero = () => {
             >
               Master Your{" "}
               <span className="relative">
-                <span className="relative z-10">CV Unlock</span>
+                <span className="relative z-10">Resume Unlock</span>
                 <motion.span
                   className="absolute bottom-2 left-0 w-full h-3 bg-white/30 -z-0"
                   initial={{ scaleX: 0 }}
@@ -177,7 +177,7 @@ const Hero = () => {
               >
                 <img
                   src="https://storage.googleapis.com/ureify-strapi-assets/resume_building_for_freshers_9bbad96764/resume_building_for_freshers_9bbad96764.webp"
-                  alt="Professional CV Design"
+                  alt="Professional Resume Design"
                   className="w-full max-w-2xl mx-auto rounded-2xl shadow-2xl border-8 border-white/20"
                 />
               </motion.div>

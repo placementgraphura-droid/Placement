@@ -93,7 +93,7 @@ const AdminPayments = () => {
 
   const courseTypeOptions = [
     { value: "all", label: "All Courses" },
-    { value: "CV_BUILDING", label: "CV Building" },
+    { value: "Resume_BUILDING", label: "Resume Building" },
     { value: "INTERVIEW_PREP", label: "Interview Prep" },
     { value: "COMBO", label: "Combo" },
   ];

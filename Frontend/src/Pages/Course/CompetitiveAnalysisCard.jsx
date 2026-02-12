@@ -23,20 +23,20 @@ const CompetitiveAnalysisCard = () => {
                 Ordinary Companies
               </th>
               <th className="w-1/2 border-b border-black pb-3 pl-4 font-semibold">
-                Graphura CV Mastery Program
+                Graphura Resume Mastery Program
               </th>
             </tr>
           </thead>
           <tbody className="align-top">
             <tr className="border-b border-black">
               <td className="py-4 pr-4 font-semibold text-black border-r border-black">
-                Live, Domain-Specific CV Guidance
+                Live, Domain-Specific Resume Guidance
               </td>
               <td className="py-4 px-4 text-black border-r border-black">
                 No domain-specific guidance (generic templates only)
               </td>
               <td className="py-4 pl-4 text-black">
-                Live sessions with domain-centric CV building (IT, HR, Finance,
+                Live sessions with domain-centric Resume building (IT, HR, Finance,
                 Core Engineering, Design, MBA, etc.)
               </td>
             </tr>
@@ -58,10 +58,10 @@ const CompetitiveAnalysisCard = () => {
                 Personalized Feedback
               </td>
               <td className="py-4 px-4 text-black border-r border-black">
-                No personalised feedback on CVs
+                No personalised feedback on Resume
               </td>
               <td className="py-4 pl-4 text-black">
-                Personalised CV review &amp; edits during live sessions
+                Personalised Resume review &amp; edits during live sessions
               </td>
             </tr>
 

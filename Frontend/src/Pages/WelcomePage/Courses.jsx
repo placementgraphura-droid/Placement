@@ -4,7 +4,7 @@ import React from "react";
 const courses = [
   {
     image: "/CV.png",
-    title: "CV Building",
+    title: "Resume Building",
     rating: "4.7",
     desc: "Essential skills to craft compelling resumes that stand out.",
     reviewed: "145+ students",
@@ -22,7 +22,7 @@ const courses = [
     image: "/Interview1.png",
     title: "Combo Package",
     rating: "4.6",
-    desc: "Comprehensive course covering CV building and interview preparation.",
+    desc: "Comprehensive course covering Resume building and interview preparation.",
     reviewed: "190+ students",
     links: "/courses",
   },

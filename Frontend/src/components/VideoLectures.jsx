@@ -33,12 +33,12 @@ const VideoLectures = () => {
           const courseType = lastCourse.courseType;
           let allowed = [];
 
-          if (courseType === "CV_BUILDING") {
-            allowed = ["CV_BUILDING"];
+          if (courseType === "RESUME_BUILDING") {
+            allowed = ["RESUME_BUILDING"];
           } else if (courseType === "INTERVIEW_PREP") {
             allowed = ["INTERVIEW_PREP"];
           } else if (courseType === "COMBO") {
-            allowed = ["CV_BUILDING", "INTERVIEW_PREP"];
+            allowed = ["RESUME_BUILDING", "INTERVIEW_PREP"];
           }
 
           setAllowedCategories(allowed);
@@ -131,7 +131,7 @@ const VideoLectures = () => {
 
   const getCategoryLabel = (category) => {
     const labels = {
-      'CV_BUILDING': 'CV Building',
+      'RESUME_BUILDING': 'Resume Building',
       'INTERVIEW_PREP': 'Interview Prep'
     };
     return labels[category] || category;
@@ -139,7 +139,7 @@ const VideoLectures = () => {
 
   const getCategoryColor = (category) => {
     const colors = {
-      'CV_BUILDING': 'bg-blue-100 text-blue-800 border-blue-200',
+      'RESUME_BUILDING': 'bg-blue-100 text-blue-800 border-blue-200',
       'INTERVIEW_PREP': 'bg-green-100 text-green-800 border-green-200'
     };
     return colors[category] || 'bg-gray-100 text-gray-800 border-gray-200';
@@ -195,7 +195,7 @@ const VideoLectures = () => {
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                <span className="text-gray-700">CV Building Masterclass</span>
+                <span className="text-gray-700">Resume Building Masterclass</span>
               </div>
               <div className="flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
