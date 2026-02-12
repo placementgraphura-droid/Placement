@@ -126,8 +126,9 @@ export const createJobPost = async (req, res) => {
 
 export const getAllJobPosts = async (req, res) => {
   try {
-    const jobs = await JobPost.find()
-      .sort({ createdAt: -1 });
+    const jobs = await JobPost.find({
+      isActive: true
+    }).sort({ createdAt: -1 });
 
     return res.json({
       success: true,
@@ -147,7 +148,10 @@ export const getAllJobPosts = async (req, res) => {
 
 export const getJobById = async (req, res) => {
   try {
-    const job = await JobPost.findById(req.params.id);
+    const job = await JobPost.findOne({
+      _id: req.params.id,
+      isActive: true
+    });
 
     if (!job) {
       return res.status(404).json({
@@ -319,7 +323,11 @@ export const exportApplicants = async (req, res) => {
     const format = req.query.format || "csv";
 
     // 🔎 Validate Job
-    const job = await JobPost.findById(jobId).lean();
+    const job = await JobPost.findOne({
+      _id: jobId,
+      isActive: true
+    }).lean();
+
     if (!job) {
       return res.status(404).json({
         success: false,

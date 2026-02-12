@@ -362,7 +362,10 @@ export const getRecentFeedback = async (req, res) => {
 
 export const getInternJobApplicationForm = async (req, res) => {
   try {
-    const job = await JobPost.findById(req.params.jobId);
+    const job = await JobPost.findOne({
+      _id: req.params.jobId,
+      isActive: true
+    });
 
     if (!job) {
       return res.status(404).json({
@@ -381,8 +384,8 @@ export const getInternJobApplicationForm = async (req, res) => {
 
     // Check if user has already applied
     const existingApplication = await JobApplication.findOne({
-      jobId: job._id,
-      userId: req.user.id
+      job: job?._id,
+      intern: req.user?.id
     });
 
     if (existingApplication) {
@@ -433,7 +436,10 @@ export const applyForJob = async (req, res) => {
     }
 
     // 2️⃣ Validate job
-    const job = await JobPost.findById(jobId);
+    const job = await JobPost.findOne({
+      _id: jobId,
+      isActive: true
+    });
     if (!job || job.status !== "Open" || !job.isActive) {
       return res.status(400).json({
         success: false,

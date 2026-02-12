@@ -575,11 +575,16 @@ export const deleteVideoLecture = async (req, res) => {
 
 export const getAllJobsAdmin = async (req, res) => {
   try {
-    const jobs = await JobPost.find()
+
+    const jobs = await JobPost.find({
+      isActive: true
+    });
+
     res.status(200).json({
       success: true,
       data: jobs,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -592,7 +597,10 @@ export const getAllJobsAdmin = async (req, res) => {
 
 export const getJobById = async (req, res) => {
   try {
-    const job = await JobPost.findById(req.params.id);
+    const job = await JobPost.findOne({
+      _id: req.params.id,
+      isActive: true
+    });
 
     if (!job) {
       return res.status(404).json({
@@ -620,8 +628,11 @@ export const deleteJobAdmin = async (req, res) => {
   try {
     const { jobId } = req.params;
 
-    await JobApplication.deleteMany({ job: jobId });
-    await JobPost.findByIdAndDelete(jobId);
+    await JobPost.findByIdAndUpdate(jobId, {
+      isActive: false,
+      status: "Closed"
+    });
+
 
     res.status(200).json({
       success: true,
@@ -643,7 +654,10 @@ export const exportApplicants = async (req, res) => {
     const format = req.query.format || "csv";
 
     // 🔎 Validate Job
-    const job = await JobPost.findById(jobId).lean();
+    const job = await JobPost.findOne({
+      _id: jobId,
+      isActive: true
+    }).lean();
     if (!job) {
       return res.status(404).json({
         success: false,
@@ -766,7 +780,10 @@ export const exportAllJobData = async (req, res) => {
   try {
     const { jobId } = req.params;
 
-    const job = await JobPost.findById(jobId).lean();
+    const job = await JobPost.findOne({
+      _id: jobId,
+      isActive: true
+    }).lean();
     const applications = await JobApplication.find({ job: jobId }).lean();
 
     if (!job) {
