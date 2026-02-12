@@ -406,8 +406,9 @@ const VideoLectures = () => {
             {filteredVideos.map((video) => (
               <div
                 key={video._id}
-                className="group bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300 overflow-hidden"
+                className="group bg-white rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full"
               >
+
                 {/* Thumbnail Container */}
                 <div className="relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                   <div className="aspect-video relative">
@@ -440,16 +441,20 @@ const VideoLectures = () => {
                 </div>
 
                 {/* Content */}
-                <div className="p-5">
+               <div className="p-5 flex flex-col flex-1">
+
                   <h3 className="font-bold text-gray-900 text-lg mb-3 group-hover:text-blue-600 transition-colors">
                     {video.title}
                   </h3>
 
-                  <p className="text-gray-600 text-sm mb-5 leading-relaxed">
-                    {video.description || 'No description available.'}
-                  </p>
+               <p className="text-gray-600 text-sm mb-5 leading-relaxed line-clamp-2">
+                 {video.description || 'No description available.'}
+               </p>
+
+
 
                   {/* Watch Button */}
+                <div className="mt-auto">
                   <button
                     onClick={() => handleWatch(video)}
                     className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all flex items-center justify-center gap-2 group/btn shadow-md hover:shadow-lg"
@@ -457,6 +462,8 @@ const VideoLectures = () => {
                     <span>Watch Lecture</span>
                     <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </button>
+                </div>
+
                 </div>
               </div>
             ))}
@@ -533,9 +540,10 @@ const VideoLectures = () => {
               <div className="space-y-5">
                 <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                   <h3 className="font-semibold text-gray-900 mb-2">Description</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    {selectedVideo.description || 'No description available.'}
-                  </p>
+                 <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                   {selectedVideo.description || 'No description available.'}
+                 </p>
+
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
