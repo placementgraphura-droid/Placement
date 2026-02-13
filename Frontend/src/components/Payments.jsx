@@ -106,18 +106,18 @@ const Payments = () => {
   const learningPlans = [
     {
       id: 'cv_building',
-      name: 'Resume Building Masterclass',
+      name: 'CV Building Masterclass',
       price: 499,
       originalPrice: 999,
       discountPercentage: 50,
       duration: 'Lifetime Access',
-      courseType: 'Resume_BUILDING',
+      courseType: 'CV_BUILDING',
       category: 'COURSE',
       totalSessions: 5,
       liveSessions: 2,
       recordedSessions: 3,
       features: [
-        'Professional Resume Template',
+        'Professional CV Template',
         'ATS Optimization Guide',
         "5 Modules",
         "Personalize Feedback",
@@ -162,7 +162,7 @@ const Payments = () => {
       liveSessions: 7,
       recordedSessions: 8,
       features: [
-        'Everything in Resume Building',
+        'Everything in CV Building',
         'Everything in Interview Prep',
         'Personal Career Roadmap',
         'Q&A Sessions',
@@ -214,7 +214,7 @@ const Payments = () => {
         setJobCredits(jobCredits || 0);
 
         const hasCVCourse = purchasedCourses?.some(course =>
-          course.courseType === 'Resume_BUILDING'
+          course.courseType === 'CV_BUILDING'
         );
         const hasInterviewCourse = purchasedCourses?.some(course =>
           course.courseType === 'INTERVIEW_PREP'
@@ -411,7 +411,7 @@ const Payments = () => {
   };
 
   const isCoursePurchased = (courseType) => {
-    if (courseType === 'RESUME_BUILDING') return learningAccess.hasCVCourse;
+    if (courseType === 'CV_BUILDING') return learningAccess.hasCVCourse;
     if (courseType === 'INTERVIEW_PREP') return learningAccess.hasInterviewCourse;
     if (courseType === 'COMBO') return learningAccess.hasCombo;
     return false;
@@ -479,7 +479,7 @@ const Payments = () => {
               <div>
                 <div className="flex items-center mb-2">
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-[#4FB0DA]/20 to-[#7EC9E8]/20 text-[#0E5C7E] border border-[#4FB0DA]/30">
-                    {latestCourse.courseDetails?.courseType === 'RESUME_BUILDING' ? 'Resume Building' :
+                    {latestCourse.courseDetails?.courseType === 'CV_BUILDING' ? 'CV Building' :
                      latestCourse.courseDetails?.courseType === 'INTERVIEW_PREP' ? 'Interview Prep' :
                      'Career Launchpad'}
                   </span>
@@ -499,7 +499,7 @@ const Payments = () => {
             <div className="flex flex-wrap gap-2">
               {learningAccess.hasCVCourse && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-                  Resume Building
+                  CV Building
                 </span>
               )}
               {learningAccess.hasInterviewCourse && (
@@ -740,7 +740,7 @@ const Payments = () => {
         <div className="flex gap-2">
           <div className="w-2 h-2 mt-2 bg-[#0E5C7E] rounded-full" />
           <span>
-            Graphura offers <strong>3 main packages</strong>: Resume Building, Interview Preparation, and Job Packages.
+            Graphura offers <strong>3 main packages</strong>: CV Building, Interview Preparation, and Job Packages.
           </span>
         </div>
 
@@ -772,7 +772,7 @@ const Payments = () => {
         <div className="flex gap-2">
           <div className="w-2 h-2 mt-2 bg-[#0E5C7E] rounded-full" />
           <span>
-            Course access depends on your purchase. Buying only the <strong>Resume course</strong> gives access to Resume content only.
+            Course access depends on your purchase. Buying only the <strong>CV course</strong> gives access to CV content only.
           </span>
         </div>
 
@@ -780,7 +780,7 @@ const Payments = () => {
         <div className="flex gap-2">
           <div className="w-2 h-2 mt-2 bg-[#0E5C7E] rounded-full" />
           <span>
-            Purchasing the <strong>Combo Course</strong> unlocks access to <strong>both Resume Building and Interview Preparation</strong>.
+            Purchasing the <strong>Combo Course</strong> unlocks access to <strong>both CV Building and Interview Preparation</strong>.
           </span>
         </div>
 
@@ -841,7 +841,7 @@ const Payments = () => {
                         ) : (
                           <>
                             <div className="font-medium">
-                              {payment.courseDetails?.courseType === 'RESUME_BUILDING' ? 'Resume Building Course' :
+                              {payment.courseDetails?.courseType === 'CV_BUILDING' ? 'CV Building Course' :
                                 payment.courseDetails?.courseType === 'INTERVIEW_PREP' ? 'Interview Prep Course' :
                                   'Career Launchpad (COMBO)'}
                             </div>

@@ -22,14 +22,14 @@ const FAQPage = () => {
     {
       id: 1,
       question: "What is Graphura ?",
-      answer: "Graphura India Private Limited is a professional training and skill-development platform offering Resume Building Courses and Interview Preparation Courses designed to enhance employability skills.",
+      answer: "Graphura India Private Limited is a professional training and skill-development platform offering CV Building Courses and Interview Preparation Courses designed to enhance employability skills.",
       icon: <HelpCircle className="w-5 h-5" />,
       category: "general"
     },
     {
       id: 2,
       question: "Who can enroll in Graphura courses?",
-      answer: "Students, interns, job seekers, and working professionals aiming to improve interview skills, resume quality, and professional communication can enroll.",
+      answer: "Students, interns, job seekers, and working professionals aiming to improve interview skills, CV quality, and professional communication can enroll.",
       icon: <Users className="w-5 h-5" />,
       category: "general"
     },
@@ -44,8 +44,8 @@ const FAQPage = () => {
     // Course Related FAQs
     {
       id: 5,
-      question: "What is included in the Resume Building Course (₹799)?",
-      answer: "The Resume Building Course includes 5 sessions, ATS-friendly resume creation, cover letter training, professional formatting, and one-on-one resume review.",
+      question: "What is included in the CV Building Course (₹799)?",
+      answer: "The CV Building Course includes 5 sessions, ATS-friendly CV creation, cover letter training, professional formatting, and one-on-one CV review.",
       icon: <FileText className="w-5 h-5" />,
       category: "course"
     },
@@ -59,7 +59,7 @@ const FAQPage = () => {
     {
       id: 7,
       question: "What do I get in the Combo Course (₹1299)?",
-      answer: "You receive both courses at a discounted price: 5 Resume Building sessions and 10 Interview Preparation sessions, total 15 sessions and bonus templates.",
+      answer: "You receive both courses at a discounted price: 5 CV Building sessions and 10 Interview Preparation sessions, total 15 sessions and bonus templates.",
       icon: <Award className="w-5 h-5" />,
       category: "course"
     },
@@ -167,7 +167,7 @@ const FAQPage = () => {
     {
       id: 21,
       question: "Do you offer guidance after the course ends?",
-      answer: "Yes. Students receive doubt resolution, resume improvement support, and career guidance related to interviews and professional growth.",
+      answer: "Yes. Students receive doubt resolution, CV improvement support, and career guidance related to interviews and professional growth.",
       icon: <Award className="w-5 h-5" />,
       category: "support"
     },

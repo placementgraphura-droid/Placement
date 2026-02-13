@@ -249,61 +249,69 @@ const Sidebar = ({ activePage, setActivePage, collapsed, setCollapsed, onMobileI
         shadow-lg">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] flex items-center justify-center shadow-md">
-              <Package size={14} className="text-white" />
-            </div>
-            <div>
-              <h3 className="text-gray-800 font-bold text-xs">Latest Purchase</h3>
-              <p className="text-gray-500 text-[10px]">{timeAgo}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            {isRecent && (
-              <span className="text-[10px] px-1.5 py-0.5 bg-green-100 text-green-600
- rounded-full border border-green-500/30 animate-pulse">
-                NEW
-              </span>
-            )}
-            <span className={`text-[10px] px-1.5 py-0.5 ${
-              statusColor === 'green' ? 'bg-green-500/20 text-green-300 border-green-500/30' :
-              statusColor === 'red' ? 'bg-red-500/20 text-red-300 border-red-500/30' :
-              statusColor === 'yellow' ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' :
-              'bg-[#4FB0DA]/20 text-[#EAF6FC] border-[#4FB0DA]/30'
-            } rounded-full border`}>
-              {latestPurchase.paymentStatus || 'ACTIVE'}
-            </span>
-          </div>
-        </div>
+       <div className="flex items-center justify-between mb-3">
+         <div className="flex items-center gap-2">
+           <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] flex items-center justify-center shadow-md">
+             <Package size={14} className="text-white" />
+           </div>
+           <div>
+             <h3 className="text-gray-800 font-bold text-xs">Latest Purchase</h3>
+             <p className="text-gray-500 text-[10px]">{timeAgo}</p>
+           </div>
+         </div>
 
-        {/* Purchase Info */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-white text-sm font-semibold truncate">{purchaseTitle}</p>
-              <p className="text-[#EAF6FC]/80 text-xs">{purchaseType}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-white font-bold text-sm">
-                ₹{latestPurchase.amountPaid?.toLocaleString('en-IN') || '0'}
-              </p>
-              <p className="text-[#EAF6FC]/80 text-[10px]">Amount</p>
-            </div>
-          </div>
-        </div>
+         <div className="flex items-center gap-1">
+           {isRecent && (
+             <span className="text-[10px] px-1.5 py-0.5 bg-green-100 text-green-700 rounded-full border border-green-500/30 animate-pulse">
+               NEW
+             </span>
+           )}
 
-        {/* Action Button */}
-        <button
-          onClick={() => {
-            setActivePage(action.page);
-            if (onMobileItemClick) onMobileItemClick();
-          }}
-          className="w-full mt-3 py-2 bg-gradient-to-r from-[#0E5C7E]/20 to-[#4FB0DA]/10 hover:from-[#0E5C7E]/30 hover:to-[#4FB0DA]/20 text-[#EAF6FC] text-xs font-bold rounded-lg border border-[#4FB0DA]/30 transition-all duration-300 flex items-center justify-center gap-2 hover:shadow"
-        >
-          {action.label}
-          <ExternalLink size={12} />
-        </button>
+           <span
+             className={`text-[10px] px-1.5 py-0.5 ${
+               statusColor === "green"
+                 ? "bg-green-100 text-black border-green-400/40"
+                 : statusColor === "red"
+                 ? "bg-red-100 text-black border-red-400/40"
+                 : statusColor === "yellow"
+                 ? "bg-yellow-100 text-black border-yellow-400/40"
+                 : "bg-[#4FB0DA]/20 text-black border-[#4FB0DA]/30"
+             } rounded-full border`}
+           >
+             {latestPurchase.paymentStatus || "ACTIVE"}
+           </span>
+         </div>
+       </div>
+
+       {/* Purchase Info */}
+       <div className="space-y-2">
+         <div className="flex items-center justify-between">
+           <div>
+             <p className="text-black text-sm font-semibold truncate">{purchaseTitle}</p>
+             <p className="text-gray-700 text-xs">{purchaseType}</p>
+           </div>
+
+           <div className="text-right">
+             <p className="text-black font-bold text-sm">
+               ₹{latestPurchase.amountPaid?.toLocaleString("en-IN") || "0"}
+             </p>
+             <p className="text-gray-600 text-[10px]">Amount</p>
+           </div>
+         </div>
+       </div>
+
+       {/* Action Button */}
+       <button
+         onClick={() => {
+           setActivePage(action.page);
+           if (onMobileItemClick) onMobileItemClick();
+         }}
+         className="w-full mt-3 py-2 bg-gradient-to-r from-[#0E5C7E]/20 to-[#4FB0DA]/10 hover:from-[#0E5C7E]/30 hover:to-[#4FB0DA]/20 text-black text-xs font-bold rounded-lg border border-[#4FB0DA]/30 transition-all duration-300 flex items-center justify-center gap-2 hover:shadow"
+       >
+         {action.label}
+         <ExternalLink size={12} />
+       </button>
+
 
       </div>
     );

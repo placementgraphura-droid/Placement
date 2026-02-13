@@ -245,7 +245,7 @@ const InternsPage = () => {
           planColor: "bg-gradient-to-r from-blue-500 to-teal-500 text-white",
           isCombo
         };
-      case "Resume_BUILDING":
+      case "CV_BUILDING":
       case "INTERVIEW_PREP":
         return {
           planCategory,
@@ -592,7 +592,7 @@ const InternsPage = () => {
               <option value="NONE">Basic</option>
               <option value="PREMIUM">Premium Combo</option>
               <option value="COMBO">COMBO Course</option>
-              <option value="RESUME_BUILDING">Resume Building</option>
+              <option value="CV_BUILDING">CV Building</option>
               <option value="INTERVIEW_PREP">Interview Prep</option>
               <option value="SILVER">Silver Package</option>
               <option value="BLUE">Blue Package</option>
