@@ -119,17 +119,17 @@ const AdminDashboard = () => {
 
 
         {/* Sidebar Header */}
-        <div className="p-4">
-          <img
-            src="/GraphuraLogo.jpg"
-            alt="Graphura Logo"
-            className="h-8 w-auto object-contain"
-          />
-          <p className="text-xs text-gray-600 mt-1">
+       <div className="p-4">
+         <img
+           src="/GraphuraLogo.jpg"
+           alt="Graphura Logo"
+           className="h-12 w-auto object-contain"
+         />
+         <p className="text-xs text-gray-600 mt-1">
+           Admin Management
+         </p>
+       </div>
 
-            Admin Management
-          </p>
-        </div>
 
         {/* Menu Buttons */}
         <nav className="flex-1 px-2 flex flex-col">
