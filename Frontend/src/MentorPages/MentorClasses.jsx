@@ -352,8 +352,8 @@ const MentorClasses = () => {
   // ===============================
   const getCategoryDetails = (category) => {
     const categories = {
-      'RESUME_BUILDING': {
-        label: 'Resume Building',
+      'CV_BUILDING': {
+        label: 'CV Building',
         icon: Briefcase,
         color: 'bg-gradient-to-r from-blue-500 to-cyan-500',
         bgColor: 'bg-blue-50',
@@ -435,9 +435,9 @@ const MentorClasses = () => {
   // CATEGORY OPTIONS
   // ===============================
   const categoryOptions = [
-    { value: 'RESUME_BUILDING', label: 'Resume Building Masterclass', description: 'Resume writing & portfolio guidance' },
+    { value: 'CV_BUILDING', label: 'CV Building Masterclass', description: 'CV writing & portfolio guidance' },
     { value: 'INTERVIEW_PREP', label: 'Interview Preparation', description: 'Mock interviews & Q&A sessions' },
-    { value: 'COMBO', label: 'Combo Session', description: 'Resume building + Interview prep' }
+    { value: 'COMBO', label: 'Combo Session', description: 'CV building + Interview prep' }
   ];
 
   const { live, upcoming, past } = categorizeClasses();
@@ -956,7 +956,7 @@ const MentorClasses = () => {
                       setNewClass((prev) => ({ ...prev, title: e.target.value }))
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-                    placeholder="e.g., Advanced Resume Writing Workshop"
+                    placeholder="e.g., Advanced CV Writing Workshop"
                   />
                 </div>
 

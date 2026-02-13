@@ -53,14 +53,14 @@ const AdminVideoLectures = () => {
 
   // Category definitions with colors and icons
   const categories = {
-    'Resume_BUILDING': {
-      label: 'Resume Building',
+    'CV_BUILDING': {
+      label: 'CV Building',
       color: 'bg-gradient-to-r from-blue-500 to-cyan-500',
       bgColor: 'bg-blue-50',
       textColor: 'text-blue-700',
       borderColor: 'border-blue-200',
       icon: FileText,
-      description: 'Resume creation and enhancement tips'
+      description: 'CV creation and enhancement tips'
     },
     'INTERVIEW_PREP': {
       label: 'Interview Preparation',

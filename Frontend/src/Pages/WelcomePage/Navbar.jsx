@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Resume", path: "/courses" },
+    { name: "CV", path: "/courses" },
     { name: "Interviews", path: "/interviews" },
     { name: "FAQ", path: "/FAQ" },
     { name: "Privacy Policy", path: "/privacy-policy" },

@@ -434,7 +434,7 @@ const DashboardHome = () => {
 
                   <div>
                     <h3 className="text-xl font-bold text-[#0A2E40]">Career Course</h3>
-                    <p className="text-[#0E5C7E] text-sm font-medium">Resume Building • Interview Prep</p>
+                    <p className="text-[#0E5C7E] text-sm font-medium">CV Building • Interview Prep</p>
                   </div>
                 </div>
                 <ul className="space-y-3 mb-6">
