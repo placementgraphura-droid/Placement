@@ -285,13 +285,13 @@ const MentorDashboard = () => {
          <img
            src={
              currentMentor.profileImage ||
-             `https://ui-avatars.com/api/?name=${currentMentor.name}&background=6366f1&color=fff`
+             `https://ui-avatars.com/api/?name=${currentMentor?.name}&background=6366f1&color=fff`
            }
            className="w-16 h-16 mx-auto rounded-2xl border border-indigo-400 shadow-md"
            alt="Profile"
          />
 
-         <h2 className="mt-3 font-medium text-black">{currentMentor.name}</h2>
+         <h2 className="mt-3 font-medium text-black">{currentMentor?.name}</h2>
          <p className="text-xs text-gray-600">
            {currentMentor.experience} yrs experience
          </p>
@@ -437,14 +437,14 @@ const MentorDashboard = () => {
                  <img
                    src={
                      mentor.profileImage ||
-                     `https://ui-avatars.com/api/?name=${mentor.name}&background=6366f1&color=fff`
+                     `https://ui-avatars.com/api/?name=${mentor?.name}&background=6366f1&color=fff`
                    }
                    alt="Profile"
                    className="w-8 h-8 rounded-full"
                  />
                  <div className="hidden sm:block">
                    <p className="text-sm font-medium text-gray-800">
-                     {mentor.name}
+                     {mentor?.name}
                    </p>
                    <p className="text-xs text-gray-400">Admin</p>
                  </div>
@@ -499,7 +499,7 @@ const DashboardOverview = ({
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-blue-600 to-purple-700 p-6 rounded-xl text-white">
-        <h1 className="text-3xl font-bold">Welcome, {mentor.name} 👋</h1>
+        <h1 className="text-3xl font-bold">Welcome, {mentor?.name} 👋</h1>
         <p className="opacity-75">Here's your performance overview</p>
       </div>
 

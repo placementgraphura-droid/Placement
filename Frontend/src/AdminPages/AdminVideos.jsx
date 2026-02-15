@@ -52,6 +52,7 @@ const AdminVideoLectures = () => {
   });
 
   // Category definitions with colors and icons
+  //Resume
   const categories = {
     'CV_BUILDING': {
       label: 'CV Building',
