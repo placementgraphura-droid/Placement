@@ -503,7 +503,7 @@ const DashboardOverview = ({
         <p className="opacity-75">Here's your performance overview</p>
       </div>
 
-      {/* Stats */}
+{/*      Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {stats.map((s, i) => {
           const Icon = s.icon;
