@@ -882,7 +882,7 @@ const AdminVideoLectures = () => {
                   </label>
                   <input
                     type="text"
-                    value={editingVideo.duration}
+                    value={editingVideo?.duration}
                     onChange={(e) => setEditingVideo(prev => ({ ...prev, duration: e.target.value }))}
                     disabled={editing}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
@@ -896,7 +896,7 @@ const AdminVideoLectures = () => {
 
                   <input
                     type="url"
-                    value={editingVideo.queryUrl || ""}
+                    value={editingVideo?.queryUrl || ""}
                     onChange={(e) =>
                       setEditingVideo(prev => ({ ...prev, queryUrl: e.target.value }))
                     }
