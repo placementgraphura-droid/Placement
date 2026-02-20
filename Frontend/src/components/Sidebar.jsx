@@ -251,7 +251,7 @@ const Sidebar = ({ activePage, setActivePage, collapsed, setCollapsed, onMobileI
         {/* Header */}
        <div className="flex items-center justify-between mb-3">
          <div className="flex items-center gap-2">
-           <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#0E5C7E] to-[#4FB0DA] flex items-center justify-center shadow-md">
+           <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center shadow-md">
              <Package size={14} className="text-white" />
            </div>
            <div>
@@ -306,7 +306,7 @@ const Sidebar = ({ activePage, setActivePage, collapsed, setCollapsed, onMobileI
            setActivePage(action.page);
            if (onMobileItemClick) onMobileItemClick();
          }}
-         className="w-full mt-3 py-2 bg-gradient-to-r from-[#0E5C7E]/20 to-[#4FB0DA]/10 hover:from-[#0E5C7E]/30 hover:to-[#4FB0DA]/20 text-black text-xs font-bold rounded-lg border border-[#4FB0DA]/30 transition-all duration-300 flex items-center justify-center gap-2 hover:shadow"
+         className="w-full mt-3 py-2 bg-gradient-to-r from-indigo-100 to-purple-100 hover:from-indigo-200 hover:to-purple-200 text-black text-xs font-bold rounded-lg border border-indigo-200 transition-all duration-300 flex items-center justify-center gap-2 hover:shadow"
        >
          {action.label}
          <ExternalLink size={12} />

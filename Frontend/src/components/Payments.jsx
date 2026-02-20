@@ -556,14 +556,20 @@ const Payments = () => {
           <h2 className="text-2xl font-bold text-[#0A2E40] mb-2">
             {activeCategory === 'job' ? 'Choose Your Job Package' : 'Select Learning Course'}
           </h2>
-          <p className="text-[#0E5C7E]">
+          <p className="text-[#757575]">
             {activeCategory === 'job'
               ? 'Purchase credits to apply for internships and jobs. Latest purchase becomes current package.'
               : 'Enroll in courses to enhance your skills and career prospects'}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 ${
+            activeCategory === 'learning'
+              ? 'lg:grid-cols-3 justify-items-center max-w-5xl mx-auto'
+              : 'lg:grid-cols-4'
+          } gap-6 mb-12`}
+        >
 
           {plans.map((plan) => {
             const isCurrentPlan = activeCategory === 'job' 
@@ -577,7 +583,7 @@ const Payments = () => {
              return (
                         <div
                           key={plan.id}
-                          className={`relative rounded-3xl p-6 pt-10 transition-all duration-300 flex flex-col ${
+                          className={`relative rounded-3xl p-6 pt-14 transition-all duration-300 flex flex-col ${
 
                             plan.popular
                               ? 'bg-gradient-to-b from-purple-600 to-violet-600 text-white shadow-2xl scale-105'
@@ -603,25 +609,41 @@ const Payments = () => {
                               </div>
                             )}
 
+                        {/* Current / Purchased Badge BELOW TAG */}
+                        {(isCurrentPlan || (activeCategory === 'learning' && isCoursePurchasedCheck && !isCurrentPlan)) && (
+                          <div className="flex justify-center mt-6">
+                            <span
+                              className={`px-4 py-1 rounded-full text-xs font-semibold shadow
+                                ${
+                                  isCurrentPlan
+                                    ? 'bg-green-500 text-white'
+                                    : 'bg-gradient-to-r from-[#4FB0DA] to-[#7EC9E8] text-white'
+                                }`}
+                            >
+                              ✓ {isCurrentPlan ? 'Current' : 'Purchased'}
+                            </span>
+                          </div>
+                        )}
 
 
-                {/* Current Plan Badge */}
-                {isCurrentPlan && (
-                  <div className="absolute -top-3 right-3 transform">
-                    <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow">
-                      ✓ Current
-                    </span>
-                  </div>
-                )}
 
-                {/* Course Purchased Badge */}
-                {activeCategory === 'learning' && isCoursePurchasedCheck && !isCurrentPlan && (
-                  <div className="absolute -top-3 right-3 transform">
-                    <span className="bg-gradient-to-r from-[#4FB0DA] to-[#7EC9E8] text-white px-3 py-1 rounded-full text-xs font-medium shadow">
-                      ✓ Purchased
-                    </span>
-                  </div>
-                )}
+{/*                  */}{/* Current Plan Badge */}
+{/*                 {isCurrentPlan && ( */}
+{/*                   <div className="absolute -top-3 right-3 transform"> */}
+{/*                     <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow"> */}
+{/*                       ✓ Current */}
+{/*                     </span> */}
+{/*                   </div> */}
+{/*                 )} */}
+
+{/*                  */}{/* Course Purchased Badge */}
+{/*                 {activeCategory === 'learning' && isCoursePurchasedCheck && !isCurrentPlan && ( */}
+{/*                   <div className="absolute -top-3 right-3 transform"> */}
+{/*                     <span className="bg-gradient-to-r from-[#4FB0DA] to-[#7EC9E8] text-white px-3 py-1 rounded-full text-xs font-medium shadow"> */}
+{/*                       ✓ Purchased */}
+{/*                     </span> */}
+{/*                   </div> */}
+{/*                 )} */}
 
                 <div className="text-center mb-6 pt-2">
                    <h3 className={`text-xl font-bold text-center mb-4 ${
