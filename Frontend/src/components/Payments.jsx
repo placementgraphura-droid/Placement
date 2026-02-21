@@ -140,7 +140,7 @@ const Payments = () => {
       recordedSessions: 5,
       features: [
         '50+ Common Interview Questions',
-        '5 Live Mock Interview Sessions',
+        'Live Mock Interview Sessions',
         'Company-Specific Interview Guides',
         'Technical Assessment Practice',
         'Body Language & Communication Tips',

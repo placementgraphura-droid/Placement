@@ -67,6 +67,7 @@ const Profile = () => {
     { value: 2, label: '2nd Year'},
     { value: 3, label: '3rd Year'},
     { value: 4, label: '4th Year' },
+     { value: 5, label: 'Completed' },
   ];
 
   // Domain options
